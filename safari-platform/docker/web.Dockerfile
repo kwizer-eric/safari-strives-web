@@ -1,11 +1,11 @@
-# Generic Dockerfile for any Next.js app under apps/. Pass APP_NAME and APP_PORT at build time.
+# Generic Dockerfile for any Next.js app under frontend/. Pass APP_NAME and APP_PORT at build time.
 FROM node:20-alpine AS builder
 ARG APP_NAME
 WORKDIR /repo
 COPY package.json package-lock.json* ./
 COPY tsconfig.base.json ./
 COPY packages ./packages
-COPY apps ./apps
+COPY frontend ./frontend
 RUN npm install --workspaces --include-workspace-root --no-audit --no-fund
 RUN npm run build -w ${APP_NAME}
 
@@ -17,6 +17,6 @@ ENV NODE_ENV=production
 ENV PORT=${APP_PORT}
 COPY --from=builder /repo/node_modules ./node_modules
 COPY --from=builder /repo/packages ./packages
-COPY --from=builder /repo/apps/${APP_NAME} ./
+COPY --from=builder /repo/frontend/${APP_NAME} ./
 EXPOSE ${APP_PORT}
 CMD ["npm", "run", "start"]

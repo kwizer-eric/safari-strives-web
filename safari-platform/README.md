@@ -6,7 +6,7 @@ Monorepo for the Safari Strives platform.
 
 ```
 safari-platform/
-  apps/
+  frontend/
     public-web/          Marketing site               (port 3000)
     admin-dashboard/     Staff administration         (port 3001)
     applicant-portal/    Applicants & founders        (port 3002)

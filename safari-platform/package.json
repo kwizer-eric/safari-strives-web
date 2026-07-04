@@ -4,7 +4,7 @@
   "private": true,
   "description": "Safari Strives platform monorepo",
   "workspaces": [
-    "apps/*",
+    "frontend/*",
     "packages/*",
     "backend"
   ],
