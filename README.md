@@ -1,12 +1,16 @@
-# safari-strives
+# Safari Strives
 
-Safari Strives nonprofit homepage — Next.js 16 + TypeScript + Tailwind CSS.
+This repository hosts the Safari Strives platform monorepo.
 
-## Getting Started
+The source code lives under [safari-platform/](./safari-platform/).
+
+## Getting started
 
 ```bash
+cd safari-platform
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+See [safari-platform/README.md](./safari-platform/README.md) for the complete
+overview: workspaces, ports, seeded logins, and testing.
