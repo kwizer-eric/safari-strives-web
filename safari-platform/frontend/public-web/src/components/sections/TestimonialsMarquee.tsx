@@ -7,7 +7,7 @@ export function TestimonialsMarquee() {
   return (
     <section
       aria-label="Community testimonials"
-      className="overflow-hidden bg-background py-6 md:py-8"
+      className="overflow-hidden bg-background py-10 md:py-12"
     >
       <div className="relative overflow-hidden">
         <div className="flex w-max gap-4 animate-marquee motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center md:gap-6">

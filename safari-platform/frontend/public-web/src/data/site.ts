@@ -5,17 +5,21 @@ export const site = {
     line1: "Every Person,",
     line2: "Every Opportunity",
   },
-  description: "A nonprofit enterprise hub in Rubavu, Rwanda.",
+  description: "A nonprofit enterprise hub.",
   email: "safaristrives@gmail.com",
   locations: ["Rubavu, Rwanda", "Crestwood, Illinois"],
-  legal: "Safari Strives is a registered 501(c)(3) nonprofit organization.",
   social: {
+    linkedin: "#",
     facebook: "#",
     instagram: "#",
-    linkedin: "#",
-    x: "#",
   },
 } as const;
+
+export const footerSocial = [
+  { label: "LinkedIn", href: site.social.linkedin },
+  { label: "Facebook", href: site.social.facebook },
+  { label: "Instagram", href: site.social.instagram },
+] as const;
 
 export const navLinks = [
   { label: "Ventures", href: "/ventures" },
@@ -46,7 +50,6 @@ export const footerColumns = {
     title: "Insights",
     links: [
       { label: "The Field Notes", href: "#insights" },
-      { label: "Press", href: "#" },
       { label: "Contact", href: "#contact" },
     ],
   },

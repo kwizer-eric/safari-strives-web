@@ -13,11 +13,11 @@ export function BlogCard({ article, className }: BlogCardProps) {
   return (
     <article
       className={cn(
-        "group flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-card",
+        "group flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-border bg-white",
         className,
       )}
     >
-      <div className="relative aspect-[16/10] overflow-hidden">
+      <div className="relative flex aspect-[5/3] items-center justify-center bg-cream">
         <Image
           src={article.image}
           alt={article.imageAlt}
@@ -26,18 +26,18 @@ export function BlogCard({ article, className }: BlogCardProps) {
           sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
-      <div className="flex flex-1 flex-col gap-3 py-6">
-        <time className="text-sm text-muted" dateTime={article.date}>
-          {article.date}
-        </time>
-        <h3 className="text-xl font-bold leading-snug text-foreground">
+      <div className="flex flex-1 flex-col gap-4 p-6">
+        <h3 className="text-lg font-bold leading-snug text-foreground">
           {article.title}
         </h3>
+        <p className="flex-1 text-sm leading-relaxed text-muted">
+          {article.excerpt}
+        </p>
         <Link
           href="#"
-          className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-foreground transition-colors hover:text-accent"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors hover:text-accent"
         >
-          Learn more
+          Read more
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>

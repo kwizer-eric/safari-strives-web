@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@safari/ui";
-import { footerColumns, site } from "@/data/site";
+import { footerColumns, footerSocial, site } from "@/data/site";
 
 function FooterColumn({
   title,
@@ -40,6 +40,11 @@ export function Footer() {
             <p className="max-w-xs text-sm leading-relaxed text-white/90">
               {site.description}
             </p>
+            <div className="mt-6 flex flex-col gap-1 text-sm text-white/90 md:mt-8">
+              {site.locations.map((location) => (
+                <p key={location}>{location}</p>
+              ))}
+            </div>
           </div>
 
           <FooterColumn
@@ -56,24 +61,16 @@ export function Footer() {
           />
         </div>
 
-        <div className="mt-12 border-t border-white/20 pt-8">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-col gap-1 text-sm text-white/90">
-              {site.locations.map((location) => (
-                <p key={location}>{location}</p>
-              ))}
-              <a
-                href={`mailto:${site.email}`}
-                className="transition-colors hover:text-white"
-              >
-                {site.email}
-              </a>
-            </div>
-            <p className="text-sm text-white/70">{site.legal}</p>
-          </div>
-          <p className="mt-6 text-sm text-white/60">
-            &copy; {new Date().getFullYear()} {site.name}. All rights reserved.
-          </p>
+        <div className="mt-12 flex justify-end gap-6 border-t border-white/20 pt-6 md:mt-16">
+          {footerSocial.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="text-sm text-white/90 transition-colors hover:text-white"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
       </Container>
     </footer>

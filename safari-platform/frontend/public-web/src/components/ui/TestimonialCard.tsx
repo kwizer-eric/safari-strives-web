@@ -17,9 +17,7 @@ export function TestimonialCard({
         className,
       )}
     >
-      <p className="text-sm font-medium text-muted">
-        {testimonial.city}, {testimonial.country}
-      </p>
+      <p className="text-sm font-medium text-muted">{testimonial.role}</p>
       <blockquote className="text-base leading-relaxed text-foreground">
         &ldquo;{testimonial.quote}&rdquo;
       </blockquote>
