@@ -1,12 +1,18 @@
 "use client";
 
-import { LayoutDashboard, BookOpen, User as UserIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  BookOpen,
+  FilePlus,
+  User as UserIcon,
+} from "lucide-react";
 import { RequireRole, useAuth } from "@safari/auth";
 import { Sidebar, TopBar, Button } from "@safari/ui";
 import { initials } from "@safari/shared";
 
 const items = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "New application", href: "/apply", icon: FilePlus },
   { label: "Programs", href: "/programs", icon: BookOpen },
   { label: "Profile", href: "/profile", icon: UserIcon },
 ];

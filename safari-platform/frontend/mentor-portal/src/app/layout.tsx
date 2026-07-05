@@ -28,7 +28,7 @@ export default function RootLayout({
         className={`${manrope.className} min-h-full antialiased`}
         suppressHydrationWarning
       >
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider demoMode demoRole="mentor">{children}</AuthProvider>
       </body>
     </html>
   );

@@ -18,19 +18,19 @@ export const site = {
 } as const;
 
 export const navLinks = [
-  { label: "Ventures", href: "#explore" },
-  { label: "Our Model", href: "#explore" },
-  { label: "Field Notes", href: "#insights" },
-  { label: "About", href: "#about" },
+  { label: "Ventures", href: "/ventures" },
+  { label: "Our Model", href: "/our-model" },
+  { label: "Field Notes", href: "/#insights" },
+  { label: "About", href: "/#about" },
 ] as const;
 
 export const footerColumns = {
   programs: {
     title: "Programs",
     links: [
-      { label: "Venture Accelerator", href: "#explore" },
-      { label: "Green Enterprise Lab", href: "#explore" },
-      { label: "The Hub", href: "#explore" },
+      { label: "Venture Accelerator", href: "/our-model" },
+      { label: "Green Enterprise Lab", href: "/green-enterprise-lab" },
+      { label: "The Hub", href: "/the-hub" },
     ],
   },
   about: {

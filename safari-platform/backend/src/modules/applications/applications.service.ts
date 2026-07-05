@@ -32,8 +32,7 @@ export async function createApplication(
   const app: Application = {
     id: generateId("app"),
     applicantId,
-    ventureName: input.ventureName,
-    ventureSummary: input.ventureSummary,
+    ...input,
     status: "draft",
     submittedAt: null,
     createdAt: now,

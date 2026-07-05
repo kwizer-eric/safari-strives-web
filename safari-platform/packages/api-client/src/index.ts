@@ -1,13 +1,21 @@
 import { DEFAULT_BACKEND_URL } from "@safari/shared";
 import type {
   Application,
+  ApplicationInput,
   ApplicationStatus,
   AuthSession,
   MentorSession,
   PartnerProject,
   Program,
   User,
+  UserRole,
 } from "@safari/shared";
+import { DemoApiClient } from "./demo-client";
+import type { ApiClientLike } from "./types";
+
+export type { ApiClientLike } from "./types";
+export { DemoApiClient } from "./demo-client";
+export { getDemoStore, getDemoUserByRole } from "./demo-store";
 
 export type ApiClientOptions = {
   baseUrl?: string;
@@ -25,7 +33,7 @@ export class ApiError extends Error {
   }
 }
 
-export class ApiClient {
+export class ApiClient implements ApiClientLike {
   private readonly baseUrl: string;
   private readonly getToken?: () => string | null | undefined;
 
@@ -61,7 +69,7 @@ export class ApiClient {
     return body as T;
   }
 
-  auth = {
+  auth: ApiClientLike["auth"] = {
     login: (email: string, password: string) =>
       this.request<AuthSession>("/auth/login", {
         method: "POST",
@@ -70,12 +78,12 @@ export class ApiClient {
     me: () => this.request<{ user: User }>("/auth/me"),
   };
 
-  applications = {
+  applications: ApiClientLike["applications"] = {
     listAll: () =>
       this.request<{ applications: Application[] }>("/applications"),
     listMine: () =>
       this.request<{ applications: Application[] }>("/applications/mine"),
-    create: (input: { ventureName: string; ventureSummary: string }) =>
+    create: (input: ApplicationInput) =>
       this.request<{ application: Application }>("/applications", {
         method: "POST",
         body: JSON.stringify(input),
@@ -95,28 +103,28 @@ export class ApiClient {
       ),
   };
 
-  programs = {
+  programs: ApiClientLike["programs"] = {
     list: () => this.request<{ programs: Program[] }>("/programs"),
   };
 
-  sessions = {
+  sessions: ApiClientLike["sessions"] = {
     listMine: () =>
       this.request<{ sessions: MentorSession[] }>("/sessions/mine"),
     listAll: () => this.request<{ sessions: MentorSession[] }>("/sessions"),
   };
 
-  partnerProjects = {
+  partnerProjects: ApiClientLike["partnerProjects"] = {
     listMine: () =>
       this.request<{ projects: PartnerProject[] }>("/partner-projects/mine"),
     listAll: () =>
       this.request<{ projects: PartnerProject[] }>("/partner-projects"),
   };
 
-  users = {
+  users: ApiClientLike["users"] = {
     list: () => this.request<{ users: User[] }>("/users"),
   };
 
-  donations = {
+  donations: ApiClientLike["donations"] = {
     create: (input: {
       name: string;
       email: string;
@@ -130,6 +138,16 @@ export class ApiClient {
   };
 }
 
-export function createApiClient(options: ApiClientOptions = {}) {
+export type CreateApiClientOptions = ApiClientOptions & {
+  demo?: boolean;
+  demoRole?: UserRole;
+};
+
+export function createApiClient(
+  options: CreateApiClientOptions = {},
+): ApiClientLike {
+  if (options.demo) {
+    return new DemoApiClient(options.demoRole ?? "admin");
+  }
   return new ApiClient(options);
 }

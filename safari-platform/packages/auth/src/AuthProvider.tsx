@@ -9,16 +9,21 @@ import {
   useState,
 } from "react";
 import type { AuthSession, User, UserRole } from "@safari/shared";
-import { ApiClient, createApiClient } from "@safari/api-client";
+import {
+  createApiClient,
+  getDemoUserByRole,
+  type ApiClientLike,
+} from "@safari/api-client";
 import { storage } from "./storage";
 
 export type AuthContextValue = {
   user: User | null;
   token: string | null;
   loading: boolean;
+  demoMode: boolean;
   login: (email: string, password: string) => Promise<AuthSession>;
   logout: () => void;
-  api: ApiClient;
+  api: ApiClientLike;
   hasRole: (...roles: UserRole[]) => boolean;
 };
 
@@ -27,41 +32,62 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 type AuthProviderProps = {
   children: React.ReactNode;
   backendUrl?: string;
+  demoMode?: boolean;
+  demoRole?: UserRole;
 };
 
-export function AuthProvider({ children, backendUrl }: AuthProviderProps) {
-  const [session, setSession] = useState<AuthSession | null>(null);
-  const [loading, setLoading] = useState(true);
+export function AuthProvider({
+  children,
+  backendUrl,
+  demoMode = false,
+  demoRole,
+}: AuthProviderProps) {
+  const [session, setSession] = useState<AuthSession | null>(() => {
+    if (demoMode && demoRole) {
+      return { token: "demo-token", user: getDemoUserByRole(demoRole) };
+    }
+    return null;
+  });
+  const [loading, setLoading] = useState(!demoMode);
 
-  const api = useMemo(
+  const api = useMemo<ApiClientLike>(
     () =>
       createApiClient({
         baseUrl: backendUrl,
+        demo: demoMode,
+        demoRole,
         getToken: () => session?.token ?? storage.read()?.token ?? null,
       }),
-    [backendUrl, session?.token],
+    [backendUrl, demoMode, demoRole, session?.token],
   );
 
   useEffect(() => {
+    if (demoMode) return;
     const existing = storage.read();
     if (existing) setSession(existing);
     setLoading(false);
-  }, []);
+  }, [demoMode]);
 
   const login = useCallback(
     async (email: string, password: string) => {
       const result = await api.auth.login(email, password);
-      storage.write(result);
+      if (!demoMode) storage.write(result);
       setSession(result);
       return result;
     },
-    [api],
+    [api, demoMode],
   );
 
   const logout = useCallback(() => {
+    if (demoMode) {
+      if (demoRole) {
+        setSession({ token: "demo-token", user: getDemoUserByRole(demoRole) });
+      }
+      return;
+    }
     storage.clear();
     setSession(null);
-  }, []);
+  }, [demoMode, demoRole]);
 
   const hasRole = useCallback(
     (...roles: UserRole[]) =>
@@ -74,12 +100,13 @@ export function AuthProvider({ children, backendUrl }: AuthProviderProps) {
       user: session?.user ?? null,
       token: session?.token ?? null,
       loading,
+      demoMode,
       login,
       logout,
       api,
       hasRole,
     }),
-    [session, loading, login, logout, api, hasRole],
+    [session, loading, demoMode, login, logout, api, hasRole],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

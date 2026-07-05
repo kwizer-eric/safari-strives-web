@@ -13,4 +13,6 @@ export type { TableColumn } from "./Table";
 export { Badge } from "./Badge";
 export { Input } from "./Input";
 export { TextArea } from "./TextArea";
+export { Select } from "./Select";
+export type { SelectOption } from "./Select";
 export { Alert } from "./Alert";
