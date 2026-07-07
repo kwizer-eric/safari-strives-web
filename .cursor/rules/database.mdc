@@ -1,0 +1,48 @@
+---
+description: Database, ORM, and Migration rules
+globs: **/models/*.py, **/alembic/**/*.py
+alwaysApply: true
+---
+
+# Database & SQLAlchemy Rules
+
+1. **SQLAlchemy 2.0 Syntax:** Always use `Mapped` and `mapped_column`. 
+   ```python
+   from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+   class Base(DeclarativeBase): pass
+   class User(Base):
+       __tablename__ = "users"
+       id: Mapped[int] = mapped_column(primary_key=True)
+       email: Mapped[str] = mapped_column(unique=True, index=True)
+
+
+
+
+
+
+
+
+### 4. `.cursor/rules/api-style.mdc`
+*Rules for designing clean, predictable REST APIs for the frontend team.*
+
+```markdown
+---
+description: FastAPI endpoint design and REST conventions
+globs: **/api/**/*.py
+alwaysApply: true
+---
+
+# API Design Rules
+
+1. **Routing & Versioning:** All routes must be prefixed with `/api/v1/`. Group by domain (e.g., `/api/v1/auth`, `/api/v1/admin/pages`).
+2. **Sync vs Async:** 
+   - Since we are using synchronous SQLAlchemy, use standard `def` for endpoints that interact with the database. 
+   - Use `async def` ONLY for endpoints that do external I/O (like sending emails via HTTP) without DB calls.
+3. **Request/Response:** 
+   - Never return SQLAlchemy models directly to the client. Always convert them to Pydantic schemas using `response_model=SchemaName` or `SchemaName.model_validate(db_object)`.
+   - Use `response_model_exclude_unset=True` for PATCH/PUT endpoints.
+4. **Error Handling:** Use FastAPI's `HTTPException` for expected errors (400, 401, 404, 403). Do not let raw SQLAlchemy exceptions leak to the frontend.
+5. **Status Codes:** 
+   - `200 OK` for GET, PUT, PATCH.
+   - `201 Created` for POST (creating new resources).
+   - `204 No Content` for successful DELETE.

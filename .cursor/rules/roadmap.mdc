@@ -1,0 +1,31 @@
+---
+description: Project phases and current focus area
+globs: 
+alwaysApply: true
+---
+
+# Safari Strives Backend Roadmap
+
+We are building a Headless CMS and Application Portal. Follow this phased approach. Do not build Phase 3 until Phase 2 is complete.
+
+- **Phase 1: Foundation & Auth (CURRENT FOCUS)**
+  - Setup FastAPI, SQLAlchemy, Alembic.
+  - AdminUser model, JWT Auth, Password Hashing.
+  - Login endpoint.
+- **Phase 2: Core CMS (Pages & Features)**
+  - Page and PageFeature models (Dynamic heroes, text, feature lists).
+  - Public GET endpoints for pages.
+  - Admin CRUD endpoints for pages.
+- **Phase 3: Global Entities**
+  - TeamMember, BoardMember, BlogPost models.
+  - CRUD endpoints for these entities.
+- **Phase 4: Submissions & Notifications**
+  - Accelerator, Partner, Contact application models.
+  - Public POST endpoints.
+  - Email notifications via BackgroundTasks.
+- **Phase 5: Media & File Uploads**
+  - S3/R2 integration via boto3.
+  - File upload endpoints.
+
+# Rule
+When asked to write code, check which phase we are in. Do not write code for future phases unless explicitly asked.

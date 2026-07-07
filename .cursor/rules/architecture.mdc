@@ -1,0 +1,21 @@
+---
+description: Project structure and architectural patterns
+globs: **/*.py
+alwaysApply: true
+---
+
+# Architecture & Folder Structure
+We use a modular, layered architecture. Keep business logic out of the routers.
+
+## Directory Layout
+- `app/core/`: Config, security, database engine setup.
+- `app/models/`: SQLAlchemy ORM models (Database tables).
+- `app/schemas/`: Pydantic models (Request/Response validation).
+- `app/api/v1/endpoints/`: FastAPI routers (Controllers).
+- `app/services/`: Business logic (e.g., email sending, complex calculations). *Use this when endpoint logic exceeds 20 lines.*
+- `app/core/deps.py`: FastAPI `Depends` functions (e.g., `get_db`, `get_current_user`).
+
+## Rules
+1. **Separation of Concerns:** Routers should only handle HTTP requests/responses and call services or DB queries. Do not write complex business logic inside a `@router.get` or `@router.post` function.
+2. **Dependency Injection:** Always use FastAPI's `Depends()` for database sessions and current user authentication. Never instantiate `SessionLocal()` directly inside an endpoint.
+3. **Imports:** Use absolute imports from the `app` root (e.g., `from app.models.user import User`), not relative imports.
