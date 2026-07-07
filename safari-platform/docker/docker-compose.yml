@@ -1,0 +1,71 @@
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend.Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      CORS_ORIGINS: "http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003,http://localhost:3004"
+
+  public-web:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      args:
+        APP_NAME: public-web
+        APP_PORT: "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+  admin-dashboard:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      args:
+        APP_NAME: admin-dashboard
+        APP_PORT: "3001"
+    ports:
+      - "3001:3001"
+    depends_on:
+      - backend
+
+  applicant-portal:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      args:
+        APP_NAME: applicant-portal
+        APP_PORT: "3002"
+    ports:
+      - "3002:3002"
+    depends_on:
+      - backend
+
+  mentor-portal:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      args:
+        APP_NAME: mentor-portal
+        APP_PORT: "3003"
+    ports:
+      - "3003:3003"
+    depends_on:
+      - backend
+
+  partner-portal:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      args:
+        APP_NAME: partner-portal
+        APP_PORT: "3004"
+    ports:
+      - "3004:3004"
+    depends_on:
+      - backend
