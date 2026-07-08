@@ -25,7 +25,7 @@ export const navLinks = [
   { label: "Ventures", href: "/ventures" },
   { label: "Our Model", href: "/our-model" },
   { label: "Field Notes", href: "/field-notes" },
-  { label: "About", href: "/#about" },
+  { label: "About", href: "/about" },
 ] as const;
 
 export const footerColumns = {
@@ -40,10 +40,10 @@ export const footerColumns = {
   about: {
     title: "About",
     links: [
-      { label: "Our Mission", href: "#about" },
-      { label: "Team", href: "#" },
-      { label: "Board", href: "#" },
-      { label: "Careers", href: "#" },
+      { label: "Our Mission", href: "/about#mission" },
+      { label: "Team", href: "/about#team" },
+      { label: "Board", href: "/about#board" },
+      { label: "Partners", href: "/about#partners" },
     ],
   },
   insights: {
