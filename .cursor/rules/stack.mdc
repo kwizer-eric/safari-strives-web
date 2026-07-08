@@ -1,0 +1,19 @@
+---
+description: Core technology stack for Safari Strives Backend
+globs: **/*.py, **/requirements.txt
+alwaysApply: true
+---
+
+# Technology Stack
+- **Language:** Python 3.10+
+- **Web Framework:** FastAPI
+- **Database:** PostgreSQL
+- **ORM:** SQLAlchemy (Use SQLAlchemy 2.0 syntax: `Mapped`, `mapped_column`, `DeclarativeBase`)
+- **Migrations:** Alembic
+- **Validation/Schemas:** Pydantic v2
+- **Authentication:** Passlib (bcrypt) for hashing, python-jose for JWTs.
+- **Environment:** pydantic-settings for `.env` management.
+- **Server:** Uvicorn
+
+# Rule
+Never suggest deprecated SQLAlchemy 1.x syntax (like `Column(Integer)`). Always use SQLAlchemy 2.0 declarative syntax (e.g., `id: Mapped[int] = mapped_column(primary_key=True)`).
