@@ -13,11 +13,14 @@ export function BlogCard({ article, className }: BlogCardProps) {
   return (
     <article
       className={cn(
-        "group flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-border bg-white",
+        "group flex flex-col overflow-hidden rounded-[var(--radius-card)] border border-border bg-white transition-colors hover:border-accent/30",
         className,
       )}
     >
-      <div className="relative flex aspect-[5/3] items-center justify-center bg-cream">
+      <Link
+        href={`/field-notes/${article.id}`}
+        className="relative block aspect-[5/3] overflow-hidden bg-cream"
+      >
         <Image
           src={article.image}
           alt={article.imageAlt}
@@ -25,16 +28,27 @@ export function BlogCard({ article, className }: BlogCardProps) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
-      </div>
+      </Link>
       <div className="flex flex-1 flex-col gap-4 p-6">
+        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider">
+          <span className="rounded-full bg-accent/10 px-2.5 py-1 text-accent">
+            {article.category}
+          </span>
+          <span className="text-muted">{article.date}</span>
+        </div>
         <h3 className="text-lg font-bold leading-snug text-foreground">
-          {article.title}
+          <Link
+            href={`/field-notes/${article.id}`}
+            className="transition-colors hover:text-accent"
+          >
+            {article.title}
+          </Link>
         </h3>
         <p className="flex-1 text-sm leading-relaxed text-muted">
           {article.excerpt}
         </p>
         <Link
-          href="#"
+          href={`/field-notes/${article.id}`}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-colors hover:text-accent"
         >
           Read more

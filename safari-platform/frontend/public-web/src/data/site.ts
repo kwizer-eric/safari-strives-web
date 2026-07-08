@@ -24,7 +24,7 @@ export const footerSocial = [
 export const navLinks = [
   { label: "Ventures", href: "/ventures" },
   { label: "Our Model", href: "/our-model" },
-  { label: "Field Notes", href: "/#insights" },
+  { label: "Field Notes", href: "/field-notes" },
   { label: "About", href: "/#about" },
 ] as const;
 
@@ -49,7 +49,7 @@ export const footerColumns = {
   insights: {
     title: "Insights",
     links: [
-      { label: "The Field Notes", href: "#insights" },
+      { label: "The Field Notes", href: "/field-notes" },
       { label: "Contact", href: "#contact" },
     ],
   },
