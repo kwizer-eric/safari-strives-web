@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Container } from "@safari/ui";
 import type { Article } from "@/data/articles";
+import { BlogCard } from "@/components/ui/BlogCard";
 
 type ArticleRelatedProps = {
   articles: Article[];
@@ -18,42 +19,28 @@ export function ArticleRelated({ articles }: ArticleRelatedProps) {
       className="border-t border-border bg-background py-16 md:py-24"
     >
       <Container>
-        <div className="mb-10 md:mb-12">
-          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">
-            Keep reading
-          </p>
+        <div className="mb-10 flex flex-col gap-6 md:mb-12 md:flex-row md:items-end md:justify-between">
           <h2
             id="related-articles-heading"
-            className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl"
+            className="text-3xl font-bold tracking-tight text-foreground md:text-4xl"
           >
-            More from the field
+            More to explore
           </h2>
+          <Link
+            href="/field-notes"
+            className="group inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-foreground transition-colors hover:text-accent"
+          >
+            View all articles
+            <ArrowRight
+              className="h-4 w-4 transition-transform group-hover:translate-x-1"
+              aria-hidden="true"
+            />
+          </Link>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {articles.map((article) => (
-            <Link
-              key={article.id}
-              href={`/field-notes/${article.id}`}
-              className="group flex flex-col rounded-[var(--radius-card)] border border-border bg-card p-6 transition-colors hover:border-accent/40"
-            >
-              <span className="mb-3 inline-block w-fit rounded-full bg-accent/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-accent">
-                {article.category}
-              </span>
-              <h3 className="mb-3 text-lg font-bold leading-snug text-foreground">
-                {article.title}
-              </h3>
-              <p className="mb-4 flex-1 text-sm leading-relaxed text-muted line-clamp-2">
-                {article.excerpt}
-              </p>
-              <span className="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-foreground transition-colors group-hover:text-accent">
-                Read note
-                <ArrowUpRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  aria-hidden="true"
-                />
-              </span>
-            </Link>
+            <BlogCard key={article.id} article={article} />
           ))}
         </div>
       </Container>

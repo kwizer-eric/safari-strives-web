@@ -36,6 +36,13 @@ body {
   font-family: var(--font-manrope), system-ui, sans-serif;
 }
 
+/* Anchor jumps only — scroll-smooth on html breaks position:sticky in Chromium */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(:target) {
+    scroll-behavior: smooth;
+  }
+}
+
 @keyframes marquee {
   from {
     transform: translateX(0);

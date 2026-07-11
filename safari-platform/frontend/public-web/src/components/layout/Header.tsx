@@ -8,16 +8,25 @@ import { cn } from "@safari/shared";
 import { navLinks, site } from "@/data/site";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 
-export function Header() {
+type HeaderProps = {
+  /** Light-background pages: dark nav + pill bar from first paint */
+  solid?: boolean;
+};
+
+export function Header({ solid = false }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(solid);
 
   useEffect(() => {
+    if (solid) return;
+
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [solid]);
+
+  const isSolid = solid || scrolled;
 
   return (
     <>
@@ -26,19 +35,12 @@ export function Header() {
           <div
             className={cn(
               "flex items-center justify-between gap-4 transition-all duration-300",
-              scrolled
+              isSolid
                 ? "rounded-[var(--radius-card)] bg-background px-4 py-3 shadow-sm md:px-6"
                 : "py-2",
             )}
           >
-            <Logo
-              src={site.logo}
-              alt={site.name}
-              imageClassName={cn(
-                "transition-all duration-300",
-                !scrolled && "brightness-0 invert",
-              )}
-            />
+            <Logo src={site.logo} alt={site.name} />
 
             <nav
               aria-label="Main navigation"
@@ -50,7 +52,7 @@ export function Header() {
                   href={link.href}
                   className={cn(
                     "text-sm font-medium transition-colors",
-                    scrolled
+                    isSolid
                       ? "text-foreground/80 hover:text-foreground"
                       : "text-white/90 hover:text-white",
                   )}
@@ -66,12 +68,18 @@ export function Header() {
                 variant="secondary"
                 className={cn(
                   "hidden sm:inline-flex",
-                  !scrolled && "border-white/40 text-white hover:bg-white/10",
+                  !isSolid && "border-white/40 text-white hover:bg-white/10",
                 )}
               >
                 Apply Now
               </Button>
-              <Button href="#" variant="primary" className="hidden sm:inline-flex">
+              <Button
+                href={site.donateHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="primary"
+                className="hidden sm:inline-flex"
+              >
                 Donate
               </Button>
               <button
@@ -79,7 +87,7 @@ export function Header() {
                 onClick={() => setMenuOpen(true)}
                 className={cn(
                   "rounded-full p-2 transition-colors lg:hidden",
-                  scrolled
+                  isSolid
                     ? "text-foreground hover:bg-cream"
                     : "text-white hover:bg-white/10",
                 )}

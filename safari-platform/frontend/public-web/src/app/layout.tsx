@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} h-full scroll-smooth`}
+      className={`${manrope.variable} h-full`}
       suppressHydrationWarning
     >
       <body

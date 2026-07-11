@@ -25,16 +25,13 @@ export function BlogCard({ article, className }: BlogCardProps) {
           src={article.image}
           alt={article.imageAlt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
       </Link>
       <div className="flex flex-1 flex-col gap-4 p-6">
-        <div className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-wider">
-          <span className="rounded-full bg-accent/10 px-2.5 py-1 text-accent">
-            {article.category}
-          </span>
-          <span className="text-muted">{article.date}</span>
+        <div className="text-xs font-semibold uppercase tracking-wider text-muted">
+          {article.date}
         </div>
         <h3 className="text-lg font-bold leading-snug text-foreground">
           <Link

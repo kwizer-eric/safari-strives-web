@@ -88,6 +88,7 @@ export function ProgramScrollSection({
         if (!card) return;
         card.style.transform = "";
         card.style.transformOrigin = "";
+        card.style.visibility = "";
       });
     };
 
@@ -104,6 +105,13 @@ export function ProgramScrollSection({
       const coverScrollSpan = window.innerHeight;
       section.style.height = `${window.innerHeight * transitions + coverScrollSpan}px`;
       setScrollLinked((prev) => (prev ? prev : true));
+    };
+
+    const scheduleLayoutUpdate = () => {
+      requestAnimationFrame(() => {
+        updateStackHeight();
+        updateScroll();
+      });
     };
 
     const updateStackHeight = () => {
@@ -132,9 +140,21 @@ export function ProgramScrollSection({
         1,
       );
 
+      const frontCardIndex = pillars.length - 1;
+
       pillars.forEach((_, index) => {
         const card = cardRefs.current[index];
         if (!card) return;
+
+        if (progress >= 1) {
+          card.style.transform = "";
+          card.style.transformOrigin = "";
+          card.style.visibility =
+            index < frontCardIndex ? "hidden" : "";
+          return;
+        }
+
+        card.style.visibility = "";
 
         const offsetX = getCardOffset(index, progress, cardWidth, pillars.length);
         const scale = getCardScale(index, progress, pillars.length);
@@ -145,20 +165,20 @@ export function ProgramScrollSection({
 
     const onChange = () => {
       setSectionHeight();
-      updateStackHeight();
-      updateScroll();
+      scheduleLayoutUpdate();
     };
 
     setSectionHeight();
-    updateStackHeight();
-    updateScroll();
+    scheduleLayoutUpdate();
 
     window.addEventListener("scroll", updateScroll, { passive: true });
     window.addEventListener("resize", onChange);
     motionQuery.addEventListener("change", onChange);
     desktopQuery.addEventListener("change", onChange);
 
-    const resizeObserver = new ResizeObserver(onChange);
+    const resizeObserver = new ResizeObserver(() => {
+      scheduleLayoutUpdate();
+    });
     resizeObserver.observe(viewport);
     cardRefs.current.forEach((card) => {
       if (card) resizeObserver.observe(card);
@@ -182,8 +202,8 @@ export function ProgramScrollSection({
       aria-labelledby="explore-heading"
       className="relative z-0 isolate bg-background"
     >
-      <div className="sticky top-20 z-0 overflow-hidden bg-background">
-        <div className="flex min-h-[calc(100vh-5rem)] items-center py-14 md:py-20">
+      <div className="sticky top-20 z-0 bg-background">
+        <div className="flex min-h-[calc(100vh-5rem)] items-center overflow-hidden py-14 md:py-20">
         <Container className="w-full">
           <div className="grid min-w-0 grid-cols-1 gap-8 md:grid-cols-4 md:gap-10">
             <h2
@@ -206,7 +226,7 @@ export function ProgramScrollSection({
                       cardRefs.current[index] = el;
                     }}
                     className={cn(
-                      "absolute top-0 left-0 will-change-transform",
+                      "absolute top-0 left-0",
                       PROGRAM_CARD_WIDTH_CLASS,
                     )}
                     style={{

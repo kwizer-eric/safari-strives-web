@@ -39,7 +39,7 @@ export function ProgramHorizontalCard({
             src={image}
             alt={imageAlt}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 63vw, 40vw"
           />
         </div>
