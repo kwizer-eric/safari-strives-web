@@ -2,7 +2,7 @@
 import { spawn } from "node:child_process";
 
 const commands = [
-  { name: "backend", args: ["run", "dev", "-w", "backend"] },
+  { name: "backend", args: ["run", "dev:backend"] },
   { name: "public", args: ["run", "dev", "-w", "public-web"] },
   { name: "admin", args: ["run", "dev", "-w", "admin-dashboard"] },
   { name: "applicant", args: ["run", "dev", "-w", "applicant-portal"] },
