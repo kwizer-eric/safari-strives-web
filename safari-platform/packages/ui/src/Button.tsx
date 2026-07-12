@@ -9,6 +9,8 @@ type ButtonProps = {
   size?: "sm" | "md";
   showArrow?: boolean;
   className?: string;
+  target?: string;
+  rel?: string;
   onClick?: () => void;
   type?: "button" | "submit";
   disabled?: boolean;
@@ -21,6 +23,8 @@ export function Button({
   size = "md",
   showArrow = false,
   className,
+  target,
+  rel,
   onClick,
   type = "button",
   disabled,
@@ -52,7 +56,7 @@ export function Button({
 
   if (href) {
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} className={classes} target={target} rel={rel}>
         {content}
       </Link>
     );

@@ -21,7 +21,7 @@ export const home = {
         image:
           "https://images.unsplash.com/photo-1634936016780-65f6a77ebdd4?w=800&q=80",
         imageAlt: "Group of people standing in front of a building",
-        href: "/our-model",
+        href: "#",
       },
       {
         id: "lab",
@@ -31,7 +31,7 @@ export const home = {
         image:
           "https://images.unsplash.com/photo-1580918577344-fe0a66733a2a?w=800&q=80",
         imageAlt: "Group of people in red and brown dress",
-        href: "/green-enterprise-lab",
+        href: "#",
       },
       {
         id: "hub",
@@ -41,29 +41,22 @@ export const home = {
         image:
           "https://images.unsplash.com/photo-1675434301763-594b4d0c5819?w=800&q=80",
         imageAlt: "Group of people sitting at desks in an office",
-        href: "/the-hub",
+        href: "#",
       },
     ],
   },
   inMotion: {
-    title: "In Motion",
+    eyebrow: "In Motion",
+    title: "Proof that model-to-market support works in Rubavu",
+    body: "These are the operating signals behind our program design: catalytic funding secured, active production on the ground, and a first cohort already in motion. We focus on measurable progress founders can build from.",
     image:
-      "https://www.brookings.edu/wp-content/uploads/2024/09/shutterstock_2342135829.jpg",
-    imageAlt: "Team collaborating around a laptop in a modern workspace",
-    stats: [
-      { value: "$45,000", label: "Yale funding" },
-      {
-        value: "$17,500",
-        label: "North Central College funding",
-      },
-      {
-        value: "4,000+",
-        label: "birds in current production",
-      },
-      {
-        value: "4 ventures",
-        label: "First official cohort, July to October 2026",
-      },
+      "https://images.unsplash.com/photo-1509099863731-ef4bff19e808?w=1800&q=80",
+    imageAlt: "Woman smiling while looking down outdoors",
+    sectors: [
+      "$45,000 Yale funding",
+      "$17,500 North Central College funding",
+      "4,000+ birds in current production",
+      "First official cohort: four ventures, July to October 2026",
     ],
   },
   featuredInsights: {

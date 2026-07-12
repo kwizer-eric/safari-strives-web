@@ -28,9 +28,9 @@ export function Logo({
       <Image
         src={src}
         alt={alt}
-        width={200}
-        height={60}
-        className={cn("h-12 w-auto object-contain md:h-14", imageClassName)}
+        width={156}
+        height={122}
+        className={cn("h-11 w-auto object-contain md:h-12", imageClassName)}
         priority
       />
     </Link>

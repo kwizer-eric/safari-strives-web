@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { FieldNotesHero } from "@/components/sections/FieldNotesHero";
 import { FieldNotesGrid } from "@/components/sections/FieldNotesGrid";
-import { FieldNotesSubscribe } from "@/components/sections/FieldNotesSubscribe";
 
 export const metadata: Metadata = {
   title: "Field Notes | Safari Strives",
@@ -14,11 +12,9 @@ export const metadata: Metadata = {
 export default function FieldNotesPage() {
   return (
     <>
-      <Header />
+      <Header solid />
       <main>
-        <FieldNotesHero />
         <FieldNotesGrid />
-        <FieldNotesSubscribe />
       </main>
       <Footer />
     </>

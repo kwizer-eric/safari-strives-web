@@ -1,18 +1,10 @@
-import type { NextConfig } from "next";
-import path from "node:path";
+import { createNextConfig } from "../create-next-config";
 
-const monorepoRoot = path.resolve(__dirname, "../..");
-
-const nextConfig: NextConfig = {
-  turbopack: {
-    root: monorepoRoot,
-  },
+export default createNextConfig(__dirname, {
   transpilePackages: [
     "@safari/ui",
     "@safari/shared",
     "@safari/auth",
     "@safari/api-client",
   ],
-};
-
-export default nextConfig;
+});

@@ -1,12 +1,6 @@
-import type { NextConfig } from "next";
-import path from "node:path";
+import { createNextConfig } from "../create-next-config";
 
-const monorepoRoot = path.resolve(__dirname, "../..");
-
-const nextConfig: NextConfig = {
-  turbopack: {
-    root: monorepoRoot,
-  },
+export default createNextConfig(__dirname, {
   transpilePackages: ["@safari/ui", "@safari/shared"],
   images: {
     remotePatterns: [
@@ -14,8 +8,7 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "framerusercontent.com" },
       { protocol: "https", hostname: "www.brookings.edu" },
       { protocol: "https", hostname: "safaristrives.org" },
+      { protocol: "https", hostname: "img.youtube.com" },
     ],
   },
-};
-
-export default nextConfig;
+});

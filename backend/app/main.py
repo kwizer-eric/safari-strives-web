@@ -1,5 +1,6 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.api.v1.router import api_router
@@ -20,15 +21,19 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_V1_PREFIX)
 
 
-@app.get("/api/v1/health", tags=["health"])
-def health() -> dict[str, str]:
+@app.get("/api/v1/health", tags=["health"], response_model=None)
+def health():
     """Readiness probe: API is up and Postgres accepts connections."""
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
     except Exception as exc:
-        raise HTTPException(
+        return JSONResponse(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail={"status": "error", "database": "unreachable", "error": str(exc)},
-        ) from exc
+            content={
+                "status": "error",
+                "database": "unreachable",
+                "error": str(exc),
+            },
+        )
     return {"status": "ok", "database": "connected"}
