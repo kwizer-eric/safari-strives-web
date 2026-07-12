@@ -1,5 +1,6 @@
 import { Button, Container } from "@safari/ui";
 import { home } from "@/data/home";
+import { site } from "@/data/site";
 
 export function FinalCTA() {
   const { finalCta } = home;
@@ -7,7 +8,7 @@ export function FinalCTA() {
   return (
     <section
       aria-labelledby="final-cta-heading"
-      className="pt-16 pb-8 md:pt-24 md:pb-10"
+      className="relative z-20 bg-background pt-16 pb-8 md:pt-24 md:pb-10"
     >
       <Container>
         <div className="rounded-[var(--radius-card)] bg-accent py-16 md:py-24">
@@ -30,7 +31,9 @@ export function FinalCTA() {
                 Apply Now
               </Button>
               <Button
-                href="#"
+                href={site.donateHref}
+                target="_blank"
+                rel="noopener noreferrer"
                 variant="primary"
                 className="bg-white text-accent hover:bg-cream hover:text-accent-hover"
               >

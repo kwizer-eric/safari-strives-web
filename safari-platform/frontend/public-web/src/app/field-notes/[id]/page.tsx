@@ -2,10 +2,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ArticleDetailHero } from "@/components/sections/ArticleDetailHero";
-import { ArticleDetailBody } from "@/components/sections/ArticleDetailBody";
+import { ArticleDetail } from "@/components/sections/ArticleDetail";
 import { ArticleRelated } from "@/components/sections/ArticleRelated";
-import { FieldNotesSubscribe } from "@/components/sections/FieldNotesSubscribe";
 import {
   articles,
   getArticleById,
@@ -50,12 +48,10 @@ export default async function ArticleDetailPage({
 
   return (
     <>
-      <Header />
+      <Header solid />
       <main>
-        <ArticleDetailHero article={article} />
-        <ArticleDetailBody article={article} />
+        <ArticleDetail article={article} />
         <ArticleRelated articles={related} />
-        <FieldNotesSubscribe />
       </main>
       <Footer />
     </>

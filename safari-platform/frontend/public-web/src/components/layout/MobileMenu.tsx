@@ -64,7 +64,13 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           >
             Apply Now
           </Button>
-          <Button href="#" variant="primary" className="w-full">
+          <Button
+            href={site.donateHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            variant="primary"
+            className="w-full"
+          >
             Donate
           </Button>
         </div>

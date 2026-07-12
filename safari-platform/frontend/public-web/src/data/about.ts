@@ -1,6 +1,7 @@
-export type AboutValue = {
-  title: string;
-  body: string;
+export type AboutLocation = {
+  label: string;
+  region: string;
+  place: string;
 };
 
 export type AboutPerson = {
@@ -25,113 +26,147 @@ export type AboutPartner = {
 export const aboutPage = {
   hero: {
     eyebrow: "About Safari Strives",
-    headline: "Every Person, Every Opportunity.",
+    headline: {
+      line1: "Why Safari Strives",
+      line2: "Exists",
+    },
+    watchVideoLabel: "Watch video",
     subhead:
-      "A nonprofit enterprise hub building the infrastructure secondary-city founders need to scale — starting in Rubavu, Rwanda.",
+      "Safari Strives fosters economic independence in Rwanda through sustainable enterprises, job creation, and zero-interest microloans for women.",
     image:
-      "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1920&q=80",
-    imageAlt: "Community members and founders gathered together",
+      "https://images.unsplash.com/photo-1535745318714-da922ca9cc81?w=1920&q=80",
+    imageAlt: "Man smiling while taking photo near a sunflower",
+    videoId: "njiqUJcuVc4",
+    videoStart: 15,
+    legalNote:
+      "Safari Strives Inc. is a registered not-for-profit corporation in the State of Illinois, EIN 39-4883848, and a 501(c)(3) public charity recognized by the IRS.",
   },
   mission: {
-    eyebrow: "Our mission",
-    title: "Help ventures escape the commodity trap.",
+    label: "Case study",
     paragraphs: [
-      "Our mission is to help promising ventures escape the commodity trap: when a business looks like every other business, customers only compare prices. Safari Strives helps entrepreneurs make their value visible.",
-      "In secondary cities like Rubavu, founders are already working — selling, hiring, and taking risks. What is missing is not talent. It is infrastructure: space, tools, records, media capacity, and operator-led support that turns hard work into scalable enterprise.",
-      "We build conditions, not just advice. The hub, the accelerator, and the Green Enterprise Lab work together so founders can learn from real operating systems and present their businesses professionally to buyers.",
+      "World Bank President Ajay Banga has called jobs one of the surest paths out of poverty. In Rwanda, many people have not waited for jobs to appear. They have built their own through shops, tailoring, poultry, local products, and businesses carried through unstable conditions.",
+      "But effort alone does not build a scalable business. Rwanda's business landscape remains 87% informal, showing how many enterprises still lack the growth basics: systems, pricing, tools, visibility, buyer access, and leadership discipline.",
+      "The deeper issue is concentration. In 2024, 60.7% of Rwanda's formal businesses were in Kigali, compared with 9.7% in the Western Province, where Rubavu sits. The strongest hubs, accelerators, mentors, buyers, and funding pipelines still sit too close to main cities. Safari Strives builds the missing infrastructure in Rubavu, helping founders produce better, sell better, grow revenue, and make their value visible.",
     ],
-    values: [
+    practitionerLed: {
+      label: "Practitioner-Led",
+      body: "Safari Strives builds the conditions around operating entrepreneurs, businesses that already have effort, demand, and local traction, and helps them become organized, visible, and ready for growth. We run our own enterprise on the same street we serve, managing cash flow, inventory, production, and costs for three years. That is what tells us which conditions actually matter.",
+    },
+    locations: [
       {
-        title: "Infrastructure first",
-        body: "Reliable space, internet, production tools, and media capacity — the equipment and environment founders could not assemble alone.",
+        label: "Head office",
+        region: "Rwanda",
+        place: "Rubavu, Rwanda",
       },
       {
-        title: "Operator-led support",
-        body: "Mentorship from people who have managed cash flow, inventory, production, and costs in their own enterprises.",
+        label: "Corporate Headquarters",
+        region: "United States",
+        place: "Crestwood, Illinois",
       },
-      {
-        title: "Visible value",
-        body: "Packaging, photography, records, and brand clarity that help customers choose on quality — not price alone.",
-      },
-    ] satisfies AboutValue[],
+    ] satisfies AboutLocation[],
   },
   team: {
     eyebrow: "Team",
-    title: "The people building the hub.",
+    title: "Our Team",
     intro:
-      "A cross-border team connecting Rubavu operations with U.S. nonprofit leadership, program design, and partner relationships.",
-  },
-  board: {
-    eyebrow: "Board",
-    title: "Governance and stewardship.",
-    intro:
-      "Our board provides fiduciary oversight, strategic guidance, and accountability as Safari Strives grows its programs and partnerships.",
+      "Meet the dedicated individuals who make Safari Strives' mission possible. Our team combines local expertise with global vision to create sustainable change in communities.",
   },
   partners: {
     eyebrow: "Partners",
     title: "Institutions that believe in the work.",
     intro:
-      "Safari Strives is supported by academic partners, funders, and local institutions that share our conviction: secondary cities deserve venture infrastructure.",
+      "Safari Strives is supported by local institutions, academic partners, and international collaborators who share our conviction that communities deserve reliable pathways to economic independence.",
   },
   closer: {
-    title: "Build with us.",
-    body: "Whether you are a founder, mentor, funder, or partner — there is a place in this work.",
-    primaryCta: { label: "Apply to the accelerator", href: "http://localhost:3002/login" },
-    secondaryCta: { label: "Contact the team", href: "mailto:safaristrives@gmail.com" },
+    title: "Become a partner",
+    body: "We welcome partners with expertise, networks, market access, and growth capital to help us reach more founders and expand the Green Enterprise Lab in Rubavu.",
+    primaryCta: {
+      label: "Partner with Safari Strives",
+      href: "mailto:safaristrives@gmail.com",
+    },
   },
 } as const;
 
 export const teamMembers: AboutPerson[] = [
   {
-    id: "director",
-    name: "Program Leadership",
-    role: "Executive Director",
+    id: "elie-imani",
+    name: "Elie Imani",
+    role: "Executive Director & Co-Founder",
     location: "U.S. · Rwanda",
-    bio: "Leads Safari Strives strategy, nonprofit governance, and the bridge between Rubavu operations and international partners.",
+    bio: "Leads Safari Strives strategy and strengthens the model through graduate research in African Studies at Yale University.",
     image:
       "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&q=80",
-    imageAlt: "Executive director portrait",
-    featured: true,
+    imageAlt: "Elie Imani portrait",
   },
   {
-    id: "country-director",
-    name: "Rubavu Operations",
-    role: "Country Director, Rwanda",
-    location: "Rubavu, Rwanda",
-    bio: "Oversees daily hub operations, local partnerships, and the relationship between Safari Strives and the Rubavu founder community.",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80",
-    imageAlt: "Country director portrait",
-  },
-  {
-    id: "program-lead",
-    name: "Accelerator Team",
-    role: "Program Lead, Venture Accelerator",
-    location: "Rubavu, Rwanda",
-    bio: "Runs the four-month cohort cycle — milestones, mentor matching, and the capacity-first path that precedes grant support.",
+    id: "martin-sheehan",
+    name: "Martin Sheehan",
+    role: "Quality Director",
+    location: "United States",
+    bio: "Oversees program quality, standards, and the consistency of Safari Strives' field operations.",
     image:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=800&q=80",
-    imageAlt: "Program lead portrait",
+    imageAlt: "Martin Sheehan portrait",
   },
   {
-    id: "hub-manager",
-    name: "Hub & Lab",
-    role: "Hub & Green Enterprise Lab Manager",
+    id: "rafael-peres",
+    name: "Rafael Peres",
+    role: "Economic Strategy & Co-founder",
+    location: "United States",
+    bio: "Shapes economic strategy and the long-term financial model behind Safari Strives' enterprises.",
+    image:
+      "https://images.unsplash.com/photo-1519085360753-af0111f7cbe7?w=800&q=80",
+    imageAlt: "Rafael Peres portrait",
+  },
+  {
+    id: "manshimwe-josue",
+    name: "Manshimwe Josue",
+    role: "Operations Director",
     location: "Rubavu, Rwanda",
-    bio: "Manages the hub's tools, media room, and the lab's poultry and waste-to-value operations that demonstrate disciplined enterprise.",
+    bio: "Manages day-to-day operations on the ground and coordinates the Rwanda team's delivery.",
+    image:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80",
+    imageAlt: "Manshimwe Josue portrait",
+  },
+  {
+    id: "carolina-alfaro",
+    name: "Carolina Alfaro",
+    role: "Quality Director",
+    location: "United States",
+    bio: "Supports quality assurance across programs, partnerships, and community-facing work.",
     image:
       "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800&q=80",
-    imageAlt: "Hub manager portrait",
+    imageAlt: "Carolina Alfaro portrait",
   },
   {
-    id: "media-lead",
-    name: "Brand & Media",
-    role: "Media & Brand Lead",
-    location: "Rubavu, Rwanda",
-    bio: "Helps ventures produce product photography, labels, and buyer-facing content that makes local businesses recognizable.",
+    id: "ashraf-kamwithi",
+    name: "Ashraf Kamwithi",
+    role: "Brand & Strategy Director",
+    location: "East Africa",
+    bio: "Leads brand development and strategic communications for Safari Strives' ventures and programs.",
     image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=800&q=80",
-    imageAlt: "Media lead portrait",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
+    imageAlt: "Ashraf Kamwithi portrait",
+  },
+  {
+    id: "hakizimana-joel",
+    name: "Hakizimana Joel",
+    role: "Advisor",
+    location: "Rubavu, Rwanda",
+    bio: "Provides local advisory support and community insight for Safari Strives' Rwanda operations.",
+    image:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800&q=80",
+    imageAlt: "Hakizimana Joel portrait",
+  },
+  {
+    id: "emmanuel-agyekum",
+    name: "Emmanuel Agyekum",
+    role: "Tech Integration Director",
+    location: "United States",
+    bio: "Drives technology integration and systems that help Safari Strives scale its impact reliably.",
+    image:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&q=80",
+    imageAlt: "Emmanuel Agyekum portrait",
   },
 ];
 
@@ -180,12 +215,26 @@ export const boardMembers: AboutPerson[] = [
 
 export const partners: AboutPartner[] = [
   {
+    id: "church-brethren",
+    name: "Church of the Brethren Rwanda",
+    type: "Local partner",
+    description:
+      "Manages our work on the ground, verifies households, identifies women entrepreneurs, and witnesses distributions.",
+  },
+  {
     id: "yale",
     name: "Yale University",
     type: "Academic partner",
     description:
-      "Supports Safari Strives research, program design, and the bridge between academic insight and field operations in Rubavu.",
+      "Supports research, program design, and the bridge between academic insight and field operations in Rwanda.",
     highlight: "$45,000 in funding",
+  },
+  {
+    id: "student-network",
+    name: "International Student Research Teams",
+    type: "Program partner",
+    description:
+      "Student teams from Rwanda, Kenya, Tanzania, Portugal, and the United States contribute research and on-the-ground capacity.",
   },
   {
     id: "north-central",
@@ -196,38 +245,23 @@ export const partners: AboutPartner[] = [
     highlight: "$17,500 in funding",
   },
   {
-    id: "local-institutions",
+    id: "rubavu-institutions",
     name: "Rubavu Institutions",
-    type: "Local partner",
+    type: "Community partner",
     description:
       "Shops, schools, clinics, and municipal stakeholders who connect founders to buyers, training pathways, and community trust.",
-  },
-  {
-    id: "mentor-network",
-    name: "Practitioner Mentors",
-    type: "Program partner",
-    description:
-      "Operators and sector specialists who mentor cohort ventures on production, finance, branding, and buyer relationships.",
   },
   {
     id: "funder-allies",
     name: "Philanthropic Allies",
     type: "Funding partner",
     description:
-      "Donors and grantmakers who believe secondary cities deserve the same venture infrastructure as capital hubs.",
-  },
-  {
-    id: "hub-users",
-    name: "Hub Community",
-    type: "Community partner",
-    description:
-      "Founders, applicants, and alumni who use the hub, contribute feedback, and shape how Safari Strives evolves on the ground.",
+      "Donors and grantmakers who believe communities deserve reliable pathways to economic independence.",
   },
 ];
 
 export const aboutSections = [
   { id: "mission", label: "Our Mission" },
   { id: "team", label: "Team" },
-  { id: "board", label: "Board" },
   { id: "partners", label: "Partners" },
 ] as const;

@@ -8,6 +8,7 @@ export default createNextConfig(__dirname, {
       { protocol: "https", hostname: "framerusercontent.com" },
       { protocol: "https", hostname: "www.brookings.edu" },
       { protocol: "https", hostname: "safaristrives.org" },
+      { protocol: "https", hostname: "img.youtube.com" },
     ],
   },
 });

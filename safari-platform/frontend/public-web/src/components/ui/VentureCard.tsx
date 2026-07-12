@@ -25,7 +25,7 @@ export function VentureCard({ venture, className }: VentureCardProps) {
           src={venture.image}
           alt={venture.imageAlt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
       </Link>

@@ -7,6 +7,8 @@ export const site = {
   },
   description: "A nonprofit enterprise hub.",
   email: "safaristrives@gmail.com",
+  donateHref:
+    "https://www.paypal.com/donate/?hosted_button_id=69TB3LC2P9C7A",
   locations: ["Rubavu, Rwanda", "Crestwood, Illinois"],
   social: {
     linkedin: "#",
@@ -24,7 +26,7 @@ export const footerSocial = [
 export const navLinks = [
   { label: "Ventures", href: "/ventures" },
   { label: "Our Model", href: "/our-model" },
-  { label: "Field Notes", href: "/field-notes" },
+  { label: "Blog", href: "/field-notes" },
   { label: "About", href: "/about" },
 ] as const;
 
@@ -42,14 +44,13 @@ export const footerColumns = {
     links: [
       { label: "Our Mission", href: "/about#mission" },
       { label: "Team", href: "/about#team" },
-      { label: "Board", href: "/about#board" },
       { label: "Partners", href: "/about#partners" },
     ],
   },
   insights: {
     title: "Insights",
     links: [
-      { label: "The Field Notes", href: "/field-notes" },
+      { label: "Blog", href: "/field-notes" },
       { label: "Contact", href: "#contact" },
     ],
   },
