@@ -71,6 +71,12 @@ export const aboutPage = {
     intro:
       "Meet the dedicated individuals who make Safari Strives' mission possible. Our team combines local expertise with global vision to create sustainable change in communities.",
   },
+  board: {
+    eyebrow: "Board",
+    title: "Board of Directors",
+    intro:
+      "Safari Strives is governed by a board that provides oversight, accountability, and strategic direction for our work in Rwanda and the United States.",
+  },
   partners: {
     eyebrow: "Partners",
     title: "Institutions that believe in the work.",
@@ -263,5 +269,6 @@ export const partners: AboutPartner[] = [
 export const aboutSections = [
   { id: "mission", label: "Our Mission" },
   { id: "team", label: "Team" },
+  { id: "board", label: "Board" },
   { id: "partners", label: "Partners" },
 ] as const;
