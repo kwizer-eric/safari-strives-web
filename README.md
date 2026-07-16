@@ -1,16 +1,31 @@
 # Safari Strives
 
-This repository hosts the Safari Strives platform monorepo.
+This repository hosts the Safari Strives platform.
 
-The source code lives under [safari-platform/](./safari-platform/).
+## Structure
 
-## Getting started
+```
+safari-platform/
+  frontend/    Next.js apps (run npm run dev here)
+  backend/     FastAPI API (run npm run dev here)
+```
+
+## Quick start
+
+**Frontend only:**
 
 ```bash
-cd safari-platform
+cd safari-platform/frontend
 npm install
 npm run dev
 ```
 
-See [safari-platform/README.md](./safari-platform/README.md) for the complete
-overview: workspaces, ports, seeded logins, and testing.
+**Backend only:**
+
+```bash
+cd safari-platform/backend
+npm install
+npm run dev
+```
+
+See [safari-platform/README.md](./safari-platform/README.md) for ports and setup details.

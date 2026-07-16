@@ -11,7 +11,7 @@ Headless CMS API for the Safari Strives marketing site and admin dashboard.
 ## Quick start
 
 ```bash
-cd backend
+cd safari-platform/backend
 
 # 1. Virtualenv + dependencies
 python3 -m venv .venv
