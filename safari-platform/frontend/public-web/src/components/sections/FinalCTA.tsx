@@ -1,3 +1,4 @@
+import { APP_URLS } from "@safari/shared";
 import { Button, Container } from "@safari/ui";
 import { home } from "@/data/home";
 import { site } from "@/data/site";
@@ -24,7 +25,7 @@ export function FinalCTA() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button
-                href="http://localhost:3002/login"
+                href={APP_URLS.applicantLogin}
                 variant="secondary"
                 className="border-white/40 text-white hover:bg-white/10"
               >

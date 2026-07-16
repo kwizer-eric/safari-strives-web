@@ -1,3 +1,5 @@
+import { APP_URLS } from "@safari/shared";
+
 export type VentureHighlight = {
   title: string;
   body: string;
@@ -260,7 +262,7 @@ export const venturesPage = {
     eyebrow: "Our mission",
     body: "Our mission is to help promising ventures escape the commodity trap: when a business looks like every other business, customers only compare prices. Safari Strives helps entrepreneurs make their value visible.",
     ctaLabel: "Apply Here",
-    ctaHref: "http://localhost:3002/login",
+    ctaHref: APP_URLS.applicantLogin,
   },
 } as const;
 

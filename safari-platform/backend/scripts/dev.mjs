@@ -4,8 +4,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const backendDir = path.join(repoRoot, "backend");
+const backendDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const venvPython =
   process.platform === "win32"
@@ -27,7 +26,7 @@ const args = [
 const child = spawn(pythonCmd, args, {
   cwd: backendDir,
   stdio: "inherit",
-  shell: process.platform === "win32",
+  shell: false,
 });
 
 child.on("exit", (code) => process.exit(code ?? 1));

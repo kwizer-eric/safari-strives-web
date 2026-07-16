@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { Button, Container, Logo } from "@safari/ui";
-import { cn } from "@safari/shared";
+import { APP_URLS, cn } from "@safari/shared";
 import { navLinks, site } from "@/data/site";
 import { MobileMenu } from "@/components/layout/MobileMenu";
 
@@ -64,7 +64,7 @@ export function Header({ solid = false }: HeaderProps) {
 
             <div className="flex items-center gap-3">
               <Button
-                href="http://localhost:3002/login"
+                href={APP_URLS.applicantLogin}
                 variant="secondary"
                 className={cn(
                   "hidden sm:inline-flex",

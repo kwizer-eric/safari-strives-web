@@ -39,7 +39,9 @@ export type ProgramPageContent = {
   };
 };
 
-const APPLY_URL = "http://localhost:3002/login";
+import { APP_URLS } from "@safari/shared";
+
+const APPLY_URL = APP_URLS.applicantLogin;
 const CONTACT_EMAIL = "safaristrives@gmail.com";
 
 export const acceleratorPage: ProgramPageContent = {

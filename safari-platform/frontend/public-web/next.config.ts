@@ -1,6 +1,7 @@
 import { createNextConfig } from "../create-next-config";
+import { zoneRewrites } from "../zone-rewrites";
 
-export default createNextConfig(__dirname, {
+const nextConfig = createNextConfig(__dirname, {
   transpilePackages: ["@safari/ui", "@safari/shared"],
   images: {
     remotePatterns: [
@@ -12,3 +13,10 @@ export default createNextConfig(__dirname, {
     ],
   },
 });
+
+export default {
+  ...nextConfig,
+  async rewrites() {
+    return zoneRewrites();
+  },
+};

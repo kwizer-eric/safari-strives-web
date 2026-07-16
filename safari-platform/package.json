@@ -2,28 +2,14 @@
   "name": "safari-platform",
   "version": "0.1.0",
   "private": true,
-  "description": "Safari Strives platform monorepo",
-  "workspaces": [
-    "frontend/*",
-    "packages/*"
-  ],
+  "description": "Safari Strives platform",
   "scripts": {
-    "dev": "concurrently -k -n backend,public,admin,applicant,mentor,partner -c blue,green,cyan,yellow,magenta,red \"npm:dev:backend\" \"npm:dev:public\" \"npm:dev:admin\" \"npm:dev:applicant\" \"npm:dev:mentor\" \"npm:dev:partner\"",
-    "dev:backend": "node scripts/dev-backend.mjs",
-    "dev:public": "npm run dev -w public-web",
-    "dev:admin": "npm run dev -w admin-dashboard",
-    "dev:applicant": "npm run dev -w applicant-portal",
-    "dev:mentor": "npm run dev -w mentor-portal",
-    "dev:partner": "npm run dev -w partner-portal",
-    "build": "npm run build --workspaces --if-present",
-    "lint": "npm run lint --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present"
-  },
-  "devDependencies": {
-    "concurrently": "^9.1.0",
-    "typescript": "^5.9.2"
-  },
-  "engines": {
-    "node": ">=20.9.0"
+    "dev": "npm run dev --prefix frontend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend",
+    "build": "npm run build --prefix frontend",
+    "install:frontend": "npm install --prefix frontend",
+    "install:backend": "npm install --prefix backend",
+    "install:all": "npm run install:frontend && npm run install:backend"
   }
 }

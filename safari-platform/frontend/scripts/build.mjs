@@ -6,7 +6,6 @@ const targets = [
   "@safari/ui",
   "@safari/api-client",
   "@safari/auth",
-  "backend",
   "public-web",
   "admin-dashboard",
   "applicant-portal",
