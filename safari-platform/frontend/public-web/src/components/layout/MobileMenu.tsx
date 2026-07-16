@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Logo } from "@safari/ui";
-import { cn } from "@safari/shared";
+import { APP_URLS, cn } from "@safari/shared";
 import { navLinks, site } from "@/data/site";
 
 type MobileMenuProps = {
@@ -58,7 +58,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
         <div className="mt-auto flex flex-col gap-3 border-t border-border pt-6">
           <Button
-            href="http://localhost:3002/login"
+            href={APP_URLS.applicantLogin}
             variant="secondary"
             className="w-full"
           >
