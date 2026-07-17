@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @source "../../../packages/ui/src";
+@source "../../../packages/auth/src";
 
 :root {
   --background: #f9f9f7;
@@ -13,6 +14,15 @@
   --dark: #000000;
   --cream: #f3f3f1;
   --site-gutter: 32px;
+}
+
+/* The 4 portals (admin/applicant/mentor/partner) were designed against
+   slightly different tokens than the marketing site. Scope their original
+   values so they render pixel-identical to their standalone-app days. */
+[data-scope="portal"] {
+  --card: #ffffff;
+  --site-gutter: 24px;
+  --radius-card: 1rem;
 }
 
 @theme inline {

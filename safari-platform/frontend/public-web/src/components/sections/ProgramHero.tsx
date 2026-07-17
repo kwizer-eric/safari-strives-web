@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Play } from "lucide-react";
 import { Button, Container } from "@safari/ui";
-import type { ProgramPageContent } from "@/data/programs-content";
+import type { ProgramPageContent } from "@/lib/program-page";
 
 type ProgramHeroProps = {
   hero: ProgramPageContent["hero"];

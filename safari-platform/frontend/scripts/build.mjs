@@ -7,10 +7,6 @@ const targets = [
   "@safari/api-client",
   "@safari/auth",
   "public-web",
-  "admin-dashboard",
-  "applicant-portal",
-  "mentor-portal",
-  "partner-portal",
 ];
 
 for (const target of targets) {

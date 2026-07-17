@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@safari/api-client": "*",
+    "@safari/auth": "*",
     "@safari/shared": "*",
     "@safari/ui": "*",
     "lucide-react": "^1.23.0",

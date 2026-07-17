@@ -4,7 +4,7 @@ The platform is split into two independent workspaces:
 
 ```
 safari-platform/
-  frontend/              Next.js apps + shared packages
+  frontend/              Next.js app (public-web) + shared packages
   backend/               FastAPI API
 ```
 
@@ -16,25 +16,15 @@ npm install
 npm run dev
 ```
 
-| App              | Path        | URL (single origin)              |
+| Segment          | Path        | URL                               |
 | ---------------- | ----------- | -------------------------------- |
-| public-web       | `/`         | http://localhost:3000            |
-| admin-dashboard  | `/admin`    | http://localhost:3000/admin      |
-| applicant-portal | `/applicant`| http://localhost:3000/applicant  |
-| mentor-portal    | `/mentor`   | http://localhost:3000/mentor     |
-| partner-portal   | `/partner`  | http://localhost:3000/partner    |
+| Marketing site   | `/`         | http://localhost:3000            |
+| Admin            | `/admin`    | http://localhost:3000/admin      |
+| Applicant        | `/applicant`| http://localhost:3000/applicant  |
+| Mentor           | `/mentor`   | http://localhost:3000/mentor     |
+| Partner          | `/partner`  | http://localhost:3000/partner    |
 
-`npm run dev` starts all apps; open **http://localhost:3000** only. Portal apps run on internal ports and are proxied via path prefixes.
-
-Individual apps (internal dev servers):
-
-```bash
-npm run dev:public
-npm run dev:admin
-npm run dev:applicant
-npm run dev:mentor
-npm run dev:partner
-```
+`npm run dev` starts the single `public-web` Next.js app on **http://localhost:3000**. The admin/applicant/mentor/partner portals are ordinary nested route segments inside that same app — no separate ports, no proxying.
 
 ## Backend
 
@@ -57,6 +47,6 @@ See [backend/README.md](./backend/README.md) for full backend docs.
 From `safari-platform/`:
 
 ```bash
-npm run dev:frontend   # all Next.js apps
+npm run dev:frontend   # the public-web Next.js app
 npm run dev:backend    # FastAPI only
 ```

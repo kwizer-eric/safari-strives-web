@@ -1,8 +1,7 @@
 import { createNextConfig } from "../create-next-config";
-import { zoneRewrites } from "../zone-rewrites";
 
 const nextConfig = createNextConfig(__dirname, {
-  transpilePackages: ["@safari/ui", "@safari/shared"],
+  transpilePackages: ["@safari/ui", "@safari/shared", "@safari/auth", "@safari/api-client"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -14,9 +13,4 @@ const nextConfig = createNextConfig(__dirname, {
   },
 });
 
-export default {
-  ...nextConfig,
-  async rewrites() {
-    return zoneRewrites();
-  },
-};
+export default nextConfig;

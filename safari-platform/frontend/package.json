@@ -5,25 +5,15 @@
   "description": "Safari Strives frontend monorepo",
   "workspaces": [
     "packages/*",
-    "public-web",
-    "admin-dashboard",
-    "applicant-portal",
-    "mentor-portal",
-    "partner-portal"
+    "public-web"
   ],
   "scripts": {
-    "dev": "concurrently -k -n public,admin,applicant,mentor,partner -c green,cyan,yellow,magenta,red \"npm:dev:public\" \"npm:dev:admin\" \"npm:dev:applicant\" \"npm:dev:mentor\" \"npm:dev:partner\"",
-    "dev:public": "npm run dev -w public-web",
-    "dev:admin": "npm run dev -w admin-dashboard",
-    "dev:applicant": "npm run dev -w applicant-portal",
-    "dev:mentor": "npm run dev -w mentor-portal",
-    "dev:partner": "npm run dev -w partner-portal",
+    "dev": "npm run dev -w public-web",
     "build": "node scripts/build.mjs",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0",
     "typescript": "^5.9.2"
   },
   "engines": {

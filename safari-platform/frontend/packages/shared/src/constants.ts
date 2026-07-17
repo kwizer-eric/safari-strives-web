@@ -19,13 +19,3 @@ export const APP_URLS = {
   mentorLogin: `${APP_PATHS.mentorPortal}/login`,
   partnerLogin: `${APP_PATHS.partnerPortal}/login`,
 } as const;
-
-/** @deprecated Internal dev ports only — use APP_PATHS in UI links. */
-export const APP_PORTS = {
-  publicWeb: 3000,
-  adminDashboard: 3001,
-  applicantPortal: 3002,
-  mentorPortal: 3003,
-  partnerPortal: 3004,
-  backend: 4000,
-} as const;

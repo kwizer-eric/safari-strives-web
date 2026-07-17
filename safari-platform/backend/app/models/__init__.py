@@ -1,6 +1,6 @@
 from app.models.admin_user import AdminUser
 from app.models.blog import BlogPost
-from app.models.page import Page, PageFeature
+from app.models.page import Page, PageFeature, PageSection
 from app.models.people import BoardMember, TeamMember
 from app.models.submission import (
     AcceleratorApplication,
@@ -13,6 +13,7 @@ __all__ = [
     "BlogPost",
     "Page",
     "PageFeature",
+    "PageSection",
     "BoardMember",
     "TeamMember",
     "AcceleratorApplication",

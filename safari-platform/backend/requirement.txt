@@ -7,5 +7,8 @@ pydantic==2.10.4
 pydantic-settings==2.7.0
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
+# Pinned <4.1: passlib 1.7.4 (unmaintained since 2020) probes bcrypt.__about__
+# to detect its version, which bcrypt>=4.1 removed, breaking every hash/verify call.
+bcrypt==4.0.1
 python-multipart==0.0.20
 email-validator==2.2.0

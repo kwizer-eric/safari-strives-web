@@ -1,5 +1,5 @@
 import { Container } from "@safari/ui";
-import type { ProgramSection } from "@/data/programs-content";
+import type { ProgramSection } from "@/lib/program-page";
 
 type ProgramIntroProps = {
   section: ProgramSection;

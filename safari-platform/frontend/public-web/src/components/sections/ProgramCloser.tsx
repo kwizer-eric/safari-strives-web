@@ -1,5 +1,5 @@
 import { Button, Container } from "@safari/ui";
-import type { ProgramPageContent } from "@/data/programs-content";
+import type { ProgramPageContent } from "@/lib/program-page";
 
 type ProgramCloserProps = {
   closer: ProgramPageContent["closer"];
