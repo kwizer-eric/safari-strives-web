@@ -61,11 +61,18 @@ export type PageResponse = {
  * or unpublished) so callers can trigger notFound() instead of throwing.
  */
 export async function getPage(slug: string): Promise<PageResponse | null> {
-  const res = await fetch(`${API_URL}/pages/${slug}`, {
-    // Program page copy changes rarely; revalidate periodically rather than
-    // on every request or (default) caching forever across deploys.
-    next: { revalidate: 60 },
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/pages/${slug}`, {
+      // Program page copy changes rarely; revalidate periodically rather than
+      // on every request or (default) caching forever across deploys.
+      next: { revalidate: 60 },
+    });
+  } catch {
+    // Backend unreachable (local-only URL in prod, cold start, etc.).
+    // Treat as missing so the page can 404 instead of crashing the render.
+    return null;
+  }
 
   if (res.status === 404) {
     return null;
