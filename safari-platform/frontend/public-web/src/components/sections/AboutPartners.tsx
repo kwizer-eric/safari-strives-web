@@ -19,7 +19,7 @@ export function AboutPartners() {
     <section
       id="partners"
       aria-labelledby="about-partners-heading"
-      className="scroll-mt-28 bg-background py-20 md:py-28"
+      className="relative z-10 scroll-mt-28 bg-background py-20 md:py-28"
     >
       <Container>
         <div className="mb-12 max-w-3xl md:mb-16">

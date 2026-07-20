@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Container } from "@safari/ui";
 import { home } from "@/data/home";
+import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
 
 export function Hero() {
   const { hero } = home;
@@ -8,28 +8,29 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-heading"
-      className="relative overflow-hidden"
+      className="sticky top-0 z-0 h-svh min-h-svh"
     >
-      <div className="absolute inset-0">
-        <Image
-          src={hero.image}
-          alt={hero.imageAlt}
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
+      <div className="absolute inset-0 overflow-hidden">
+        <HeroBackgroundVideo
+          src={hero.heroVideo}
+          posterSrc={hero.image}
+          label={hero.imageAlt}
         />
         <div className="absolute inset-0 bg-dark/60" />
       </div>
 
-      <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">
-        <div className="max-w-4xl">
+      <Container className="relative flex h-full min-h-svh flex-col justify-end pb-20 pt-32 md:pb-28">
+        <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between md:gap-12">
           <h1
             id="hero-heading"
-            className="text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl"
+            className="max-w-2xl text-5xl font-bold leading-[1.05] tracking-tight text-white md:max-w-3xl md:text-6xl lg:text-7xl"
           >
             {hero.headline}
           </h1>
+
+          <p className="max-w-sm text-sm leading-relaxed text-white/90 md:max-w-md md:text-base md:leading-7">
+            {hero.body}
+          </p>
         </div>
       </Container>
     </section>

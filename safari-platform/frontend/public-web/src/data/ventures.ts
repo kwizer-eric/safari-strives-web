@@ -44,7 +44,7 @@ export const ventures: Venture[] = [
       },
     ],
     image:
-      "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80",
+      "https://images.unsplash.com/photo-1530785602389-07594beb8b73?w=800&q=80",
     imageAlt: "Founder Umubyeyi preparing natural cosmetics",
   },
   {
@@ -73,7 +73,7 @@ export const ventures: Venture[] = [
       },
     ],
     image:
-      "https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=800&q=80",
+      "https://images.unsplash.com/photo-1612928414075-bc722ade44f1?w=800&q=80",
     imageAlt: "Handcrafted decor from IJISHO Artspace",
   },
   {
@@ -102,95 +102,8 @@ export const ventures: Venture[] = [
       },
     ],
     image:
-      "https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=800&q=80",
+      "https://images.unsplash.com/photo-1529111290557-82f6d5c6cf85?w=800&q=80",
     imageAlt: "Byusa Armstrong on his pig farm",
-  },
-  {
-    id: "josydes",
-    founder: "Josiane Mukamana",
-    ventureName: "Josydes",
-    category: "Fashion",
-    location: "Rubavu",
-    tagline: "Fashion with fit, finish, and a brand customers return for.",
-    story: [
-      "Josydes is Josiane's fashion line — tailored pieces and everyday wear made in Rubavu. She had loyal customers, but without consistent sizing charts, lookbooks, or a recognizable label, growth stayed word-of-mouth.",
-      "Safari Strives supports Josydes with product photography, brand identity, and the hub tools needed to present collections professionally to shops and online buyers.",
-    ],
-    highlights: [
-      {
-        title: "Brand identity",
-        body: "Labels, tags, and visual language that make Josydes recognizable at a glance.",
-      },
-      {
-        title: "Collection drops",
-        body: "Seasonal lookbooks and styled shoots so buyers see a full line, not random pieces.",
-      },
-      {
-        title: "Retail readiness",
-        body: "Pricing, sizing, and presentation standards that meet shop and boutique expectations.",
-      },
-    ],
-    image:
-      "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80",
-    imageAlt: "Josydes fashion pieces on display",
-  },
-  {
-    id: "kivu-roastery",
-    founder: "Aime Niyibizi",
-    ventureName: "Kivu Roastery",
-    category: "Specialty coffee",
-    location: "Rubavu",
-    tagline: "Lake Kivu coffee with origin, roast profile, and a name worth remembering.",
-    story: [
-      "Kivu Roastery sources and roasts coffee near Lake Kivu. Aime knew the beans were good, but sold mostly as unbranded bulk — buyers had no reason to choose his roast over the next sack.",
-      "The work now is to make value visible: named blends, roast dates, packaging, and tasting notes that help cafés and retail buyers understand why Kivu Roastery is different.",
-    ],
-    highlights: [
-      {
-        title: "Origin story",
-        body: "Clear sourcing and processing details that connect buyers to Lake Kivu coffee.",
-      },
-      {
-        title: "Packaged retail",
-        body: "Sealed bags with labels, roast dates, and brew guidance for shop shelves.",
-      },
-      {
-        title: "Café partnerships",
-        body: "Repeat supply relationships with restaurants and hotels that want a consistent local roast.",
-      },
-    ],
-    image:
-      "https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=800&q=80",
-    imageAlt: "Kivu Roastery specialty coffee beans",
-  },
-  {
-    id: "green-grid",
-    founder: "Diane Iradukunda",
-    ventureName: "GreenGrid Solar",
-    category: "Clean energy",
-    location: "Rubavu",
-    tagline: "Solar solutions packaged for shops, clinics, and small enterprises.",
-    story: [
-      "GreenGrid Solar installs and maintains solar systems for small businesses around Rubavu. Diane competes in a market where many providers look the same and customers buy on price alone.",
-      "Safari Strives helps GreenGrid sharpen its offer — clear service tiers, installation photos, maintenance records, and buyer education that builds trust before the invoice.",
-    ],
-    highlights: [
-      {
-        title: "Service packages",
-        body: "Defined offerings for shops, homes, and institutions instead of one-size quotes.",
-      },
-      {
-        title: "Installation proof",
-        body: "Documented projects and before/after visuals that show reliable workmanship.",
-      },
-      {
-        title: "After-sales trust",
-        body: "Maintenance plans and follow-up that turn one install into long-term relationships.",
-      },
-    ],
-    image:
-      "https://images.unsplash.com/photo-1509390144018-eeaf6cc9a56b?w=800&q=80",
-    imageAlt: "Solar panels installed on a small shop",
   },
   {
     id: "sunbake",
@@ -218,49 +131,21 @@ export const ventures: Venture[] = [
       },
     ],
     image:
-      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80",
+      "https://images.unsplash.com/photo-1523477800337-966dbabe060b?w=800&q=80",
     imageAlt: "Sunbake sourdough loaves ready for delivery",
-  },
-  {
-    id: "ubwiza",
-    founder: "Claudine Mukeshimana",
-    ventureName: "Ubwiza Weaves",
-    category: "Textiles",
-    location: "Rubavu",
-    tagline: "Handwoven textiles with patterns, pricing, and presentation that travel.",
-    story: [
-      "Ubwiza Weaves produces handwoven fabrics and finished pieces in Rubavu. Claudine's weaving skill was never the question — visibility was. Without catalog photos or a coherent collection story, buyers treated every piece as a one-off negotiation.",
-      "Safari Strives helps Ubwiza document collections, photograph texture and color accurately, and reach buyers who value craft when they can see it clearly.",
-    ],
-    highlights: [
-      {
-        title: "Pattern catalog",
-        body: "Named designs and colorways so buyers can reorder what they liked.",
-      },
-      {
-        title: "Texture photography",
-        body: "Close, honest product shots that show weave quality online and in lookbooks.",
-      },
-      {
-        title: "Export-ready presentation",
-        body: "Pricing sheets and collection notes for shops and design buyers beyond Rubavu.",
-      },
-    ],
-    image:
-      "https://images.unsplash.com/photo-1493666438817-866a91353ca9?w=800&q=80",
-    imageAlt: "Handwoven textiles from Ubwiza Weaves",
   },
 ];
 
 export const venturesPage = {
   eyebrow: "Meet the ventures",
   headline: "Entrepreneurs building beyond survival.",
+  heroVideo: "/videos/ventures-hero.mp4",
   heroImage:
-    "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1920&q=80",
-  heroImageAlt: "Founders and mentors working together in Rubavu",
+    "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=1920&q=80",
+  heroImageAlt: "People collaborating at computers in an office",
   mission: {
     eyebrow: "Our mission",
-    body: "Our mission is to help promising ventures escape the commodity trap: when a business looks like every other business, customers only compare prices. Safari Strives helps entrepreneurs make their value visible.",
+    body: "Our mission is to help promising ventures escape the commodity trap. When a business looks like every other business, customers only compare prices. Safari Strives helps entrepreneurs make their value visible.",
     ctaLabel: "Apply Here",
     ctaHref: APP_URLS.applicantLogin,
   },

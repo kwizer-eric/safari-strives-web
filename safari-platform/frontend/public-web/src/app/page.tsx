@@ -1,7 +1,6 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
-import { Opening } from "@/components/sections/Opening";
 import { Explore } from "@/components/sections/Explore";
 import { InMotion } from "@/components/sections/InMotion";
 import { FeaturedInsights } from "@/components/sections/FeaturedInsights";
@@ -14,7 +13,6 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
-        <Opening />
         <Explore />
         <InMotion />
         <FeaturedInsights />

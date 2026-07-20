@@ -36,6 +36,7 @@ export const aboutPage = {
     image:
       "https://images.unsplash.com/photo-1535745318714-da922ca9cc81?w=1920&q=80",
     imageAlt: "Man smiling while taking photo near a sunflower",
+    heroVideo: "/videos/about-hero.mp4",
     videoId: "njiqUJcuVc4",
     videoStart: 15,
     legalNote:

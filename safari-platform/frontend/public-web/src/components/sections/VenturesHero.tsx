@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Container } from "@safari/ui";
 import { venturesPage } from "@/data/ventures";
+import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
 
 export function VenturesHero() {
   return (
@@ -9,18 +9,15 @@ export function VenturesHero() {
       className="relative overflow-hidden"
     >
       <div className="absolute inset-0">
-        <Image
-          src={venturesPage.heroImage}
-          alt={venturesPage.heroImageAlt}
-          fill
-          priority
-          className="object-cover"
-          sizes="100vw"
+        <HeroBackgroundVideo
+          src={venturesPage.heroVideo}
+          posterSrc={venturesPage.heroImage}
+          label={venturesPage.heroImageAlt}
         />
         <div className="absolute inset-0 bg-dark/65" />
       </div>
 
-      <Container className="relative flex min-h-[70vh] flex-col justify-end pb-16 pt-32 md:min-h-[80vh] md:pb-24">
+      <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">
         <div className="max-w-4xl">
           <p className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/80">
             {venturesPage.eyebrow}

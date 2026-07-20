@@ -8,7 +8,7 @@ export function Opening() {
     <section
       id="about"
       aria-labelledby="opening-heading"
-      className="bg-background py-20 md:py-28"
+      className="relative z-10 bg-background py-20 md:py-28"
     >
       <Container className="px-5 md:px-6">
         <div className="mx-auto w-full max-w-6xl text-center">

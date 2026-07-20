@@ -7,7 +7,7 @@ export function AboutCloser() {
   return (
     <section
       aria-labelledby="about-closer-heading"
-      className="relative overflow-hidden bg-accent py-24 md:py-32"
+      className="relative z-10 overflow-hidden bg-accent py-24 md:py-32"
     >
       <Container className="relative">
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
@@ -23,7 +23,7 @@ export function AboutCloser() {
           <Button
             href={closer.primaryCta.href}
             variant="primary"
-            className="bg-white px-8 py-3.5 text-base text-accent-hover shadow-xl shadow-black/10 hover:bg-cream hover:text-accent"
+            className="bg-white px-8 py-3.5 text-base text-accent-hover hover:bg-cream hover:text-accent"
           >
             {closer.primaryCta.label}
           </Button>

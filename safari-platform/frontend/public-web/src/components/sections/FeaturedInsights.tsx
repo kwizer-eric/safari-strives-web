@@ -21,7 +21,7 @@ export function FeaturedInsights() {
           </h2>
           <Link
             href="/field-notes"
-            className="group inline-flex w-fit shrink-0 items-center justify-center rounded-full bg-[#dbe8d6] px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white"
+            className="group inline-flex w-fit shrink-0 items-center justify-center rounded-full bg-[#d4e6db] px-6 py-3 text-sm font-semibold text-foreground transition-colors hover:bg-white"
           >
             View more
           </Link>

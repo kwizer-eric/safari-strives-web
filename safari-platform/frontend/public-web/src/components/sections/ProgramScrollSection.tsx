@@ -102,8 +102,8 @@ export function ProgramScrollSection({
       }
 
       const transitions = Math.max(pillars.length - 1, 1);
-      const coverScrollSpan = window.innerHeight;
-      section.style.height = `${window.innerHeight * transitions + coverScrollSpan}px`;
+      // One viewport of scroll per card transition — no extra hold after the stack finishes
+      section.style.height = `${window.innerHeight * transitions}px`;
       setScrollLinked((prev) => (prev ? prev : true));
     };
 
@@ -129,9 +129,7 @@ export function ProgramScrollSection({
       const cardWidth = getCardWidth();
       if (cardWidth === 0) return;
 
-      const coverScrollSpan = window.innerHeight;
-      const cardScrollSpan =
-        section.offsetHeight - window.innerHeight - coverScrollSpan;
+      const cardScrollSpan = section.offsetHeight - window.innerHeight;
       if (cardScrollSpan <= 0) return;
 
       const progress = clamp(
@@ -200,7 +198,7 @@ export function ProgramScrollSection({
       ref={sectionRef}
       id="explore"
       aria-labelledby="explore-heading"
-      className="relative z-0 isolate bg-background"
+      className="relative z-10 isolate bg-background"
     >
       <div className="sticky top-20 z-0 bg-background">
         <div className="flex min-h-[calc(100vh-5rem)] items-center overflow-hidden py-14 md:py-20">
@@ -208,7 +206,7 @@ export function ProgramScrollSection({
           <div className="grid min-w-0 grid-cols-1 gap-8 md:grid-cols-4 md:gap-10">
             <h2
               id="explore-heading"
-              className="text-sm font-semibold uppercase tracking-widest text-muted md:col-span-1 md:pt-2"
+              className="text-sm font-semibold uppercase tracking-widest text-accent md:col-span-1 md:pt-2"
             >
               {title}
             </h2>

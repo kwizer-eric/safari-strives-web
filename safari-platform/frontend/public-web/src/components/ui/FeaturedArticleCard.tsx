@@ -10,7 +10,7 @@ export function FeaturedArticleCard({ article }: FeaturedArticleCardProps) {
   return (
     <Link
       href={`/field-notes/${article.id}`}
-      className="group relative mb-16 block min-h-[520px] overflow-hidden rounded-2xl md:mb-24 md:min-h-[600px]"
+      className="group relative mb-16 block min-h-[680px] overflow-hidden rounded-2xl md:mb-24 md:min-h-[780px]"
     >
       <Image
         src={article.image}
@@ -36,7 +36,7 @@ export function FeaturedArticleCard({ article }: FeaturedArticleCardProps) {
           </h3>
         </div>
 
-        <span className="inline-flex w-fit shrink-0 items-center justify-center rounded-full bg-[#dbe8d6] px-6 py-3 text-sm font-semibold text-foreground transition-colors group-hover:bg-white">
+        <span className="inline-flex w-fit shrink-0 items-center justify-center rounded-full bg-[#d4e6db] px-6 py-3 text-sm font-semibold text-foreground transition-colors group-hover:bg-white">
           Learn more
         </span>
       </div>

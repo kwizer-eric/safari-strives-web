@@ -11,7 +11,7 @@ export function AboutMission() {
     <section
       id="mission"
       aria-labelledby="about-mission-heading"
-      className="scroll-mt-28 bg-white py-24 md:py-32"
+      className="relative z-10 scroll-mt-28 bg-white py-24 md:py-32"
     >
       <Container>
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-x-12 xl:gap-x-20">

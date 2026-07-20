@@ -87,14 +87,14 @@ export function ArticleDetail({ article }: ArticleDetailProps) {
           </p>
         </header>
 
-        <div className="relative mt-10 min-h-[520px] w-full overflow-hidden rounded-2xl md:mt-14 md:min-h-[600px]">
+        <div className="relative mx-auto mt-10 min-h-[520px] w-full max-w-5xl overflow-hidden rounded-2xl md:mt-14 md:min-h-[600px]">
           <Image
             src={article.image}
             alt={article.imageAlt}
             fill
             priority
             className="object-cover"
-            sizes="(max-width: 768px) 100vw, 1038px"
+            sizes="(max-width: 768px) 100vw, 1024px"
           />
         </div>
 

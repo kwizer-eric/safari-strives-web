@@ -32,7 +32,7 @@ function FooterColumn({
 
 export function Footer() {
   return (
-    <footer id="contact" className="bg-black text-white">
+    <footer id="contact" className="relative z-10 bg-black text-white">
       <Container className="py-16">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">

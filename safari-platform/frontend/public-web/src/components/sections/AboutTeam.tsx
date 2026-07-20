@@ -56,7 +56,7 @@ function TeamCard({ person }: { person: AboutPerson }) {
 
       <div
         className={cn(
-          "absolute inset-0 flex flex-col bg-[#dbe8d6] p-5 transition-opacity duration-500 md:p-6",
+          "absolute inset-0 flex flex-col bg-[#d4e6db] p-5 transition-opacity duration-500 md:p-6",
           expanded
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
@@ -122,7 +122,7 @@ export function AboutTeam() {
     <section
       id="team"
       aria-labelledby="about-team-heading"
-      className="scroll-mt-28 bg-background py-20 md:py-28"
+      className="relative z-10 scroll-mt-28 bg-background py-20 md:py-28"
     >
       <Container>
         <div className="mb-12 max-w-3xl md:mb-16">

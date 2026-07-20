@@ -20,7 +20,9 @@ export function FieldNotesGrid() {
             id="field-notes-grid-heading"
             className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl"
           >
-            Latest Insights and Trends
+            Latest Insights
+            <br />
+            and Trends
           </h2>
         </div>
 
