@@ -22,7 +22,7 @@ export const home = {
         image:
           "https://images.unsplash.com/photo-1634936016780-65f6a77ebdd4?w=800&q=80",
         imageAlt: "Group of people standing in front of a building",
-        href: "#",
+        href: "/our-model",
       },
       {
         id: "lab",
@@ -32,7 +32,7 @@ export const home = {
         image:
           "https://images.unsplash.com/photo-1580918577344-fe0a66733a2a?w=800&q=80",
         imageAlt: "Group of people in red and brown dress",
-        href: "#",
+        href: "/green-enterprise-lab",
       },
       {
         id: "hub",
@@ -42,7 +42,7 @@ export const home = {
         image:
           "https://images.unsplash.com/photo-1675434301763-594b4d0c5819?w=800&q=80",
         imageAlt: "Group of people sitting at desks in an office",
-        href: "#",
+        href: "/the-hub",
       },
     ],
   },

@@ -133,7 +133,12 @@ export function AboutTeam() {
             {team.title}
           </h2>
           <p className="text-base leading-relaxed text-muted md:text-lg">
-            {team.intro}
+            {team.intro.split("\n").map((line, index) => (
+              <span key={line}>
+                {index > 0 && <br />}
+                {line}
+              </span>
+            ))}
           </p>
         </div>
 

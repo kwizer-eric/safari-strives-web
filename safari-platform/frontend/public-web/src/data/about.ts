@@ -20,6 +20,10 @@ export type AboutPartner = {
   name: string;
   type: string;
   description: string;
+  logo: string;
+  href: string;
+  logoOnDark?: boolean;
+  logoOnWhite?: boolean;
   highlight?: string;
 };
 
@@ -27,12 +31,12 @@ export const aboutPage = {
   hero: {
     eyebrow: "About Safari Strives",
     headline: {
-      line1: "Why Safari Strives",
-      line2: "Exists",
+      line1: "We Don't Advise",
+      line2: "From a Distance.",
     },
-    watchVideoLabel: "Watch video",
+    watchVideoLabel: "Founder video",
     subhead:
-      "Safari Strives fosters economic independence in Rwanda through sustainable enterprises, job creation, and zero-interest microloans for women.",
+      "Safari Strives operates, tests, and builds alongside the founders\nwe support in Rubavu.",
     image:
       "https://images.unsplash.com/photo-1535745318714-da922ca9cc81?w=1920&q=80",
     imageAlt: "Man smiling while taking photo near a sunflower",
@@ -43,15 +47,16 @@ export const aboutPage = {
       "Safari Strives Inc. is a registered not-for-profit corporation in the State of Illinois, EIN 39-4883848, and a 501(c)(3) public charity recognized by the IRS.",
   },
   mission: {
-    label: "Case study",
+    label: "Our Journey",
     paragraphs: [
-      "World Bank President Ajay Banga has called jobs one of the surest paths out of poverty. In Rwanda, many people have not waited for jobs to appear. They have built their own through shops, tailoring, poultry, local products, and businesses carried through unstable conditions.",
-      "But effort alone does not build a scalable business. Rwanda's business landscape remains 87% informal, showing how many enterprises still lack the growth basics: systems, pricing, tools, visibility, buyer access, and leadership discipline.",
-      "The deeper issue is concentration. In 2024, 60.7% of Rwanda's formal businesses were in Kigali, compared with 9.7% in the Western Province, where Rubavu sits. The strongest hubs, accelerators, mentors, buyers, and funding pipelines still sit too close to main cities. Safari Strives builds the missing infrastructure in Rubavu, helping founders produce better, sell better, grow revenue, and make their value visible.",
+      "Safari Strives began with a question: How do people move from survival into sustainable growth?",
+      "For four years, we tested different approaches on the ground in Gisenyi, from livestock and cash transfers to in-kind financing and direct support. Some created short-term gains, but none solved the underlying business constraints.",
+      "Then we realized something simple: people were already working and selling. What was missing were the systems, tools, capital, and market access that help businesses grow.",
+      "That insight shaped Safari Strives today: building the infrastructure that helps local businesses grow revenue, create jobs, and move beyond survival.",
     ],
     practitionerLed: {
       label: "Practitioner-Led",
-      body: "Safari Strives builds the conditions around operating entrepreneurs, businesses that already have effort, demand, and local traction, and helps them become organized, visible, and ready for growth. We run our own enterprise on the same street we serve, managing cash flow, inventory, production, and costs for three years. That is what tells us which conditions actually matter.",
+      body: "We operate in the same community and face many of the same risks as the entrepreneurs we support. That firsthand experience shapes practical support grounded in real decisions, real constraints, and what it actually takes to grow a business here.",
     },
     locations: [
       {
@@ -70,7 +75,7 @@ export const aboutPage = {
     eyebrow: "Team",
     title: "Our Team",
     intro:
-      "Meet the dedicated individuals who make Safari Strives' mission possible. Our team combines local expertise with global vision to create sustainable change in communities.",
+      "Our team combines local expertise with global vision to create\nsustainable change in communities.",
   },
   board: {
     eyebrow: "Board",
@@ -80,13 +85,12 @@ export const aboutPage = {
   },
   partners: {
     eyebrow: "Partners",
-    title: "Institutions that believe in the work.",
-    intro:
-      "Safari Strives is supported by local institutions, academic partners, and international collaborators who share our conviction that communities deserve reliable pathways to economic independence.",
+    title: "Partners Who Make Growth Possible",
+    intro: "",
   },
   closer: {
     title: "Become a partner",
-    body: "We welcome partners with expertise, networks, market access, and growth capital to help us reach more founders and expand the Green Enterprise Lab in Rubavu.",
+    body: "Safari Strives is building a lean, revenue-driven model rooted in Rubavu. Our enterprise supports core operations, while partners help expand founder support, strengthen infrastructure, and open new opportunities. We welcome partners who bring expertise, networks, market access, technical support, or growth and windfall capital.",
     primaryCta: {
       label: "Partner with Safari Strives",
       href: "mailto:safaristrives@gmail.com",
@@ -222,48 +226,33 @@ export const boardMembers: AboutPerson[] = [
 
 export const partners: AboutPartner[] = [
   {
-    id: "church-brethren",
-    name: "Church of the Brethren Rwanda",
-    type: "Local partner",
-    description:
-      "Manages our work on the ground, verifies households, identifies women entrepreneurs, and witnesses distributions.",
-  },
-  {
-    id: "yale",
-    name: "Yale University",
+    id: "yale-tsai",
+    name: "Yale-Tsai City",
     type: "Academic partner",
+    logo: "/partners/tsai-city.png",
+    href: "https://city.yale.edu/",
+    logoOnWhite: true,
     description:
       "Supports research, program design, and the bridge between academic insight and field operations in Rwanda.",
-    highlight: "$45,000 in funding",
-  },
-  {
-    id: "student-network",
-    name: "International Student Research Teams",
-    type: "Program partner",
-    description:
-      "Student teams from Rwanda, Kenya, Tanzania, Portugal, and the United States contribute research and on-the-ground capacity.",
   },
   {
     id: "north-central",
     name: "North Central College",
     type: "Academic partner",
+    logo: "/partners/north-central-college.svg",
+    href: "https://www.northcentralcollege.edu/",
     description:
       "Partners on student engagement, cross-cultural learning, and capacity building for the Safari Strives nonprofit model.",
-    highlight: "$17,500 in funding",
   },
   {
-    id: "rubavu-institutions",
-    name: "Rubavu Institutions",
-    type: "Community partner",
+    id: "church-brethren",
+    name: "Church of the Brethren",
+    type: "Local partner",
+    logo: "/partners/church-of-the-brethren.png",
+    href: "https://www.brethren.org/",
+    logoOnDark: true,
     description:
-      "Shops, schools, clinics, and municipal stakeholders who connect founders to buyers, training pathways, and community trust.",
-  },
-  {
-    id: "funder-allies",
-    name: "Philanthropic Allies",
-    type: "Funding partner",
-    description:
-      "Donors and grantmakers who believe communities deserve reliable pathways to economic independence.",
+      "Manages our work on the ground, verifies households, identifies women entrepreneurs, and witnesses distributions.",
   },
 ];
 

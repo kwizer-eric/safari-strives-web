@@ -35,6 +35,14 @@ export function AboutHero() {
               <br />
               {hero.headline.line2}
             </h1>
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg">
+              {hero.subhead.split("\n").map((line, index) => (
+                <span key={line}>
+                  {index > 0 && <br />}
+                  {line}
+                </span>
+              ))}
+            </p>
             <Button
               variant="secondary"
               onClick={() => setVideoOpen(true)}
@@ -51,7 +59,7 @@ export function AboutHero() {
         onClose={() => setVideoOpen(false)}
         videoId={hero.videoId}
         videoStart={hero.videoStart}
-        title="Why Safari Strives exists"
+        title="We Don't Advise From a Distance."
       />
     </>
   );

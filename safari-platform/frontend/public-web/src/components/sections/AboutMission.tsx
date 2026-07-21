@@ -18,7 +18,7 @@ export function AboutMission() {
           <div>
             <h2
               id="about-mission-heading"
-              className={`font-bold ${missionTextClass}`}
+              className="text-base font-bold leading-relaxed text-accent md:text-lg"
             >
               {mission.label}
             </h2>
@@ -31,7 +31,7 @@ export function AboutMission() {
           </div>
 
           <div>
-            <h3 className={`font-bold ${missionTextClass}`}>
+            <h3 className="text-base font-bold leading-relaxed text-accent md:text-lg">
               {mission.practitionerLed.label}
             </h3>
           </div>

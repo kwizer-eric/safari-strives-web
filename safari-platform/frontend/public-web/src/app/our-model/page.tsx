@@ -1,35 +1,41 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ProgramHero } from "@/components/sections/ProgramHero";
-import { ProgramIntro } from "@/components/sections/ProgramIntro";
-import { ProgramFeatureGrid } from "@/components/sections/ProgramFeatureGrid";
-import { ProgramCloser } from "@/components/sections/ProgramCloser";
-import { getPage } from "@/lib/api";
-import { toProgramPageContent } from "@/lib/program-page";
+import { ModelPageHero } from "@/components/sections/ModelPageHero";
+import { ModelPageAudience } from "@/components/sections/ModelPageAudience";
+import { ModelPageFeatures } from "@/components/sections/ModelPageFeatures";
+import { ModelPageCloser } from "@/components/sections/ModelPageCloser";
+import { ventureAcceleratorPage } from "@/data/venture-accelerator";
 
 export const metadata: Metadata = {
-  title: "Our Model — The Accelerator Program | Safari Strives",
+  title: "The Venture Accelerator | Safari Strives",
   description:
-    "The Venture Accelerator is a four-month support cycle for operating entrepreneurs in Rubavu. Founder-led growth, practitioner-led support, milestone-based grants.",
+    "A four-month, execution-focused program for operating entrepreneurs in Rwanda's secondary cities who are ready to strengthen their businesses and grow.",
 };
 
-export default async function OurModelPage() {
-  const page = await getPage("our-model");
-  if (!page) {
-    notFound();
-  }
-  const acceleratorPage = toProgramPageContent(page);
+export default function VentureAcceleratorPage() {
+  const page = ventureAcceleratorPage;
 
   return (
     <>
       <Header />
       <main>
-        <ProgramHero hero={acceleratorPage.hero} />
-        {acceleratorPage.intro && <ProgramIntro section={acceleratorPage.intro} />}
-        <ProgramFeatureGrid features={acceleratorPage.features} />
-        <ProgramCloser closer={acceleratorPage.closer} />
+        <ModelPageHero
+          hero={page.hero}
+          headingId="venture-accelerator-hero-heading"
+        />
+        <ModelPageAudience
+          audience={page.audience}
+          headingId="venture-accelerator-audience-heading"
+        />
+        <ModelPageFeatures
+          differentiators={page.differentiators}
+          headingId="venture-accelerator-features-heading"
+        />
+        <ModelPageCloser
+          closer={page.closer}
+          headingId="venture-accelerator-closer-heading"
+        />
       </main>
       <Footer />
     </>

@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { ProgramHero } from "@/components/sections/ProgramHero";
-import { ProgramIntro } from "@/components/sections/ProgramIntro";
-import { ProgramFeatureGrid } from "@/components/sections/ProgramFeatureGrid";
-import { ProgramCloser } from "@/components/sections/ProgramCloser";
-import { getPage } from "@/lib/api";
-import { toProgramPageContent } from "@/lib/program-page";
+import { ModelPageHero } from "@/components/sections/ModelPageHero";
+import { ModelPageAudience } from "@/components/sections/ModelPageAudience";
+import { ModelPageFeatures } from "@/components/sections/ModelPageFeatures";
+import { ModelPageCloser } from "@/components/sections/ModelPageCloser";
+import { theHubPage } from "@/data/the-hub";
 
 export const metadata: Metadata = {
   title: "The Hub | Safari Strives",
@@ -15,21 +13,26 @@ export const metadata: Metadata = {
     "Workspace, media studio, production tools, and a professional environment for founders in Rubavu.",
 };
 
-export default async function TheHubPage() {
-  const page = await getPage("the-hub");
-  if (!page) {
-    notFound();
-  }
-  const hubPage = toProgramPageContent(page);
+export default function TheHubPage() {
+  const page = theHubPage;
 
   return (
     <>
       <Header />
       <main>
-        <ProgramHero hero={hubPage.hero} />
-        {hubPage.intro && <ProgramIntro section={hubPage.intro} />}
-        <ProgramFeatureGrid features={hubPage.features} />
-        <ProgramCloser closer={hubPage.closer} />
+        <ModelPageHero hero={page.hero} headingId="the-hub-hero-heading" />
+        <ModelPageAudience
+          audience={page.audience}
+          headingId="the-hub-audience-heading"
+        />
+        <ModelPageFeatures
+          differentiators={page.differentiators}
+          headingId="the-hub-features-heading"
+        />
+        <ModelPageCloser
+          closer={page.closer}
+          headingId="the-hub-closer-heading"
+        />
       </main>
       <Footer />
     </>

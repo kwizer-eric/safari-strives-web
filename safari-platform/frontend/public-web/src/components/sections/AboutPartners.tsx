@@ -1,19 +1,13 @@
+import Image from "next/image";
 import { cn } from "@safari/shared";
 import { Container } from "@safari/ui";
 import { aboutPage, partners } from "@/data/about";
 
-function gridCellBorderClass(index: number) {
-  return cn(
-    index % 2 === 0 && "border-r border-border",
-    index < 4 && "border-b border-border",
-    "md:border-b-0",
-    index % 4 !== 3 && "md:border-r md:border-border",
-    index < 4 && "md:border-b md:border-border",
-  );
-}
-
 export function AboutPartners() {
   const { partners: partnersCopy } = aboutPage;
+  // Two identical halves so `animate-marquee` (-50%) loops seamlessly; extra copies fill wide viewports.
+  const half = [...partners, ...partners];
+  const duplicated = [...half, ...half];
 
   return (
     <section
@@ -32,32 +26,40 @@ export function AboutPartners() {
           >
             {partnersCopy.title}
           </h2>
-          <p className="text-base leading-relaxed text-muted md:text-lg">
-            {partnersCopy.intro}
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 border border-border md:grid-cols-4">
-          {partners.map((partner, index) => (
-            <div
-              key={partner.id}
-              className={cn(
-                "flex min-h-[120px] items-center justify-center p-6 md:min-h-[140px]",
-                gridCellBorderClass(index),
-              )}
-            >
-              <div className="text-center">
-                <span className="block text-sm font-semibold text-foreground md:text-base">
-                  {partner.name}
-                </span>
-                <span className="mt-1 block text-[10px] font-medium uppercase tracking-wider text-muted">
-                  {partner.type}
-                </span>
-              </div>
-            </div>
-          ))}
+          {partnersCopy.intro ? (
+            <p className="text-base leading-relaxed text-muted md:text-lg">
+              {partnersCopy.intro}
+            </p>
+          ) : null}
         </div>
       </Container>
+
+      <div className="relative overflow-hidden">
+        <div className="flex w-max gap-4 animate-marquee motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center md:gap-6">
+          {duplicated.map((partner, index) => (
+            <a
+              key={`${partner.id}-${index}`}
+              href={partner.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Visit ${partner.name} (opens in new tab)`}
+              className={cn(
+                "flex h-[120px] w-[280px] shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-border bg-card p-6 transition-opacity hover:opacity-90 md:h-[140px] md:w-[320px]",
+                partner.logoOnWhite && "bg-white",
+                partner.logoOnDark && "bg-black",
+              )}
+            >
+              <Image
+                src={partner.logo}
+                alt=""
+                width={220}
+                height={80}
+                className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
+              />
+            </a>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }

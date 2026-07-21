@@ -1,6 +1,7 @@
 export const site = {
   name: "Safari Strives",
   logo: "/logo/logo.png",
+  logoWhite: "/logo/logowhite.png",
   tagline: {
     line1: "Every Person,",
     line2: "Every Opportunity",
@@ -28,6 +29,24 @@ export const navLinks = [
   { label: "Our Model", href: "/our-model" },
   { label: "Blog", href: "/field-notes" },
   { label: "About", href: "/about" },
+] as const;
+
+export const ourModelLinks = [
+  {
+    title: "Venture Accelerator",
+    description: "Model-to-market support for founders in Rubavu",
+    href: "/our-model",
+  },
+  {
+    title: "Green Enterprise Lab",
+    description: "Hands-on enterprise building on the ground",
+    href: "/green-enterprise-lab",
+  },
+  {
+    title: "The Hub",
+    description: "Shared workspace and community for local businesses",
+    href: "/the-hub",
+  },
 ] as const;
 
 export const footerColumns = {
