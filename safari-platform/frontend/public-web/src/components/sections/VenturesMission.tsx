@@ -1,5 +1,8 @@
-import { Button, Container } from "@safari/ui";
+"use client";
+
+import { Container } from "@safari/ui";
 import { venturesPage } from "@/data/ventures";
+import { ApplyButton } from "@/components/ui/ApplyButton";
 
 export function VenturesMission() {
   const { mission } = venturesPage;
@@ -26,13 +29,12 @@ export function VenturesMission() {
             {mission.body}
           </p>
 
-          <Button
-            href={mission.ctaHref}
+          <ApplyButton
             variant="primary"
             className="bg-white px-8 py-3.5 text-base text-accent-hover hover:bg-cream hover:text-accent"
           >
             {mission.ctaLabel}
-          </Button>
+          </ApplyButton>
         </div>
       </Container>
     </section>

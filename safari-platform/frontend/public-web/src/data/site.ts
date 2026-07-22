@@ -10,6 +10,8 @@ export const site = {
   email: "safaristrives@gmail.com",
   donateHref:
     "https://www.paypal.com/donate/?hosted_button_id=69TB3LC2P9C7A",
+  /** Default Apply Now / Apply Here destination (Google Form, Typeform, etc.). */
+  applyUrl: "/applicant/login",
   locations: ["Rubavu, Rwanda", "Crestwood, Illinois"],
   social: {
     linkedin: "#",
@@ -17,6 +19,8 @@ export const site = {
     instagram: "#",
   },
 } as const;
+
+export const APPLY_URL_STORAGE_KEY = "safari-apply-url";
 
 export const footerSocial = [
   { label: "LinkedIn", href: site.social.linkedin },

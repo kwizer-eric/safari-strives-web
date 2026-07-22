@@ -1,5 +1,5 @@
-import { APP_URLS } from "@safari/shared";
 import type { ModelPageContent } from "@/data/model-page";
+import { site } from "@/data/site";
 
 export const ventureAcceleratorPage: ModelPageContent = {
   hero: {
@@ -60,7 +60,7 @@ export const ventureAcceleratorPage: ModelPageContent = {
     },
     primaryCta: {
       label: "Apply Here",
-      href: APP_URLS.applicantLogin,
+      href: site.applyUrl,
     },
   },
 };

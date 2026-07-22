@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Logo } from "@safari/ui";
-import { APP_URLS, cn } from "@safari/shared";
+import { cn } from "@safari/shared";
 import { navLinks, site } from "@/data/site";
+import { ApplyButton } from "@/components/ui/ApplyButton";
 
 type MobileMenuProps = {
   isOpen: boolean;
@@ -57,13 +58,9 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </ul>
 
         <div className="mt-auto flex flex-col gap-3 border-t border-border pt-6">
-          <Button
-            href={APP_URLS.applicantLogin}
-            variant="secondary"
-            className="w-full"
-          >
+          <ApplyButton variant="secondary" className="w-full">
             Apply Now
-          </Button>
+          </ApplyButton>
           <Button
             href={site.donateHref}
             target="_blank"

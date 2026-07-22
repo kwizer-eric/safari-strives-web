@@ -1,5 +1,8 @@
-import { Button, Container } from "@safari/ui";
+"use client";
+
+import { Container } from "@safari/ui";
 import { aboutPage } from "@/data/about";
+import { ApplyButton } from "@/components/ui/ApplyButton";
 
 export function AboutCloser() {
   const { closer } = aboutPage;
@@ -20,13 +23,12 @@ export function AboutCloser() {
           <p className="mb-10 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg">
             {closer.body}
           </p>
-          <Button
-            href={closer.primaryCta.href}
+          <ApplyButton
             variant="primary"
             className="bg-white px-8 py-3.5 text-base text-accent-hover hover:bg-cream hover:text-accent"
           >
             {closer.primaryCta.label}
-          </Button>
+          </ApplyButton>
         </div>
       </Container>
     </section>

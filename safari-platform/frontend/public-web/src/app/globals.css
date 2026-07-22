@@ -27,13 +27,16 @@
   --muted-foreground: #4a4a4a;
 }
 
-/* The 4 portals (admin/applicant/mentor/partner) were designed against
-   slightly different tokens than the marketing site. Scope their original
-   values so they render pixel-identical to their standalone-app days. */
+/* Portals share the marketing site font + brand green; only layout tokens differ. */
 [data-scope="portal"] {
   --card: #ffffff;
   --site-gutter: 24px;
   --radius-card: 1rem;
+  --accent: #2d664b;
+  --accent-hover: #24533c;
+  --primary: #2d664b;
+  --ring: #2d664b;
+  font-family: var(--font-manrope), system-ui, sans-serif;
 }
 
 @theme inline {

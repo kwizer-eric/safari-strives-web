@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { MenuIcon } from "lucide-react";
-import { APP_URLS, cn } from "@safari/shared";
+import { cn } from "@safari/shared";
 import { Button as SafariButton, Logo } from "@safari/ui";
 import {
   Accordion,
@@ -10,6 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ApplyButton } from "@/components/ui/ApplyButton";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -120,13 +121,12 @@ export function Navbar5({ isSolid = true }: Navbar5Props) {
       </NavigationMenu>
 
       <div className="hidden items-center gap-3 lg:flex">
-        <SafariButton
-          href={APP_URLS.applicantLogin}
+        <ApplyButton
           variant="secondary"
           className={cn(!isSolid && "border-white/40 text-white hover:bg-white/10")}
         >
           Apply Now
-        </SafariButton>
+        </ApplyButton>
         <SafariButton
           href={site.donateHref}
           target="_blank"
@@ -202,13 +202,9 @@ export function Navbar5({ isSolid = true }: Navbar5Props) {
             </div>
 
             <div className="mt-6 flex flex-col gap-3">
-              <SafariButton
-                href={APP_URLS.applicantLogin}
-                variant="secondary"
-                className="w-full"
-              >
+              <ApplyButton variant="secondary" className="w-full">
                 Apply Now
-              </SafariButton>
+              </ApplyButton>
               <SafariButton
                 href={site.donateHref}
                 target="_blank"

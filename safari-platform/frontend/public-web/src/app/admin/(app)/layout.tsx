@@ -2,21 +2,27 @@
 
 import {
   LayoutDashboard,
-  Users,
-  ClipboardList,
   BookOpen,
-  Handshake,
+  Newspaper,
+  Building2,
+  Briefcase,
+  Images,
+  MessageSquareQuote,
+  Link2,
 } from "lucide-react";
 import { RequireRole, useAuth } from "@safari/auth";
-import { Sidebar, TopBar, Button } from "@safari/ui";
+import { Sidebar, Button } from "@safari/ui";
 import { initials } from "@safari/shared";
 
 const items = [
   { label: "Overview", href: "/admin/overview", icon: LayoutDashboard },
-  { label: "Applications", href: "/admin/applications", icon: ClipboardList },
+  { label: "Application Link", href: "/admin/application-link", icon: Link2 },
   { label: "Programs", href: "/admin/programs", icon: BookOpen },
-  { label: "Users", href: "/admin/users", icon: Users },
-  { label: "Partners", href: "/admin/partners", icon: Handshake },
+  { label: "Ventures", href: "/admin/ventures", icon: Briefcase },
+  { label: "In Motion", href: "/admin/in-motion", icon: Images },
+  { label: "Testimonials", href: "/admin/testimonials", icon: MessageSquareQuote },
+  { label: "Blog", href: "/admin/blog", icon: Newspaper },
+  { label: "About", href: "/admin/about", icon: Building2 },
 ];
 
 export default function AppLayout({
@@ -61,14 +67,6 @@ function AppShell({ children }: { children: React.ReactNode }) {
         }
       />
       <div className="flex flex-1 flex-col">
-        <TopBar>
-          <p className="text-sm text-muted">
-            Signed in as{" "}
-            <span className="font-medium text-foreground">
-              {user?.email ?? ""}
-            </span>
-          </p>
-        </TopBar>
         <main className="flex-1 overflow-y-auto p-8">{children}</main>
       </div>
     </div>

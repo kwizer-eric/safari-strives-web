@@ -1,7 +1,9 @@
-import { APP_URLS } from "@safari/shared";
+"use client";
+
 import { Button, Container } from "@safari/ui";
 import { home } from "@/data/home";
 import { site } from "@/data/site";
+import { ApplyButton } from "@/components/ui/ApplyButton";
 
 export function FinalCTA() {
   const { finalCta } = home;
@@ -24,13 +26,12 @@ export function FinalCTA() {
               {finalCta.line2}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Button
-                href={APP_URLS.applicantLogin}
+              <ApplyButton
                 variant="secondary"
                 className="border-white/40 text-white hover:bg-white/10"
               >
                 Apply Now
-              </Button>
+              </ApplyButton>
               <Button
                 href={site.donateHref}
                 target="_blank"

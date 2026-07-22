@@ -10,7 +10,7 @@ export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div data-scope="portal">
+    <div data-scope="portal" className="font-sans antialiased">
       <AuthProvider demoMode demoRole="admin">
         {children}
       </AuthProvider>

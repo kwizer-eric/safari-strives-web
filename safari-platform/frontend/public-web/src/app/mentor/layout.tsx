@@ -10,7 +10,7 @@ export default function MentorLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div data-scope="portal">
+    <div data-scope="portal" className="font-sans antialiased">
       <AuthProvider demoMode demoRole="mentor">
         {children}
       </AuthProvider>

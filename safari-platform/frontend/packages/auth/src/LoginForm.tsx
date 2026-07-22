@@ -70,7 +70,7 @@ export function LoginForm({
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 55% at 15% 10%, rgba(106, 142, 95, 0.55) 0%, transparent 65%), radial-gradient(45% 40% at 90% 90%, rgba(90, 122, 80, 0.5) 0%, transparent 70%), radial-gradient(35% 30% at 80% 15%, rgba(243, 243, 241, 0.12) 0%, transparent 70%)",
+              "radial-gradient(60% 55% at 15% 10%, rgba(45, 102, 75, 0.55) 0%, transparent 65%), radial-gradient(45% 40% at 90% 90%, rgba(36, 83, 60, 0.5) 0%, transparent 70%), radial-gradient(35% 30% at 80% 15%, rgba(243, 243, 241, 0.12) 0%, transparent 70%)",
           }}
         />
         <div
@@ -109,7 +109,7 @@ export function LoginForm({
             {highlights.map((line) => (
               <li key={line} className="flex items-start gap-3">
                 <span
-                  className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent shadow-[0_0_0_3px_rgba(106,142,95,0.25)]"
+                  className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent shadow-[0_0_0_3px_rgba(45,102,75,0.25)]"
                   aria-hidden="true"
                 />
                 <span className="leading-relaxed">{line}</span>

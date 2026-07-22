@@ -42,7 +42,7 @@ export function Button({
     secondary:
       "border border-foreground/20 bg-transparent text-foreground hover:bg-foreground/5",
     ghost: "text-foreground hover:text-accent",
-    danger: "bg-red-600 text-white hover:bg-red-700",
+    danger: "bg-red-50 text-red-700 hover:bg-red-100 hover:text-red-800",
   };
 
   const classes = cn(baseStyles, sizes[size], variants[variant], className);
