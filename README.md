@@ -29,3 +29,5 @@ npm run dev
 ```
 
 See [safari-platform/README.md](./safari-platform/README.md) for ports and setup details.
+
+**Deploy:** [safari-platform/DEPLOY.md](./safari-platform/DEPLOY.md) (Vercel + Docker).
