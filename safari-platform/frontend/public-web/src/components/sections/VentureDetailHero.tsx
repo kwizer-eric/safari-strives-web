@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Container } from "@safari/ui";
-import type { Venture } from "@/data/ventures";
+import type { Venture } from "@/types/content";
 
 type VentureDetailHeroProps = {
   venture: Venture;

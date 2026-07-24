@@ -2,19 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { Alert, Button, Input, PageHeader } from "@safari/ui";
-import { site } from "@/data/site";
 import {
   isExternalApplyUrl,
   readApplyUrl,
   writeApplyUrl,
 } from "@/lib/apply-url";
 
+const DEFAULT_APPLY_URL = "/applicant/login";
+
 export default function ApplicationLinkPage() {
-  const [url, setUrl] = useState<string>(site.applyUrl);
+  const [url, setUrl] = useState<string>(DEFAULT_APPLY_URL);
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    setUrl(readApplyUrl());
+    setUrl(readApplyUrl(DEFAULT_APPLY_URL));
   }, []);
 
   function save(event: React.FormEvent) {
@@ -31,9 +32,9 @@ export default function ApplicationLinkPage() {
   }
 
   function resetDefault() {
-    writeApplyUrl(site.applyUrl);
-    setUrl(site.applyUrl);
-    setMessage("Reset to the default site apply URL.");
+    writeApplyUrl(DEFAULT_APPLY_URL);
+    setUrl(DEFAULT_APPLY_URL);
+    setMessage("Reset to the default apply URL.");
   }
 
   return (

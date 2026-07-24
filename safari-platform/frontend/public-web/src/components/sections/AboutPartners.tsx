@@ -1,10 +1,14 @@
 import Image from "next/image";
 import { cn } from "@safari/shared";
 import { Container } from "@safari/ui";
-import { aboutPage, partners } from "@/data/about";
+import type { AboutPagePayload, AboutPartner } from "@/types/content";
 
-export function AboutPartners() {
-  const { partners: partnersCopy } = aboutPage;
+type AboutPartnersProps = {
+  copy: AboutPagePayload["partners"];
+  partners: AboutPartner[];
+};
+
+export function AboutPartners({ copy, partners }: AboutPartnersProps) {
   // Two identical halves so `animate-marquee` (-50%) loops seamlessly; extra copies fill wide viewports.
   const half = [...partners, ...partners];
   const duplicated = [...half, ...half];
@@ -18,17 +22,17 @@ export function AboutPartners() {
       <Container>
         <div className="mb-12 max-w-3xl md:mb-16">
           <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">
-            {partnersCopy.eyebrow}
+            {copy.eyebrow}
           </p>
           <h2
             id="about-partners-heading"
             className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl"
           >
-            {partnersCopy.title}
+            {copy.title}
           </h2>
-          {partnersCopy.intro ? (
+          {copy.intro ? (
             <p className="text-base leading-relaxed text-muted md:text-lg">
-              {partnersCopy.intro}
+              {copy.intro}
             </p>
           ) : null}
         </div>

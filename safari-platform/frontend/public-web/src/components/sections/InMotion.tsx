@@ -1,9 +1,16 @@
 import { Container } from "@safari/ui";
-import { home } from "@/data/home";
 import { InMotionCard } from "@/components/ui/InMotionCard";
+import type { HomeInMotionCard } from "@/lib/cms";
 
-export function InMotion() {
-  const { inMotion } = home;
+type InMotionProps = {
+  inMotion: {
+    eyebrow: string;
+    title: string;
+    cards: readonly HomeInMotionCard[];
+  };
+};
+
+export function InMotion({ inMotion }: InMotionProps) {
   const duplicated = [...inMotion.cards, ...inMotion.cards];
 
   return (

@@ -1,11 +1,14 @@
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@safari/ui";
-import { aboutPage } from "@/data/about";
+import type { AboutPagePayload } from "@/types/content";
 
 const missionTextClass = "text-base leading-relaxed text-muted md:text-lg";
 
-export function AboutMission() {
-  const { mission } = aboutPage;
+type AboutMissionProps = {
+  mission: AboutPagePayload["mission"];
+};
+
+export function AboutMission({ mission }: AboutMissionProps) {
 
   return (
     <section

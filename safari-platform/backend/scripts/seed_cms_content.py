@@ -39,9 +39,9 @@ CMS_PAGES: list[dict] = [
                     "revenue, strengthen their businesses, create jobs, and become "
                     "better positioned for future opportunities."
                 ),
-                "image": "https://images.unsplash.com/photo-1509099896299-af46ad97ff57?w=1920&q=80",
+                "image": "",
                 "imageAlt": "Group of people in a community",
-                "heroVideo": "/videos/home-hero.mp4",
+                "heroVideo": "",
             },
             "opening": {
                 "title": "One business at a time.",
@@ -162,9 +162,9 @@ CMS_PAGES: list[dict] = [
                     "through sustainable enterprises, job creation, and "
                     "zero-interest microloans for women."
                 ),
-                "image": "https://images.unsplash.com/photo-1535745318714-da922ca9cc81?w=1920&q=80",
-                "imageAlt": "Man smiling while taking photo near a sunflower",
-                "heroVideo": "/videos/about-hero.mp4",
+                "image": "",
+                "imageAlt": "Safari Strives about hero",
+                "heroVideo": "",
                 "videoId": "njiqUJcuVc4",
                 "videoStart": 15,
                 "legalNote": (
@@ -271,8 +271,8 @@ CMS_PAGES: list[dict] = [
         "payload": {
             "eyebrow": "Meet the ventures",
             "headline": "Entrepreneurs building beyond survival.",
-            "heroVideo": "/videos/ventures-hero.mp4",
-            "heroImage": "https://images.unsplash.com/photo-1606857521015-7f9fcf423740?w=1920&q=80",
+            "heroVideo": "",
+            "heroImage": "",
             "heroImageAlt": "People collaborating at computers in an office",
             "mission": {
                 "eyebrow": "Our mission",
@@ -313,10 +313,12 @@ CMS_COLLECTIONS: list[dict] = [
         "payload": {
             "name": "Safari Strives",
             "logo": "/logo/logo.png",
+            "logoWhite": "/logo/logowhite.png",
             "tagline": {"line1": "Every Person,", "line2": "Every Opportunity"},
             "description": "A nonprofit enterprise hub.",
             "email": CONTACT_EMAIL,
             "donateHref": DONATE_URL,
+            "applyUrl": APPLY_URL,
             "locations": ["Rubavu, Rwanda", "Crestwood, Illinois"],
             "social": {"linkedin": "#", "facebook": "#", "instagram": "#"},
             "navLinks": [
@@ -324,6 +326,23 @@ CMS_COLLECTIONS: list[dict] = [
                 {"label": "Our Model", "href": "/our-model"},
                 {"label": "Blog", "href": "/field-notes"},
                 {"label": "About", "href": "/about"},
+            ],
+            "ourModelLinks": [
+                {
+                    "title": "Venture Accelerator",
+                    "description": "Model-to-market support for founders in Rubavu",
+                    "href": "/our-model",
+                },
+                {
+                    "title": "Green Enterprise Lab",
+                    "description": "Hands-on enterprise building on the ground",
+                    "href": "/green-enterprise-lab",
+                },
+                {
+                    "title": "The Hub",
+                    "description": "Shared workspace and community for local businesses",
+                    "href": "/the-hub",
+                },
             ],
             "footerColumns": {
                 "programs": {

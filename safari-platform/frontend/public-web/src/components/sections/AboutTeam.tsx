@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Minus, Plus } from "lucide-react";
 import { cn } from "@safari/shared";
 import { Container } from "@safari/ui";
-import { aboutPage, teamMembers, type AboutPerson } from "@/data/about";
+import type { AboutPagePayload, AboutPerson } from "@/types/content";
 
 function TeamCard({ person }: { person: AboutPerson }) {
   const [expanded, setExpanded] = useState(false);
@@ -115,9 +115,12 @@ function TeamCard({ person }: { person: AboutPerson }) {
   );
 }
 
-export function AboutTeam() {
-  const { team } = aboutPage;
+type AboutTeamProps = {
+  team: AboutPagePayload["team"];
+  members: AboutPerson[];
+};
 
+export function AboutTeam({ team, members }: AboutTeamProps) {
   return (
     <section
       id="team"
@@ -143,7 +146,7 @@ export function AboutTeam() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {teamMembers.map((person) => (
+          {members.map((person) => (
             <TeamCard key={person.id} person={person} />
           ))}
         </div>

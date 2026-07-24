@@ -1,10 +1,12 @@
 import { Container } from "@safari/ui";
-import { home } from "@/data/home";
 import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
+import type { HomeHero } from "@/lib/cms";
 
-export function Hero() {
-  const { hero } = home;
+type HeroProps = {
+  hero: HomeHero;
+};
 
+export function Hero({ hero }: HeroProps) {
   return (
     <section
       aria-labelledby="hero-heading"
@@ -13,10 +15,9 @@ export function Hero() {
       <div className="absolute inset-0 overflow-hidden">
         <HeroBackgroundVideo
           src={hero.heroVideo}
-          posterSrc={hero.image}
-          label={hero.imageAlt}
+          label={hero.headline || "Homepage hero video"}
         />
-        <div className="absolute inset-0 bg-dark/60" />
+        <div className="pointer-events-none absolute inset-0 bg-dark/60" />
       </div>
 
       <Container className="relative flex h-full min-h-svh flex-col justify-end pb-20 pt-32 md:pb-28">

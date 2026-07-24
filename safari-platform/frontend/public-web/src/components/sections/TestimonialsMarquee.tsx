@@ -1,7 +1,11 @@
-import { testimonials } from "@/data/testimonials";
 import { TestimonialCard } from "@/components/ui/TestimonialCard";
+import type { Testimonial } from "@/types/content";
 
-export function TestimonialsMarquee() {
+type TestimonialsMarqueeProps = {
+  testimonials: Testimonial[];
+};
+
+export function TestimonialsMarquee({ testimonials }: TestimonialsMarqueeProps) {
   const duplicated = [...testimonials, ...testimonials];
 
   return (

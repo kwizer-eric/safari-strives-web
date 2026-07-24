@@ -6,8 +6,7 @@ import {
   Newspaper,
   Building2,
   Briefcase,
-  Images,
-  MessageSquareQuote,
+  Home,
   Link2,
 } from "lucide-react";
 import { RequireRole, useAuth } from "@safari/auth";
@@ -16,11 +15,10 @@ import { initials } from "@safari/shared";
 
 const items = [
   { label: "Overview", href: "/admin/overview", icon: LayoutDashboard },
+  { label: "Home", href: "/admin/home", icon: Home },
   { label: "Application Link", href: "/admin/application-link", icon: Link2 },
   { label: "Programs", href: "/admin/programs", icon: BookOpen },
   { label: "Ventures", href: "/admin/ventures", icon: Briefcase },
-  { label: "In Motion", href: "/admin/in-motion", icon: Images },
-  { label: "Testimonials", href: "/admin/testimonials", icon: MessageSquareQuote },
   { label: "Blog", href: "/admin/blog", icon: Newspaper },
   { label: "About", href: "/admin/about", icon: Building2 },
 ];

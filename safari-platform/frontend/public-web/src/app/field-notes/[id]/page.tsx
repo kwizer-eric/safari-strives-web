@@ -1,59 +1,40 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { ArticleDetail } from "@/components/sections/ArticleDetail";
 import { ArticleRelated } from "@/components/sections/ArticleRelated";
-import {
-  articles,
-  getArticleById,
-  getOtherArticles,
-} from "@/data/articles";
+import { getArticleById } from "@/lib/content";
 
 type ArticleDetailPageProps = {
   params: Promise<{ id: string }>;
 };
 
-export async function generateStaticParams() {
-  return articles.map((article) => ({ id: article.id }));
-}
-
 export async function generateMetadata({
   params,
 }: ArticleDetailPageProps): Promise<Metadata> {
   const { id } = await params;
-  const article = getArticleById(id);
-
-  if (!article) {
+  try {
+    const { article } = await getArticleById(id);
+    return {
+      title: `${article.title} | Field Notes`,
+      description: article.excerpt,
+    };
+  } catch {
     return {};
   }
-
-  return {
-    title: `${article.title} | Field Notes`,
-    description: article.excerpt,
-  };
 }
 
 export default async function ArticleDetailPage({
   params,
 }: ArticleDetailPageProps) {
   const { id } = await params;
-  const article = getArticleById(id);
-
-  if (!article) {
-    notFound();
-  }
-
-  const related = getOtherArticles(id);
+  const { article, related } = await getArticleById(id);
 
   return (
-    <>
-      <Header solid />
+    <MarketingChrome solid>
       <main>
         <ArticleDetail article={article} />
         <ArticleRelated articles={related} />
       </main>
-      <Footer />
-    </>
+    </MarketingChrome>
   );
 }

@@ -1,5 +1,5 @@
 import { Container } from "@safari/ui";
-import type { Venture } from "@/data/ventures";
+import type { Venture } from "@/types/content";
 
 type VentureDetailStoryProps = {
   venture: Venture;

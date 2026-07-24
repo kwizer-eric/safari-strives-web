@@ -1,5 +1,5 @@
 import { cn } from "@safari/shared";
-import type { Testimonial } from "@/data/testimonials";
+import type { Testimonial } from "@/types/content";
 
 type TestimonialCardProps = {
   testimonial: Testimonial;

@@ -1,5 +1,5 @@
 import { Container } from "@safari/ui";
-import type { ModelPageContent } from "@/data/model-page";
+import type { ModelPageContent } from "@/types/content";
 
 function FeatureCard({
   index,

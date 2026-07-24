@@ -1,44 +1,73 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Program } from "@safari/shared";
-import { Alert, PageHeader, Table, type TableColumn } from "@safari/ui";
+import { DEFAULT_BACKEND_URL } from "@safari/shared";
+import { Alert, Badge, PageHeader, Table, type TableColumn } from "@safari/ui";
 import { useAuth } from "@safari/auth";
-import { formatDate } from "@safari/shared";
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? `${DEFAULT_BACKEND_URL}/api/v1`;
+
+type ProgramPageSummary = {
+  id: number;
+  slug: string;
+  is_published: boolean;
+  hero_title: string;
+};
 
 export default function ProgramsPage() {
-  const { api } = useAuth();
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const { token } = useAuth();
+  const [programs, setPrograms] = useState<ProgramPageSummary[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.programs
-      .list()
-      .then((res) => setPrograms(res.programs))
-      .catch((err) => setError((err as Error).message));
-  }, [api]);
+    async function load() {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        // Admin list includes drafts; public /pages is published-only.
+        const res = await fetch(`${API_URL}/admin/pages`, {
+          cache: "no-store",
+          headers: { authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+          throw new Error(`Failed to load programs (${res.status})`);
+        }
+        const data = (await res.json()) as ProgramPageSummary[];
+        setPrograms(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    void load();
+  }, [token]);
 
-  const columns: TableColumn<Program>[] = [
+  const columns: TableColumn<ProgramPageSummary>[] = [
     {
       key: "title",
       header: "Program",
       render: (p) => (
         <div>
-          <p className="font-semibold text-foreground">{p.title}</p>
-          <p className="text-xs text-muted">{p.summary}</p>
+          <p className="font-semibold text-foreground">{p.hero_title}</p>
+          <p className="text-xs text-muted">/{p.slug}</p>
         </div>
       ),
     },
-    { key: "cohort", header: "Cohort", render: (p) => p.cohort },
     {
-      key: "seats",
-      header: "Seats",
-      render: (p) => `${p.seatsRemaining} / ${p.seatsTotal}`,
-    },
-    {
-      key: "starts",
-      header: "Starts",
-      render: (p) => formatDate(p.startsAt),
+      key: "status",
+      header: "Status",
+      render: (p) => (
+        <Badge tone={p.is_published ? "success" : "warning"}>
+          {p.is_published ? "Published" : "Draft"}
+        </Badge>
+      ),
     },
   ];
 
@@ -46,19 +75,23 @@ export default function ProgramsPage() {
     <div>
       <PageHeader
         title="Programs"
-        description="Cohorts, seat availability, and dates."
+        description="Program pages from the CMS (Venture Accelerator, Green Lab, The Hub)."
       />
       {error && (
         <Alert tone="danger" className="mb-6">
           {error}
         </Alert>
       )}
-      <Table
-        columns={columns}
-        rows={programs}
-        getRowKey={(p) => p.id}
-        emptyMessage="No programs defined."
-      />
+      {loading ? (
+        <p className="text-sm text-muted">Loading programs…</p>
+      ) : (
+        <Table
+          columns={columns}
+          rows={programs}
+          getRowKey={(p) => String(p.id)}
+          emptyMessage="No program pages yet. Seed with: python -m scripts.seed_program_pages"
+        />
+      )}
     </div>
   );
 }

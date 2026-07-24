@@ -4,15 +4,16 @@ import Link from "next/link";
 import { X } from "lucide-react";
 import { Button, Logo } from "@safari/ui";
 import { cn } from "@safari/shared";
-import { navLinks, site } from "@/data/site";
 import { ApplyButton } from "@/components/ui/ApplyButton";
+import type { SiteSettings } from "@/types/content";
 
 type MobileMenuProps = {
   isOpen: boolean;
   onClose: () => void;
+  site: SiteSettings;
 };
 
-export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+export function MobileMenu({ isOpen, onClose, site }: MobileMenuProps) {
   return (
     <>
       <div
@@ -32,19 +33,18 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         )}
       >
         <div className="mb-8 flex items-center justify-between">
-          <Logo src={site.logo} alt={site.name} onClick={onClose} />
+          <Logo src={site.logo} alt={site.name} />
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full p-2 text-foreground transition-colors hover:bg-cream"
+            className="rounded-full p-2 text-foreground hover:bg-cream"
             aria-label="Close menu"
           >
-            <X className="h-6 w-6" />
+            <X className="h-5 w-5" />
           </button>
         </div>
-
-        <ul className="flex flex-col gap-1">
-          {navLinks.map((link) => (
+        <ul className="flex flex-col gap-2">
+          {site.navLinks.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
@@ -56,8 +56,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </li>
           ))}
         </ul>
-
-        <div className="mt-auto flex flex-col gap-3 border-t border-border pt-6">
+        <div className="mt-auto flex flex-col gap-3 pt-8">
           <ApplyButton variant="secondary" className="w-full">
             Apply Now
           </ApplyButton>

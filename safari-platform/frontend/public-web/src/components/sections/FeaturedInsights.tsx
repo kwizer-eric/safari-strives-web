@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { Container } from "@safari/ui";
-import { articles } from "@/data/articles";
-import { home } from "@/data/home";
 import { BlogCard } from "@/components/ui/BlogCard";
+import type { Article } from "@/types/content";
 
-export function FeaturedInsights() {
+type FeaturedInsightsProps = {
+  title: string;
+  articles: Article[];
+};
+
+export function FeaturedInsights({ title, articles }: FeaturedInsightsProps) {
   return (
     <section
       id="insights"
@@ -17,7 +21,7 @@ export function FeaturedInsights() {
             id="insights-heading"
             className="text-3xl font-bold tracking-tight text-foreground md:text-4xl"
           >
-            {home.featuredInsights.title}
+            {title}
           </h2>
           <Link
             href="/field-notes"
@@ -27,7 +31,7 @@ export function FeaturedInsights() {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.slice(0, 3).map((article) => (
+          {articles.map((article) => (
             <BlogCard key={article.id} article={article} />
           ))}
         </div>

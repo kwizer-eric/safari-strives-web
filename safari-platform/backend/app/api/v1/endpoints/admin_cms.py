@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.api.v1.deps import get_db
+from app.api.v1.deps import get_current_admin, get_db
 from app.models.cms import CmsCollection, CmsPage
 from app.schemas.cms import (
     CmsCollectionCreate,
@@ -13,9 +14,13 @@ from app.schemas.cms import (
     CmsPageUpdate,
 )
 
-# Auth intentionally disabled while the CMS UI is being built out.
-# Re-add `dependencies=[Depends(get_current_admin)]` before production.
-router = APIRouter(prefix="/admin/cms", tags=["admin-cms"])
+# Why JWT here: without it anyone on the network can rewrite homepage content.
+# Frontend must send Authorization: Bearer <access_token> from POST /auth/login.
+router = APIRouter(
+    prefix="/admin/cms",
+    tags=["admin-cms"],
+    dependencies=[Depends(get_current_admin)],
+)
 
 
 def _get_page_or_404(page_id: int, db: Session) -> CmsPage:
@@ -48,7 +53,14 @@ def list_pages(db: Session = Depends(get_db)) -> list[CmsPage]:
 def create_page(payload: CmsPageCreate, db: Session = Depends(get_db)) -> CmsPage:
     page = CmsPage(**payload.model_dump())
     db.add(page)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"CMS page slug '{payload.slug}' already exists",
+        ) from None
     db.refresh(page)
     return page
 
@@ -65,7 +77,14 @@ def update_page(
     page = _get_page_or_404(page_id, db)
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(page, field, value)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="CMS page update conflicts with an existing slug",
+        ) from None
     db.refresh(page)
     return page
 
@@ -91,7 +110,14 @@ def create_collection(
 ) -> CmsCollection:
     collection = CmsCollection(**payload.model_dump())
     db.add(collection)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"CMS collection key '{payload.key}' already exists",
+        ) from None
     db.refresh(collection)
     return collection
 
@@ -108,7 +134,14 @@ def update_collection(
     collection = _get_collection_or_404(collection_id, db)
     for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(collection, field, value)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="CMS collection update conflicts with an existing key",
+        ) from None
     db.refresh(collection)
     return collection
 

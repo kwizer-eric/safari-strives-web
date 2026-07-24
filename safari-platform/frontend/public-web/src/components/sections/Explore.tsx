@@ -1,9 +1,14 @@
-import { home } from "@/data/home";
 import { ProgramScrollSection } from "@/components/sections/ProgramScrollSection";
+import type { HomePillar } from "@/lib/cms";
 
-export function Explore() {
-  const { explore } = home;
+type ExploreProps = {
+  explore: {
+    title: string;
+    pillars: readonly HomePillar[];
+  };
+};
 
+export function Explore({ explore }: ExploreProps) {
   return (
     <ProgramScrollSection title={explore.title} pillars={explore.pillars} />
   );

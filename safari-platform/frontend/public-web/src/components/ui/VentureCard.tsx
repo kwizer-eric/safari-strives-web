@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@safari/shared";
-import type { Venture } from "@/data/ventures";
+import type { Venture } from "@/types/content";
 
 type VentureCardProps = {
   venture: Venture;

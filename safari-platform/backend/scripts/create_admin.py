@@ -5,6 +5,7 @@ out-of-band by whoever has shell/DB access, not self-service over HTTP.
 
 Usage:
     python -m scripts.create_admin --email admin@safaristrives.org --password 'change-me' [--role admin]
+    python -m scripts.create_admin --email admin@safaristrives.org --password 'new' --reset-password
 """
 
 import argparse
@@ -17,13 +18,23 @@ from app.core.security import hash_password
 from app.models.admin_user import AdminUser
 
 
-def create_admin(email: str, password: str, role: str) -> None:
+def create_admin(email: str, password: str, role: str, reset_password: bool) -> None:
     db = SessionLocal()
     try:
         existing = db.scalars(select(AdminUser).where(AdminUser.email == email)).first()
         if existing is not None:
-            print(f"AdminUser with email '{email}' already exists (id={existing.id}).")
-            sys.exit(1)
+            if not reset_password:
+                print(f"AdminUser with email '{email}' already exists (id={existing.id}).")
+                print("Re-run with --reset-password to update the password.")
+                sys.exit(1)
+            existing.hashed_password = hash_password(password)
+            existing.role = role
+            existing.is_active = True
+            db.commit()
+            print(
+                f"Updated password for AdminUser id={existing.id} email={existing.email}"
+            )
+            return
 
         admin = AdminUser(
             email=email,
@@ -43,9 +54,19 @@ def main() -> None:
     parser.add_argument("--email", required=True)
     parser.add_argument("--password", required=True)
     parser.add_argument("--role", default="admin")
+    parser.add_argument(
+        "--reset-password",
+        action="store_true",
+        help="If the email already exists, update its password instead of exiting.",
+    )
     args = parser.parse_args()
 
-    create_admin(email=args.email, password=args.password, role=args.role)
+    create_admin(
+        email=args.email,
+        password=args.password,
+        role=args.role,
+        reset_password=args.reset_password,
+    )
 
 
 if __name__ == "__main__":

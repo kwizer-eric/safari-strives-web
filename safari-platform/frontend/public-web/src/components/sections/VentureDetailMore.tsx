@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@safari/ui";
-import type { Venture } from "@/data/ventures";
+import type { Venture } from "@/types/content";
 
 type VentureDetailMoreProps = {
   ventures: Venture[];
