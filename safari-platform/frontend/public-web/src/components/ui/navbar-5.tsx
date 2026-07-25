@@ -143,22 +143,34 @@ export function Navbar5({ isSolid = true, site }: Navbar5Props) {
       <Sheet>
         <SheetTrigger asChild className="lg:hidden">
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             className={cn(
-              !isSolid && "border-white/40 bg-transparent text-white hover:bg-white/10",
+              !isSolid && "text-white hover:bg-white/10",
             )}
           >
             <MenuIcon className="h-4 w-4" />
           </Button>
         </SheetTrigger>
         <SheetContent side="top" className="max-h-screen overflow-auto">
-          <SheetHeader>
-            <SheetTitle>
+          <SheetHeader className="items-start text-left">
+            <SheetTitle className="text-left">
               <Logo src={site.logo} alt={site.name} />
             </SheetTitle>
           </SheetHeader>
           <div className="flex flex-col p-4">
+            <div className="flex flex-col gap-2">
+              {simpleLinks.map((link) => (
+                <Link
+                  href={link.href}
+                  key={link.label}
+                  className="rounded-lg px-3 py-3 text-lg font-medium text-foreground transition-colors hover:bg-cream"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+
             <Accordion type="single" collapsible className="mt-4 mb-2">
               <AccordionItem value="our-model" className="border-none">
                 <AccordionTrigger className="text-base hover:no-underline">
@@ -189,20 +201,6 @@ export function Navbar5({ isSolid = true, site }: Navbar5Props) {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-
-            <div className="flex flex-col gap-2">
-              {navLinks
-                .filter((link) => link.label !== "Our Model")
-                .map((link) => (
-                  <Link
-                    href={link.href}
-                    key={link.label}
-                    className="rounded-lg px-3 py-3 text-lg font-medium text-foreground transition-colors hover:bg-cream"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-            </div>
 
             <div className="mt-6 flex flex-col gap-3">
               <ApplyButton variant="secondary" className="w-full">

@@ -10,9 +10,9 @@ export function VenturesHero({ page }: VenturesHeroProps) {
   return (
     <section
       aria-labelledby="ventures-hero-heading"
-      className="relative overflow-hidden"
+      className="sticky top-0 z-0 min-h-[92vh]"
     >
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 overflow-hidden">
         <HeroBackgroundVideo
           src={page.heroVideo}
           label={page.heroImageAlt || "Ventures hero video"}

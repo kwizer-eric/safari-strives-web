@@ -12,7 +12,7 @@ export function VenturesMission({ mission }: VenturesMissionProps) {
   return (
     <section
       aria-labelledby="ventures-mission-heading"
-      className="bg-accent py-20 md:py-32"
+      className="relative z-10 bg-accent py-20 md:py-32"
     >
       <Container>
         <div className="mx-auto flex max-w-3xl flex-col items-center text-center">

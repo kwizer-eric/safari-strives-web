@@ -8,7 +8,36 @@ Headless CMS API for the Safari Strives marketing site and admin dashboard.
 - PostgreSQL + SQLAlchemy 2.0 + Alembic
 - Pydantic v2
 
-## Quick start
+## Quick start (Docker — recommended)
+
+Fresh database + API image in one command:
+
+```bash
+cd safari-platform/backend
+./scripts/docker-reset.sh
+```
+
+This will:
+1. Stop and delete the old Postgres volume (`docker compose down -v`)
+2. Rebuild the `safari-strives-api:latest` image
+3. Start Postgres + API (migrations run automatically on boot)
+4. Seed CMS content, program pages, and an admin user
+
+Default admin: `admin@safaristrives.org` / `admin123`
+
+Then start the frontend:
+
+```bash
+cd ../frontend && npm run dev
+```
+
+| Service  | URL |
+|----------|-----|
+| API      | http://localhost:4000/api/v1 |
+| Docs     | http://localhost:4000/docs |
+| Postgres | `localhost:5433` (postgres/postgres/safari_strives) |
+
+## Quick start (local Python)
 
 ```bash
 cd safari-platform/backend
@@ -29,11 +58,11 @@ docker compose up -d db
 alembic upgrade head
 
 # 5. Run API
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 4000
 ```
 
-- API base URL: `http://localhost:8000/api/v1`
-- Interactive docs: `http://localhost:8000/docs`
+- API base URL: `http://localhost:4000/api/v1`
+- Interactive docs: `http://localhost:4000/docs`
 - Health check: `GET /api/v1/health` (returns `database: connected` when Postgres is reachable)
 
 ## Database connection (Docker)

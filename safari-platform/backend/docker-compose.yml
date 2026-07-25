@@ -1,14 +1,22 @@
-# Safari Strives dev database
+# Safari Strives local stack
 #
-# Host port 5433 maps to Postgres 5432 inside the container so we do not clash
-# with a system Postgres already listening on 5432.
+# Services:
+#   db  — PostgreSQL 16 (fresh volume on `docker compose down -v`)
+#   api — FastAPI backend (built from ./Dockerfile)
 #
-# Connection string (must match backend/.env):
-#   postgresql+psycopg2://postgres:postgres@localhost:5433/safari_strives
+# Host URLs:
+#   API:      http://localhost:4000/api/v1
+#   Docs:     http://localhost:4000/docs
+#   Postgres: localhost:5433  (user/pass/db: postgres/postgres/safari_strives)
 #
-# Start:  docker compose up -d db
-# Stop:   docker compose down
-# Reset:  docker compose down -v   (deletes all data)
+# Quick start (fresh DB + image):
+#   ./scripts/docker-reset.sh
+#
+# Manual:
+#   docker compose up -d --build
+#   docker compose exec api python -m scripts.seed_cms_content
+#   docker compose exec api python -m scripts.seed_program_pages
+#   docker compose exec api python -m scripts.create_admin --email admin@safaristrives.org --password 'admin123'
 
 services:
   db:
@@ -27,8 +35,34 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres -d safari_strives"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
       start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: safari-strives-api:latest
+    container_name: safari-strives-api
+    restart: unless-stopped
+    ports:
+      - "4000:4000"
+    environment:
+      ENVIRONMENT: development
+      PORT: "4000"
+      DATABASE_URL: postgresql+psycopg2://postgres:postgres@db:5432/safari_strives
+      CORS_ORIGINS: http://localhost:3000
+      SECRET_KEY: change-me-in-development
+      WAIT_FOR_DB: "true"
+      RUN_MIGRATIONS: "true"
+      DB_HOST: db
+      DB_PORT: "5432"
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: safari_strives
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   safari_strives_pgdata:

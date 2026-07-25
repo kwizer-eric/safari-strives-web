@@ -200,13 +200,13 @@ export function ProgramScrollSection({
       aria-labelledby="explore-heading"
       className="relative z-10 isolate bg-background"
     >
-      <div className="sticky top-20 z-0 bg-background">
-        <div className="flex min-h-[calc(100vh-5rem)] items-center overflow-hidden py-14 md:py-20">
+      <div className="z-0 bg-background md:sticky md:top-20">
+        <div className="flex overflow-hidden py-14 md:min-h-[calc(100vh-5rem)] md:items-center md:py-20">
         <Container className="w-full">
           <div className="grid min-w-0 grid-cols-1 gap-8 md:grid-cols-4 md:gap-10">
             <h2
               id="explore-heading"
-              className="text-sm font-semibold uppercase tracking-widest text-accent md:col-span-1 md:pt-2"
+              className="text-4xl font-bold leading-tight tracking-tight text-black md:col-span-1 md:pt-2 md:text-5xl"
             >
               {title}
             </h2>
@@ -249,20 +249,19 @@ export function ProgramScrollSection({
             ) : (
               <div
                 ref={viewportRef}
-                className="min-w-0 snap-x snap-mandatory overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] md:col-span-3 [&::-webkit-scrollbar]:hidden"
+                className="flex min-w-0 flex-col gap-4 pb-2 md:col-span-3"
               >
-                <div className="flex gap-3">
-                  {pillars.map((pillar) => (
-                    <ProgramHorizontalCard
-                      key={pillar.id}
-                      title={pillar.title}
-                      description={pillar.description}
-                      image={pillar.image}
-                      imageAlt={pillar.imageAlt}
-                      href={pillar.href}
-                    />
-                  ))}
-                </div>
+                {pillars.map((pillar) => (
+                  <ProgramHorizontalCard
+                    key={pillar.id}
+                    title={pillar.title}
+                    description={pillar.description}
+                    image={pillar.image}
+                    imageAlt={pillar.imageAlt}
+                    href={pillar.href}
+                    className="w-full"
+                  />
+                ))}
               </div>
             )}
           </div>

@@ -34,10 +34,9 @@ CMS_PAGES: list[dict] = [
             "hero": {
                 "headline": "Supporting Entrepreneurs in Africa's Secondary Cities",
                 "body": (
-                    "Safari Strives provides local entrepreneurs with the tools, "
-                    "space, funding, and operator-led support they need to increase "
-                    "revenue, strengthen their businesses, create jobs, and become "
-                    "better positioned for future opportunities."
+                    "Safari Strives equips local entrepreneurs with tools, funding, "
+                    "space, and support to grow businesses, create jobs, and seize "
+                    "new opportunities."
                 ),
                 "image": "",
                 "imageAlt": "Group of people in a community",
