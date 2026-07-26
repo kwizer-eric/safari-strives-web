@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Article } from "@/data/articles";
+import type { Article } from "@/types/content";
 
 type FeaturedArticleCardProps = {
   article: Article;

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Container } from "@safari/ui";
-import type { Article } from "@/data/articles";
+import type { Article } from "@/types/content";
 import { BlogCard } from "@/components/ui/BlogCard";
 
 type ArticleRelatedProps = {

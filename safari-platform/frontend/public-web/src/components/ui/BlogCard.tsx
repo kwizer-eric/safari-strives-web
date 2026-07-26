@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@safari/shared";
-import type { Article } from "@/data/articles";
+import type { Article } from "@/types/content";
 
 type BlogCardProps = {
   article: Article;

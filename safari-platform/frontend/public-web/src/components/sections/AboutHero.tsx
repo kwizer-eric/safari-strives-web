@@ -2,12 +2,15 @@
 
 import { useState } from "react";
 import { Button, Container } from "@safari/ui";
-import { aboutPage } from "@/data/about";
 import { YouTubeVideoModal } from "@/components/ui/YouTubeVideoModal";
 import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
+import type { AboutPagePayload } from "@/types/content";
 
-export function AboutHero() {
-  const { hero } = aboutPage;
+type AboutHeroProps = {
+  hero: AboutPagePayload["hero"];
+};
+
+export function AboutHero({ hero }: AboutHeroProps) {
   const [videoOpen, setVideoOpen] = useState(false);
 
   return (
@@ -19,10 +22,9 @@ export function AboutHero() {
         <div className="absolute inset-0 overflow-hidden">
           <HeroBackgroundVideo
             src={hero.heroVideo}
-            posterSrc={hero.image}
-            label={hero.imageAlt}
+            label={hero.imageAlt || "About hero video"}
           />
-          <div className="absolute inset-0 bg-dark/60" />
+          <div className="pointer-events-none absolute inset-0 bg-dark/60" />
         </div>
 
         <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">

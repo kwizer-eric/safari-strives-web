@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { ModelPageHero } from "@/components/sections/ModelPageHero";
 import { ModelPageAudience } from "@/components/sections/ModelPageAudience";
 import { ModelPageFeatures } from "@/components/sections/ModelPageFeatures";
 import { ModelPageCloser } from "@/components/sections/ModelPageCloser";
-import { ventureAcceleratorPage } from "@/data/venture-accelerator";
+import { getProgramPage } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "The Venture Accelerator | Safari Strives",
@@ -13,12 +12,11 @@ export const metadata: Metadata = {
     "A four-month, execution-focused program for operating entrepreneurs in Rwanda's secondary cities who are ready to strengthen their businesses and grow.",
 };
 
-export default function VentureAcceleratorPage() {
-  const page = ventureAcceleratorPage;
+export default async function VentureAcceleratorPage() {
+  const page = await getProgramPage("our-model");
 
   return (
-    <>
-      <Header />
+    <MarketingChrome>
       <main>
         <ModelPageHero
           hero={page.hero}
@@ -37,7 +35,6 @@ export default function VentureAcceleratorPage() {
           headingId="venture-accelerator-closer-heading"
         />
       </main>
-      <Footer />
-    </>
+    </MarketingChrome>
   );
 }

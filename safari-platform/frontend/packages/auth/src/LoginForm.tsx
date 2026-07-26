@@ -16,6 +16,8 @@ type LoginFormProps = {
   brandName?: string;
   brandTagline?: string;
   highlights?: string[];
+  /** Demo portals can show seeded credentials; real admin login should hide this. */
+  showDemoHint?: boolean;
 };
 
 const defaultHighlights = [
@@ -33,11 +35,12 @@ export function LoginForm({
   brandName = "Safari Strives",
   brandTagline = "Build the conditions. Scale the work.",
   highlights = defaultHighlights,
+  showDemoHint = true,
 }: LoginFormProps) {
   const { login } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState(defaultEmail ?? "");
-  const [password, setPassword] = useState("password");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -218,25 +221,27 @@ export function LoginForm({
               </form>
             </div>
 
-            <div className="border-t border-border bg-cream/60 px-8 py-4 sm:px-10">
-              <div className="flex items-center gap-3">
-                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
-                  <Sparkles className="h-4 w-4" aria-hidden="true" />
-                </span>
-                <div className="text-xs">
-                  <p className="font-semibold uppercase tracking-widest text-muted">
-                    Demo credentials
-                  </p>
-                  <p className="mt-0.5 text-foreground">
-                    Any seeded account works. Password is{" "}
-                    <code className="rounded bg-background px-1.5 py-0.5 font-mono text-[11px] font-semibold text-accent-hover">
-                      password
-                    </code>
-                    .
-                  </p>
+            {showDemoHint ? (
+              <div className="border-t border-border bg-cream/60 px-8 py-4 sm:px-10">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent/15 text-accent">
+                    <Sparkles className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                  <div className="text-xs">
+                    <p className="font-semibold uppercase tracking-widest text-muted">
+                      Demo credentials
+                    </p>
+                    <p className="mt-0.5 text-foreground">
+                      Any seeded account works. Password is{" "}
+                      <code className="rounded bg-background px-1.5 py-0.5 font-mono text-[11px] font-semibold text-accent-hover">
+                        password
+                      </code>
+                      .
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : null}
           </div>
 
           <p className="mt-6 text-center text-xs text-muted">

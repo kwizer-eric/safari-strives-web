@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Container } from "@safari/ui";
-import type { Article, ArticleBlock } from "@/data/articles";
+import type { Article, ArticleBlock } from "@/types/content";
 
 type ArticleDetailProps = {
   article: Article;

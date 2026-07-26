@@ -1,11 +1,14 @@
 "use client";
 
 import { Container } from "@safari/ui";
-import { aboutPage } from "@/data/about";
 import { ApplyButton } from "@/components/ui/ApplyButton";
+import type { AboutPagePayload } from "@/types/content";
 
-export function AboutCloser() {
-  const { closer } = aboutPage;
+type AboutCloserProps = {
+  closer: AboutPagePayload["closer"];
+};
+
+export function AboutCloser({ closer }: AboutCloserProps) {
 
   return (
     <section

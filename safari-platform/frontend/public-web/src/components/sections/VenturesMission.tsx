@@ -1,12 +1,14 @@
 "use client";
 
 import { Container } from "@safari/ui";
-import { venturesPage } from "@/data/ventures";
 import { ApplyButton } from "@/components/ui/ApplyButton";
+import type { VenturesPagePayload } from "@/types/content";
 
-export function VenturesMission() {
-  const { mission } = venturesPage;
+type VenturesMissionProps = {
+  mission: VenturesPagePayload["mission"];
+};
 
+export function VenturesMission({ mission }: VenturesMissionProps) {
   return (
     <section
       aria-labelledby="ventures-mission-heading"

@@ -4,14 +4,15 @@ export default function LoginPage() {
   return (
     <LoginForm
       title="Admin console"
-      subtitle="Sign in to manage applications, programs, users, and partners."
+      subtitle="Use admin@safaristrives.org and your staff password."
       allowedRoles={["admin"]}
       redirectTo="/admin/overview"
-      defaultEmail="admin@safari.local"
+      defaultEmail="admin@safaristrives.org"
       brandName="Safari Admin"
       brandTagline="Steady work behind the scenes."
+      showDemoHint={false}
       highlights={[
-        "Move applications through the pipeline.",
+        "Publish homepage media and collections.",
         "Manage cohorts and program capacity.",
         "See partners, projects, and impact reports.",
       ]}

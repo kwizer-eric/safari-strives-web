@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { ModelPageHero } from "@/components/sections/ModelPageHero";
 import { ModelPageAudience } from "@/components/sections/ModelPageAudience";
 import { ModelPageFeatures } from "@/components/sections/ModelPageFeatures";
 import { ModelPageCloser } from "@/components/sections/ModelPageCloser";
-import { greenEnterpriseLabPage } from "@/data/green-enterprise-lab";
+import { getProgramPage } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Green Enterprise Lab | Safari Strives",
@@ -13,12 +12,11 @@ export const metadata: Metadata = {
     "Safari Strives' demonstration platform and cash-flow engine: poultry, packaged eggs, organic fertilizer, and market-ready green enterprise.",
 };
 
-export default function GreenEnterpriseLabPage() {
-  const page = greenEnterpriseLabPage;
+export default async function GreenEnterpriseLabPage() {
+  const page = await getProgramPage("green-enterprise-lab");
 
   return (
-    <>
-      <Header />
+    <MarketingChrome>
       <main>
         <ModelPageHero
           hero={page.hero}
@@ -37,7 +35,6 @@ export default function GreenEnterpriseLabPage() {
           headingId="green-enterprise-lab-closer-heading"
         />
       </main>
-      <Footer />
-    </>
+    </MarketingChrome>
   );
 }

@@ -63,10 +63,36 @@ export function AuthProvider({
 
   useEffect(() => {
     if (demoMode) return;
-    const existing = storage.read();
-    if (existing) setSession(existing);
-    setLoading(false);
-  }, [demoMode]);
+
+    let cancelled = false;
+
+    async function hydrateSession() {
+      const existing = storage.read();
+      if (!existing?.token) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+
+      // Show the stored session immediately, then prove the JWT is still valid.
+      // Why: without /auth/me, an expired token keeps the UI "logged in" until
+      // the next PATCH fails with a confusing 401.
+      if (!cancelled) setSession(existing);
+
+      try {
+        await api.auth.me();
+      } catch {
+        storage.clear();
+        if (!cancelled) setSession(null);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    void hydrateSession();
+    return () => {
+      cancelled = true;
+    };
+  }, [demoMode, api]);
 
   const login = useCallback(
     async (email: string, password: string) => {

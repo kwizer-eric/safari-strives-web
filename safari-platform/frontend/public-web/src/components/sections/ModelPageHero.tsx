@@ -1,5 +1,5 @@
 import { Container } from "@safari/ui";
-import type { ModelPageContent } from "@/data/model-page";
+import type { ModelPageContent } from "@/types/content";
 import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
 
 type ModelPageHeroProps = {
@@ -16,10 +16,9 @@ export function ModelPageHero({ hero, headingId }: ModelPageHeroProps) {
       <div className="absolute inset-0 overflow-hidden">
         <HeroBackgroundVideo
           src={hero.heroVideo}
-          posterSrc={hero.image}
-          label={hero.imageAlt}
+          label={hero.imageAlt || "Program hero video"}
         />
-        <div className="absolute inset-0 bg-dark/60" />
+        <div className="pointer-events-none absolute inset-0 bg-dark/60" />
       </div>
 
       <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">

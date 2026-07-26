@@ -28,13 +28,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { navLinks, ourModelLinks, site } from "@/data/site";
+import type { SiteSettings } from "@/types/content";
 
 type Navbar5Props = {
   isSolid?: boolean;
+  site: SiteSettings;
 };
 
-export function Navbar5({ isSolid = true }: Navbar5Props) {
+export function Navbar5({ isSolid = true, site }: Navbar5Props) {
+  const navLinks = site.navLinks;
+  const ourModelLinks = site.ourModelLinks;
   const linkClass = cn(
     "bg-transparent text-sm font-medium transition-colors",
     "hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent",

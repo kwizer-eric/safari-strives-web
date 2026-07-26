@@ -1,13 +1,17 @@
 "use client";
 
 import { Button, Container } from "@safari/ui";
-import { home } from "@/data/home";
-import { site } from "@/data/site";
 import { ApplyButton } from "@/components/ui/ApplyButton";
 
-export function FinalCTA() {
-  const { finalCta } = home;
+type FinalCTAProps = {
+  finalCta: {
+    line1: string;
+    line2: string;
+  };
+  donateHref: string;
+};
 
+export function FinalCTA({ finalCta, donateHref }: FinalCTAProps) {
   return (
     <section
       aria-labelledby="final-cta-heading"
@@ -33,7 +37,7 @@ export function FinalCTA() {
                 Apply Now
               </ApplyButton>
               <Button
-                href={site.donateHref}
+                href={donateHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="primary"

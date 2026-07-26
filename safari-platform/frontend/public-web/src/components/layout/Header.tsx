@@ -4,13 +4,15 @@ import { useEffect, useState } from "react";
 import { Container } from "@safari/ui";
 import { cn } from "@safari/shared";
 import { Navbar5 } from "@/components/ui/navbar-5";
+import type { SiteSettings } from "@/types/content";
 
 type HeaderProps = {
   /** Light-background pages: dark nav + pill bar from first paint */
   solid?: boolean;
+  site: SiteSettings;
 };
 
-export function Header({ solid = false }: HeaderProps) {
+export function Header({ solid = false, site }: HeaderProps) {
   const [scrolled, setScrolled] = useState(solid);
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export function Header({ solid = false }: HeaderProps) {
               : "py-2",
           )}
         >
-          <Navbar5 isSolid={isSolid} />
+          <Navbar5 isSolid={isSolid} site={site} />
         </div>
       </Container>
     </header>

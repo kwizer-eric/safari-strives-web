@@ -2,94 +2,165 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { Program } from "@safari/shared";
+import { DEFAULT_BACKEND_URL } from "@safari/shared";
 import { PageHeader, StatCard, Alert } from "@safari/ui";
 import { useAuth } from "@safari/auth";
-import { articles } from "@/data/articles";
-import { ventures } from "@/data/ventures";
-import { home } from "@/data/home";
-import { testimonials } from "@/data/testimonials";
-import { partners, teamMembers } from "@/data/about";
 import { readApplyUrl } from "@/lib/apply-url";
+import {
+  listAdminCmsCollections,
+  listAdminCmsPages,
+  type HomePayload,
+} from "@/lib/cms";
+
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? `${DEFAULT_BACKEND_URL}/api/v1`;
 
 const shortcuts = [
+  { label: "Home", href: "/admin/home" },
   { label: "Application Link", href: "/admin/application-link" },
   { label: "Programs", href: "/admin/programs" },
   { label: "Ventures", href: "/admin/ventures" },
-  { label: "In Motion", href: "/admin/in-motion" },
-  { label: "Testimonials", href: "/admin/testimonials" },
   { label: "Blog", href: "/admin/blog" },
   { label: "About", href: "/admin/about" },
 ] as const;
 
+type OverviewStats = {
+  programs: number;
+  inMotion: number;
+  testimonials: number;
+  articles: number;
+  team: number;
+  partners: number;
+  ventures: number;
+};
+
+const emptyStats: OverviewStats = {
+  programs: 0,
+  inMotion: 0,
+  testimonials: 0,
+  articles: 0,
+  team: 0,
+  partners: 0,
+  ventures: 0,
+};
+
 export default function OverviewPage() {
-  const { api } = useAuth();
-  const [programs, setPrograms] = useState<Program[]>([]);
+  const { token } = useAuth();
+  const [stats, setStats] = useState<OverviewStats>(emptyStats);
   const [applyUrl, setApplyUrl] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setApplyUrl(readApplyUrl());
-    api.programs
-      .list()
-      .then((res) => setPrograms(res.programs))
-      .catch((err) => setError((err as Error).message));
-  }, [api]);
 
-  const openSeats = programs.reduce((sum, p) => sum + p.seatsRemaining, 0);
+    async function load() {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        // Program pages live on /pages (typed CMS). Home/collections live on /admin/cms.
+        const [programPagesRes, cmsPages, collections] = await Promise.all([
+          fetch(`${API_URL}/pages`, { cache: "no-store" }),
+          listAdminCmsPages(token),
+          listAdminCmsCollections(token),
+        ]);
+
+        const programPages = programPagesRes.ok
+          ? ((await programPagesRes.json()) as unknown[])
+          : [];
+
+        const home = cmsPages.find((page) => page.slug === "home");
+        const homePayload = (home?.payload ?? null) as HomePayload | null;
+
+        const countItems = (key: string) => {
+          const collection = collections.find((item) => item.key === key);
+          const items = (collection?.payload as { items?: unknown[] } | undefined)
+            ?.items;
+          return Array.isArray(items) ? items.length : 0;
+        };
+
+        setStats({
+          programs: Array.isArray(programPages) ? programPages.length : 0,
+          inMotion: homePayload?.inMotion?.cards?.length ?? 0,
+          testimonials: countItems("testimonials"),
+          articles: countItems("articles"),
+          team: countItems("team-members"),
+          partners: countItems("partners"),
+          ventures: countItems("ventures"),
+        });
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void load();
+  }, [token]);
 
   return (
     <div>
       <PageHeader
         title="Overview"
-        description="Content counts from the sections in this admin dashboard."
+        description="Live counts from the CMS and published program pages."
       />
       {error && (
         <Alert tone="danger" className="mb-6">
           {error}
         </Alert>
       )}
+      {loading && (
+        <p className="mb-6 text-sm text-muted">Loading dashboard stats…</p>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Programs"
-          value={programs.length}
-          hint={`${openSeats} open seats`}
+          value={stats.programs}
+          hint="Published program pages"
         />
         <StatCard
           label="Venturists"
-          value={ventures.length}
-          hint="Founders on /ventures"
+          value={stats.ventures}
+          hint="CMS ventures collection"
         />
         <StatCard
           label="In Motion cards"
-          value={home.inMotion.cards.length}
+          value={stats.inMotion}
           hint="Homepage marquee"
         />
         <StatCard
           label="Testimonials"
-          value={testimonials.length}
+          value={stats.testimonials}
           hint="Homepage marquee"
         />
         <StatCard
           label="Blog posts"
-          value={articles.length}
+          value={stats.articles}
           hint="Field Notes articles"
         />
         <StatCard
           label="Team members"
-          value={teamMembers.length}
+          value={stats.team}
           hint="About page team"
         />
         <StatCard
           label="Partners"
-          value={partners.length}
+          value={stats.partners}
           hint="About page logos"
         />
         <StatCard
           label="Application link"
           value={applyUrl ? "Set" : "Missing"}
-          hint={applyUrl ? applyUrl.replace(/^https?:\/\//, "").slice(0, 36) : "Add in Application Link"}
+          hint={
+            applyUrl
+              ? applyUrl.replace(/^https?:\/\//, "").slice(0, 36)
+              : "Add in Application Link"
+          }
         />
       </div>
 
@@ -117,8 +188,8 @@ export default function OverviewPage() {
           </h2>
           <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
             <li>Confirm the Application Link points to the live Google Form.</li>
-            <li>Refresh In Motion and Testimonials for the homepage.</li>
-            <li>Publish new Field Notes from Blog when ready.</li>
+            <li>Refresh Home → In Motion and Testimonials.</li>
+            <li>Publish new Field Notes from Blog when CMS-wired.</li>
             <li>Keep About team and partner logos up to date.</li>
           </ul>
         </div>

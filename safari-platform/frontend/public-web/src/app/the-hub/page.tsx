@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { ModelPageHero } from "@/components/sections/ModelPageHero";
 import { ModelPageAudience } from "@/components/sections/ModelPageAudience";
 import { ModelPageFeatures } from "@/components/sections/ModelPageFeatures";
 import { ModelPageCloser } from "@/components/sections/ModelPageCloser";
-import { theHubPage } from "@/data/the-hub";
+import { getProgramPage } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "The Hub | Safari Strives",
@@ -13,12 +12,11 @@ export const metadata: Metadata = {
     "Workspace, media studio, production tools, and a professional environment for founders in Rubavu.",
 };
 
-export default function TheHubPage() {
-  const page = theHubPage;
+export default async function TheHubPage() {
+  const page = await getProgramPage("the-hub");
 
   return (
-    <>
-      <Header />
+    <MarketingChrome>
       <main>
         <ModelPageHero hero={page.hero} headingId="the-hub-hero-heading" />
         <ModelPageAudience
@@ -34,7 +32,6 @@ export default function TheHubPage() {
           headingId="the-hub-closer-heading"
         />
       </main>
-      <Footer />
-    </>
+    </MarketingChrome>
   );
 }

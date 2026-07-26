@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Container } from "@safari/ui";
-import { footerColumns, footerSocial, site } from "@/data/site";
+import type { SiteSettings } from "@/types/content";
 
 function FooterColumn({
   title,
@@ -30,7 +30,17 @@ function FooterColumn({
   );
 }
 
-export function Footer() {
+type FooterProps = {
+  site: SiteSettings;
+};
+
+export function Footer({ site }: FooterProps) {
+  const footerSocial = [
+    { label: "LinkedIn", href: site.social.linkedin },
+    { label: "Facebook", href: site.social.facebook },
+    { label: "Instagram", href: site.social.instagram },
+  ];
+
   return (
     <footer id="contact" className="relative z-10 bg-black text-white">
       <Container className="py-16">
@@ -48,16 +58,16 @@ export function Footer() {
           </div>
 
           <FooterColumn
-            title={footerColumns.programs.title}
-            links={footerColumns.programs.links}
+            title={site.footerColumns.programs.title}
+            links={site.footerColumns.programs.links}
           />
           <FooterColumn
-            title={footerColumns.about.title}
-            links={footerColumns.about.links}
+            title={site.footerColumns.about.title}
+            links={site.footerColumns.about.links}
           />
           <FooterColumn
-            title={footerColumns.insights.title}
-            links={footerColumns.insights.links}
+            title={site.footerColumns.insights.title}
+            links={site.footerColumns.insights.links}
           />
         </div>
 

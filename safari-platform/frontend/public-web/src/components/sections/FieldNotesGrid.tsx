@@ -1,11 +1,18 @@
 import { Container } from "@safari/ui";
-import { articles, getFeaturedArticle } from "@/data/articles";
 import { BlogCard } from "@/components/ui/BlogCard";
 import { FeaturedArticleCard } from "@/components/ui/FeaturedArticleCard";
+import type { Article } from "@/types/content";
+import { latestArticles } from "@/lib/cms";
 
-export function FieldNotesGrid() {
-  const featured = getFeaturedArticle();
-  const rest = articles.filter((article) => article.id !== featured.id);
+type FieldNotesGridProps = {
+  articles: Article[];
+};
+
+export function FieldNotesGrid({ articles }: FieldNotesGridProps) {
+  const featured = latestArticles(articles, 1)[0];
+  const rest = articles.filter((article) => article.id !== featured?.id);
+
+  if (!featured) return null;
 
   return (
     <section
