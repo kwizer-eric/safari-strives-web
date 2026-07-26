@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Container } from "@safari/ui";
 import type { Article, ArticleBlock } from "@/types/content";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 type ArticleDetailProps = {
   article: Article;
@@ -116,7 +116,7 @@ export function ArticleDetail({ article, compact = false }: ArticleDetailProps) 
                 className="absolute inset-0 h-full w-full object-cover"
               />
             ) : (
-              <Image
+              <CmsImage
                 src={article.image}
                 alt={article.imageAlt}
                 fill

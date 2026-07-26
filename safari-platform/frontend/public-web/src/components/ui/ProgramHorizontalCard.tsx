@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@safari/shared";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 export const PROGRAM_CARD_WIDTH_CLASS =
   "w-[calc(((100%-1.75rem)/1.5)*0.9)]";
@@ -35,7 +35,7 @@ export function ProgramHorizontalCard({
     >
       <Link href={href} className="group flex h-full flex-col">
         <div className="relative aspect-[16/10] overflow-hidden">
-          <Image
+          <CmsImage
             src={image}
             alt={imageAlt}
             fill

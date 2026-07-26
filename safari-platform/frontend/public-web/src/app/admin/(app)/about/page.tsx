@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@safari/auth";
 import { Alert, Button, Input, PageHeader, TextArea } from "@safari/ui";
@@ -13,6 +12,7 @@ import {
   patchAdminCmsPage,
   slugify,
 } from "@/lib/cms";
+import { CmsImage } from "@/components/ui/CmsImage";
 import { mediaUrlValidationMessage } from "@/lib/media-url";
 import type {
   AboutPagePayload,
@@ -349,7 +349,7 @@ export default function AdminAboutPage() {
                 <div className="flex items-center gap-3">
                   {person.image ? (
                     <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-muted">
-                      <Image
+                      <CmsImage
                         src={person.image}
                         alt=""
                         fill
@@ -513,7 +513,7 @@ export default function AdminAboutPage() {
                 <div className="flex items-center gap-3">
                   {partner.logo ? (
                     <div className="relative flex h-14 w-28 shrink-0 items-center justify-center rounded border border-border bg-white p-2">
-                      <Image
+                      <CmsImage
                         src={partner.logo}
                         alt=""
                         width={100}

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@safari/auth";
 import { Alert, Button, Input, PageHeader } from "@safari/ui";

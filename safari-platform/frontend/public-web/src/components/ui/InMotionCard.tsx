@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { cn } from "@safari/shared";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 export type InMotionCardData = {
   id: string;
@@ -21,7 +21,7 @@ export function InMotionCard({ card, className }: InMotionCardProps) {
         className,
       )}
     >
-      <Image
+      <CmsImage
         src={card.image}
         alt={card.imageAlt}
         fill

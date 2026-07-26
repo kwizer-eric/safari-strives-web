@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@safari/shared";
 import type { Article } from "@/types/content";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 type BlogCardProps = {
   article: Article;
@@ -21,7 +21,7 @@ export function BlogCard({ article, className }: BlogCardProps) {
         href={`/field-notes/${article.id}`}
         className="relative block aspect-[5/3] overflow-hidden bg-cream"
       >
-        <Image
+        <CmsImage
           src={article.image}
           alt={article.imageAlt}
           fill

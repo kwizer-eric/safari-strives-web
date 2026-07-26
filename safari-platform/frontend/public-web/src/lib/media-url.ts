@@ -164,7 +164,7 @@ export function venturePosterUrl(image: string, videoUrl?: string): string {
   return "";
 }
 
-/** Use unoptimized next/image for Cloudinary / arbitrary https CMS assets. */
+/** Skip next/image optimizer for remote https (avoids server-side fetch timeouts). */
 export function shouldUnoptimizeCmsImage(src: string): boolean {
   const trimmed = src.trim();
   if (!trimmed || trimmed.startsWith("/")) return false;

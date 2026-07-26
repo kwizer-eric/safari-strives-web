@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Article } from "@/types/content";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 type FeaturedArticleCardProps = {
   article: Article;
@@ -12,7 +12,7 @@ export function FeaturedArticleCard({ article }: FeaturedArticleCardProps) {
       href={`/field-notes/${article.id}`}
       className="group relative mb-16 block min-h-[680px] overflow-hidden rounded-2xl md:mb-24 md:min-h-[780px]"
     >
-      <Image
+      <CmsImage
         src={article.image}
         alt={article.imageAlt}
         fill

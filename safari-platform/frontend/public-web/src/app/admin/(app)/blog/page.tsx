@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@safari/auth";
 import { Alert, Button, Input, PageHeader, TextArea } from "@safari/ui";
@@ -11,6 +10,7 @@ import {
   slugify,
 } from "@/lib/cms";
 import type { Article, ArticleBlock } from "@/types/content";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 function paragraphsToSections(text: string): ArticleBlock[] {
   return text
@@ -229,7 +229,7 @@ export default function AdminBlogPage() {
             <article className="max-w-3xl space-y-6 rounded-[var(--radius-card)] border border-border bg-card p-6 md:p-8">
               {editing.image.trim() ? (
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-muted">
-                  <Image
+                  <CmsImage
                     src={editing.image}
                     alt={editing.imageAlt || editing.title}
                     fill

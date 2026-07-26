@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Container } from "@safari/ui";
 import type { Venture } from "@/types/content";
+import { CmsImage } from "@/components/ui/CmsImage";
 
 type VentureDetailHeroProps = {
   venture: Venture;
@@ -17,7 +17,7 @@ export function VentureDetailHero({ venture }: VentureDetailHeroProps) {
       className="relative overflow-hidden"
     >
       <div className="absolute inset-0">
-        <Image
+        <CmsImage
           src={venture.image}
           alt={venture.imageAlt}
           fill
