@@ -8,20 +8,36 @@ Headless CMS API for the Safari Strives marketing site and admin dashboard.
 - PostgreSQL + SQLAlchemy 2.0 + Alembic
 - Pydantic v2
 
-## Quick start (Docker — recommended)
+## Quick start
 
-Fresh database + API image in one command:
+Requires **PostgreSQL** running locally (no Docker).
 
 ```bash
 cd safari-platform/backend
-./scripts/docker-reset.sh
+
+# 1. Virtualenv + dependencies
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirement.txt
+
+# 2. Environment
+cp .env.example .env
+# Edit DATABASE_URL if your Postgres user/password differ
+
+# 3. Create database (once — adjust user/password to match .env)
+sudo -u postgres psql -c "CREATE DATABASE safari_strives;" 2>/dev/null || true
+
+# 4. Migrations + seed
+alembic upgrade head
+python -m scripts.seed_cms_content
+python -m scripts.seed_program_pages
+python -m scripts.create_admin --email admin@safaristrives.org --password 'admin123'
+
+# 5. Run API
+uvicorn app.main:app --reload --host 0.0.0.0 --port 4000
 ```
 
-This will:
-1. Stop and delete the old Postgres volume (`docker compose down -v`)
-2. Rebuild the `safari-strives-api:latest` image
-3. Start Postgres + API (migrations run automatically on boot)
-4. Seed CMS content, program pages, and an admin user
+Or use `npm run dev` from `backend/` (same as step 5).
 
 Default admin: `admin@safaristrives.org` / `admin123`
 
@@ -35,52 +51,24 @@ cd ../frontend && npm run dev
 |----------|-----|
 | API      | http://localhost:4000/api/v1 |
 | Docs     | http://localhost:4000/docs |
-| Postgres | `localhost:5433` (postgres/postgres/safari_strives) |
-
-## Quick start (local Python)
-
-```bash
-cd safari-platform/backend
-
-# 1. Virtualenv + dependencies
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirement.txt
-
-# 2. Environment
-cp .env.example .env
-# Edit .env if needed (defaults target Docker Postgres on port 5433)
-
-# 3. Database (Docker)
-docker compose up -d db
-
-# 4. Migrations
-alembic upgrade head
-
-# 5. Run API
-uvicorn app.main:app --reload --host 0.0.0.0 --port 4000
-```
+| Postgres | `localhost:5432` / `safari_strives` |
 
 - API base URL: `http://localhost:4000/api/v1`
 - Interactive docs: `http://localhost:4000/docs`
 - Health check: `GET /api/v1/health` (returns `database: connected` when Postgres is reachable)
 
-## Database connection (Docker)
+## Database connection
 
 | Setting  | Value            |
 |----------|------------------|
 | Host     | `localhost`      |
-| Port     | `5433`           |
+| Port     | `5432`           |
 | Database | `safari_strives` |
 | User     | `postgres`       |
 | Password | `postgres`       |
 
 ```bash
-# Connect with psql
-PGPASSWORD=postgres psql -h localhost -p 5433 -U postgres -d safari_strives
-
-# Or via Docker
-docker exec -it safari-strives-db psql -U postgres -d safari_strives
+PGPASSWORD=postgres psql -h localhost -p 5432 -U postgres -d safari_strives
 ```
 
 ## Public endpoints (Phase 2)

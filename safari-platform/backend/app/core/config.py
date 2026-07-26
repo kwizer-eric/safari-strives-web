@@ -1,6 +1,16 @@
 from functools import lru_cache
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def normalize_database_url(url: str) -> str:
+    """Railway/Heroku expose postgres:// or postgresql://; SQLAlchemy needs +psycopg2."""
+    if url.startswith("postgres://"):
+        return "postgresql+psycopg2://" + url[len("postgres://") :]
+    if url.startswith("postgresql://") and "+psycopg2" not in url.split("://", 1)[0]:
+        return "postgresql+psycopg2://" + url[len("postgresql://") :]
+    return url
 
 
 class Settings(BaseSettings):
@@ -15,7 +25,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
 
     # Database. Example: postgresql+psycopg2://user:pass@localhost:5432/safari_strives
-    DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5433/safari_strives"
+    DATABASE_URL: str = "postgresql+psycopg2://postgres:postgres@localhost:5432/safari_strives"
 
     # Security — must be a long random string in production (never the default below).
     SECRET_KEY: str = "change-me-in-production"
@@ -41,6 +51,13 @@ class Settings(BaseSettings):
     S3_ENDPOINT_URL: str = ""
     S3_PUBLIC_BASE_URL: str = ""
     S3_REGION: str = "auto"
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def _normalize_database_url(cls, value: object) -> object:
+        if isinstance(value, str):
+            return normalize_database_url(value)
+        return value
 
     @property
     def cors_origins_list(self) -> list[str]:

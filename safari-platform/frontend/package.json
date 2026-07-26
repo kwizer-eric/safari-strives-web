@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "npm run dev -w public-web",
     "build": "node scripts/build.mjs",
+    "start": "npm run start -w public-web",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
   },

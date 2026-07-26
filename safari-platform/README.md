@@ -28,13 +28,18 @@ npm run dev
 
 ## Backend
 
+Requires **PostgreSQL** installed locally.
+
 ```bash
 cd backend
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1   # Windows
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .\.venv\Scripts\Activate.ps1
 pip install -r requirement.txt
-docker compose up -d db
+cp .env.example .env
 alembic upgrade head
+python -m scripts.seed_cms_content
+python -m scripts.seed_program_pages
+python -m scripts.create_admin --email admin@safaristrives.org --password 'admin123'
 npm run dev
 ```
 
@@ -44,7 +49,10 @@ See [backend/README.md](./backend/README.md) for full backend docs.
 
 ## Deploy
 
-See **[DEPLOY.md](./DEPLOY.md)** for Vercel (frontend) + Docker (API) setup.
+- **Railway** (Postgres + backend + frontend): see [RAILWAY.md](./RAILWAY.md)
+- **Vercel + Docker**: see [DEPLOY.md](./DEPLOY.md)
+
+## Run everything (optional)
 
 From `safari-platform/`:
 
