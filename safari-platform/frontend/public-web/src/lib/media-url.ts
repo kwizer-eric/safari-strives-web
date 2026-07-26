@@ -71,6 +71,26 @@ function youtubeIdFromUrl(url: URL): string | null {
   return null;
 }
 
+/** Extract a YouTube video id from a full URL or a bare id string. */
+export function youtubeIdFromMediaUrl(raw: string): string | null {
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (/^[\w-]{6,}$/.test(trimmed) && !trimmed.includes(".")) return trimmed;
+  try {
+    return youtubeIdFromUrl(new URL(trimmed));
+  } catch {
+    return null;
+  }
+}
+
+/** Poster image for a venturist card from video URL or existing image. */
+export function venturePosterUrl(image: string, videoUrl?: string): string {
+  if (image.trim()) return image.trim();
+  const ytId = videoUrl ? youtubeIdFromMediaUrl(videoUrl) : null;
+  if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+  return "";
+}
+
 function googleDriveFileId(url: URL): string | null {
   const host = url.hostname.replace(/^www\./, "");
   if (host !== "drive.google.com" && host !== "docs.google.com") return null;

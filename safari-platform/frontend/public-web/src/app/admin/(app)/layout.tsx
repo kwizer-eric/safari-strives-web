@@ -17,7 +17,7 @@ const items = [
   { label: "Overview", href: "/admin/overview", icon: LayoutDashboard },
   { label: "Home", href: "/admin/home", icon: Home },
   { label: "Application Link", href: "/admin/application-link", icon: Link2 },
-  { label: "Programs", href: "/admin/programs", icon: BookOpen },
+  { label: "Our Model", href: "/admin/our-model", icon: BookOpen },
   { label: "Ventures", href: "/admin/ventures", icon: Briefcase },
   { label: "Blog", href: "/admin/blog", icon: Newspaper },
   { label: "About", href: "/admin/about", icon: Building2 },

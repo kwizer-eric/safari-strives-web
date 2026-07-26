@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import { Container } from "@safari/ui";
 import type { ModelPageContent } from "@/types/content";
 import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
@@ -8,16 +11,36 @@ type ModelPageHeroProps = {
 };
 
 export function ModelPageHero({ hero, headingId }: ModelPageHeroProps) {
+  const hasVideo = Boolean(hero.heroVideo?.trim());
+  const hasPhoto = Boolean(hero.image?.trim());
+
   return (
     <section
       aria-labelledby={headingId}
       className="sticky top-0 z-0 min-h-[92vh]"
     >
       <div className="absolute inset-0 overflow-hidden">
-        <HeroBackgroundVideo
-          src={hero.heroVideo}
-          label={hero.imageAlt || "Program hero video"}
-        />
+        {hasVideo ? (
+          <HeroBackgroundVideo
+            src={hero.heroVideo}
+            label={hero.imageAlt || "Program hero video"}
+          />
+        ) : hasPhoto ? (
+          <Image
+            src={hero.image}
+            alt={hero.imageAlt || "Program hero"}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+        ) : (
+          <div
+            className="h-full w-full bg-dark"
+            role="img"
+            aria-label={hero.imageAlt || "Program hero"}
+          />
+        )}
         <div className="pointer-events-none absolute inset-0 bg-dark/60" />
       </div>
 

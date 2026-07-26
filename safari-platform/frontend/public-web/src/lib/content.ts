@@ -85,11 +85,15 @@ export async function getAboutContent(): Promise<{
 
   if (!page?.payload?.hero || !page.payload.mission) notFound();
 
-  const partners = requireItems(partnersCol, "partners").map((partner) => ({
-    ...partner,
-    href: partner.href || "#",
-    logo: partner.logo || "/logo/logo.png",
-  }));
+  // Only show partners with a real logo URL — seed items ship with empty logos
+  // and we must not fall back to the Safari mark (that duplicated six times).
+  const partners = requireItems(partnersCol, "partners")
+    .map((partner) => ({
+      ...partner,
+      href: partner.href?.trim() || "#",
+      logo: partner.logo?.trim() || "",
+    }))
+    .filter((partner) => Boolean(partner.logo));
 
   return {
     page: page.payload,
@@ -182,7 +186,7 @@ function toModelPageContent(page: PageResponse): ModelPageContent {
         line1: page.hero_subhead ?? page.hero_body ?? "",
       },
       heroVideo: looksLikeImage ? "" : mediaUrl,
-      image: looksLikeImage ? mediaUrl : mediaUrl,
+      image: looksLikeImage ? mediaUrl : "",
       imageAlt: page.hero_media_alt ?? page.hero_title,
     },
     audience: {

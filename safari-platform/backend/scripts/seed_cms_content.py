@@ -7,12 +7,16 @@ pages), these tables store a single JSON `payload` blob per slug/key, so the
 admin "Page Editor" / "Collection Editor" screens can render + edit them
 without a migration per content change.
 
-Safe to re-run — rows are upserted by slug (`cms_pages`) or key
-(`cms_collections`) instead of duplicated.
+Safe to re-run by default: existing rows are **skipped** so admin edits
+survive redeploys. Pass `--force` only when you intentionally want to
+overwrite CMS content with seed defaults.
 
 Usage:
     python -m scripts.seed_cms_content
+    python -m scripts.seed_cms_content --force
 """
+
+import argparse
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -1240,47 +1244,67 @@ CMS_COLLECTIONS: list[dict] = [
 ]
 
 
-def _upsert_page(db: Session, data: dict) -> CmsPage:
+def _upsert_page(db: Session, data: dict, *, force: bool) -> CmsPage | None:
     page = db.scalars(select(CmsPage).where(CmsPage.slug == data["slug"])).first()
     if page is None:
         page = CmsPage(**data)
         db.add(page)
-    else:
-        for field, value in data.items():
-            setattr(page, field, value)
+        return page
+    if not force:
+        print(f"Skip cms_page '{data['slug']}' (already exists — admin edits kept)")
+        return None
+    for field, value in data.items():
+        setattr(page, field, value)
     return page
 
 
-def _upsert_collection(db: Session, data: dict) -> CmsCollection:
+def _upsert_collection(
+    db: Session, data: dict, *, force: bool
+) -> CmsCollection | None:
     collection = db.scalars(
         select(CmsCollection).where(CmsCollection.key == data["key"])
     ).first()
     if collection is None:
         collection = CmsCollection(**data)
         db.add(collection)
-    else:
-        for field, value in data.items():
-            setattr(collection, field, value)
+        return collection
+    if not force:
+        print(
+            f"Skip cms_collection '{data['key']}' "
+            "(already exists — admin edits kept)"
+        )
+        return None
+    for field, value in data.items():
+        setattr(collection, field, value)
     return collection
 
 
-def seed() -> None:
+def seed(*, force: bool = False) -> None:
     db = SessionLocal()
     try:
         for data in CMS_PAGES:
-            page = _upsert_page(db, dict(data))
+            page = _upsert_page(db, dict(data), force=force)
             db.commit()
-            db.refresh(page)
-            print(f"Seeded cms_page '{page.slug}' (id={page.id})")
+            if page is not None:
+                db.refresh(page)
+                print(f"Seeded cms_page '{page.slug}' (id={page.id})")
 
         for data in CMS_COLLECTIONS:
-            collection = _upsert_collection(db, dict(data))
+            collection = _upsert_collection(db, dict(data), force=force)
             db.commit()
-            db.refresh(collection)
-            print(f"Seeded cms_collection '{collection.key}' (id={collection.id})")
+            if collection is not None:
+                db.refresh(collection)
+                print(f"Seeded cms_collection '{collection.key}' (id={collection.id})")
     finally:
         db.close()
 
 
 if __name__ == "__main__":
-    seed()
+    parser = argparse.ArgumentParser(description="Seed CMS pages and collections.")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing CMS rows (destroys admin edits).",
+    )
+    args = parser.parse_args()
+    seed(force=args.force)

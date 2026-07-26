@@ -47,6 +47,8 @@ export type Venture = {
   location?: string;
   image: string;
   imageAlt: string;
+  /** Video shown when the venturist card is clicked (YouTube or direct https). */
+  videoUrl?: string;
   tagline: string;
   story: string[];
   highlights: VentureHighlight[];

@@ -18,7 +18,7 @@ const API_URL =
 const shortcuts = [
   { label: "Home", href: "/admin/home" },
   { label: "Application Link", href: "/admin/application-link" },
-  { label: "Programs", href: "/admin/programs" },
+  { label: "Our Model", href: "/admin/our-model" },
   { label: "Ventures", href: "/admin/ventures" },
   { label: "Blog", href: "/admin/blog" },
   { label: "About", href: "/admin/about" },

@@ -526,9 +526,17 @@ export default function AdminAboutPage() {
                       No logo
                     </div>
                   )}
-                  <p className="max-w-xs truncate text-sm text-muted">
-                    {partner.href || "No link"}
-                  </p>
+                  <div className="min-w-0">
+                    <p className="font-semibold">
+                      {partner.name?.trim() || "Unnamed partner"}
+                    </p>
+                    <p className="truncate text-sm text-muted">
+                      {partner.type?.trim()
+                        ? `${partner.type} · `
+                        : ""}
+                      {partner.href?.trim() || "No link yet"}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -581,6 +589,15 @@ export default function AdminAboutPage() {
             </Button>
           </div>
           <Input
+            label="Partner name"
+            value={editingPartner.name}
+            onChange={(e) =>
+              setEditingPartner({ ...editingPartner, name: e.target.value })
+            }
+            placeholder="Yale University"
+            required
+          />
+          <Input
             label="Logo URL"
             value={editingPartner.logo}
             onChange={(e) =>
@@ -604,20 +621,21 @@ export default function AdminAboutPage() {
               type="button"
               disabled={
                 saving ||
+                !editingPartner.name.trim() ||
                 !editingPartner.logo.trim() ||
                 !editingPartner.href.trim()
               }
               onClick={() => {
                 const id =
                   editingPartner.id ||
-                  slugify(editingPartner.href) ||
+                  slugify(editingPartner.name) ||
                   `partner-${Date.now()}`;
                 const nextItem: AboutPartner = {
                   ...editingPartner,
                   id,
-                  name: editingPartner.name || "",
-                  type: "",
-                  description: "",
+                  name: editingPartner.name.trim(),
+                  type: editingPartner.type || "",
+                  description: editingPartner.description || "",
                 };
                 const exists = partners.some((item) => item.id === id);
                 const next = exists

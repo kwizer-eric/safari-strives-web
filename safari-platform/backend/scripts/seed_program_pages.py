@@ -2,12 +2,17 @@
 public-web's src/data/programs-content.ts before that file gets deleted).
 
 This is the one place we deviate from "no seed data": without it, wiring
-the frontend to the API would make these pages render empty. Safe to
-re-run — pages are upserted by slug instead of duplicated.
+the frontend to the API would make these pages render empty.
+
+Safe to re-run by default: existing pages are **skipped** so admin hero
+media edits survive redeploys. Pass `--force` to overwrite.
 
 Usage:
     python -m scripts.seed_program_pages
+    python -m scripts.seed_program_pages --force
 """
+
+import argparse
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -186,7 +191,7 @@ PAGES: list[dict] = [
 ]
 
 
-def _upsert_page(db: Session, data: dict) -> Page:
+def _upsert_page(db: Session, data: dict, *, force: bool) -> Page | None:
     features = data.pop("features")
     sections = data.pop("sections")
 
@@ -194,26 +199,40 @@ def _upsert_page(db: Session, data: dict) -> Page:
     if page is None:
         page = Page(**data)
         db.add(page)
-    else:
-        for field, value in data.items():
-            setattr(page, field, value)
+        page.features = [PageFeature(**f) for f in features]
+        page.sections = [PageSection(**s) for s in sections]
+        return page
 
+    if not force:
+        print(f"Skip page '{data['slug']}' (already exists — admin edits kept)")
+        return None
+
+    for field, value in data.items():
+        setattr(page, field, value)
     page.features = [PageFeature(**f) for f in features]
     page.sections = [PageSection(**s) for s in sections]
     return page
 
 
-def seed() -> None:
+def seed(*, force: bool = False) -> None:
     db = SessionLocal()
     try:
         for data in PAGES:
-            page = _upsert_page(db, dict(data))
+            page = _upsert_page(db, dict(data), force=force)
             db.commit()
-            db.refresh(page)
-            print(f"Seeded page '{page.slug}' (id={page.id})")
+            if page is not None:
+                db.refresh(page)
+                print(f"Seeded page '{page.slug}' (id={page.id})")
     finally:
         db.close()
 
 
 if __name__ == "__main__":
-    seed()
+    parser = argparse.ArgumentParser(description="Seed program pages.")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing program pages (destroys admin edits).",
+    )
+    args = parser.parse_args()
+    seed(force=args.force)

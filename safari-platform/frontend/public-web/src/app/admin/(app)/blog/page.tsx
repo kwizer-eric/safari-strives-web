@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@safari/auth";
 import { Alert, Button, Input, PageHeader, TextArea } from "@safari/ui";
@@ -47,6 +48,7 @@ export default function AdminBlogPage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [editing, setEditing] = useState<Article | null>(null);
   const [bodyText, setBodyText] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -92,6 +94,7 @@ export default function AdminBlogPage() {
       setArticles(next);
       setEditing(null);
       setBodyText("");
+      setShowPreview(false);
       setMessage("Articles saved.");
     } catch (err) {
       setError((err as Error).message);
@@ -101,9 +104,14 @@ export default function AdminBlogPage() {
   }
 
   function startEdit(article: Article) {
+    setMessage(null);
+    setError(null);
     setEditing(article);
     setBodyText(sectionsToParagraphs(article.sections));
+    setShowPreview(false);
   }
+
+  const previewParagraphs = paragraphsToSections(bodyText);
 
   if (loading) {
     return (
@@ -118,7 +126,7 @@ export default function AdminBlogPage() {
     <div>
       <PageHeader
         title="Blog"
-        description="Create, edit, and delete Field Notes articles. Homepage Featured Insights shows the latest three."
+        description="Create, edit, and preview Field Notes articles."
       />
       {message && (
         <Alert tone="success" className="mb-6">
@@ -131,128 +139,217 @@ export default function AdminBlogPage() {
         </Alert>
       )}
 
-      <div className="mb-4 flex justify-between gap-3">
-        <p className="text-sm text-muted">{articles.length} articles</p>
-        <Button
-          type="button"
-          size="sm"
-          onClick={() => {
-            setEditing(emptyArticle());
-            setBodyText("");
-          }}
-        >
-          Add article
-        </Button>
-      </div>
+      {!editing && (
+        <>
+          <div className="mb-4 flex justify-between gap-3">
+            <p className="text-sm text-muted">{articles.length} articles</p>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => startEdit(emptyArticle())}
+            >
+              Add article
+            </Button>
+          </div>
 
-      <ul className="mb-6 divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
-        {articles.map((article) => (
-          <li
-            key={article.id}
-            className="flex flex-wrap items-center justify-between gap-3 p-4"
-          >
-            <div>
-              <p className="font-semibold">{article.title}</p>
-              <p className="text-xs text-muted">
-                {article.date} · {article.category}
-              </p>
-            </div>
+          <ul className="mb-6 divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
+            {articles.map((article) => (
+              <li
+                key={article.id}
+                className="flex flex-wrap items-center justify-between gap-3 p-4"
+              >
+                <div>
+                  <p className="font-semibold">{article.title}</p>
+                  <p className="text-xs text-muted">
+                    {article.date} · {article.category}
+                  </p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => startEdit(article)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="danger"
+                    onClick={() =>
+                      void saveArticles(
+                        articles.filter((item) => item.id !== article.id),
+                      )
+                    }
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </li>
+            ))}
+            {articles.length === 0 && (
+              <li className="p-6 text-sm text-muted">No articles yet.</li>
+            )}
+          </ul>
+        </>
+      )}
+
+      {editing && (
+        <div className="space-y-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">
+              {editing.id ? "Edit article" : "New article"}
+            </h2>
             <div className="flex gap-2">
               <Button
                 type="button"
                 size="sm"
-                variant="secondary"
-                onClick={() => startEdit(article)}
+                variant={showPreview ? "primary" : "secondary"}
+                onClick={() => setShowPreview((open) => !open)}
               >
-                Edit
+                {showPreview ? "Edit form" : "Preview"}
               </Button>
               <Button
                 type="button"
                 size="sm"
-                variant="danger"
-                onClick={() =>
-                  void saveArticles(
-                    articles.filter((item) => item.id !== article.id),
-                  )
-                }
+                variant="secondary"
+                onClick={() => {
+                  setEditing(null);
+                  setBodyText("");
+                  setShowPreview(false);
+                }}
               >
-                Delete
+                Back to list
               </Button>
             </div>
-          </li>
-        ))}
-        {articles.length === 0 && (
-          <li className="p-6 text-sm text-muted">No articles yet.</li>
-        )}
-      </ul>
+          </div>
 
-      {editing && (
-        <div className="max-w-2xl space-y-4 rounded-[var(--radius-card)] border border-border bg-card p-6">
-          <h2 className="text-lg font-semibold">
-            {editing.id ? "Edit article" : "New article"}
-          </h2>
-          <Input
-            label="Title"
-            value={editing.title}
-            onChange={(e) => setEditing({ ...editing, title: e.target.value })}
-          />
-          <TextArea
-            label="Excerpt"
-            rows={2}
-            value={editing.excerpt}
-            onChange={(e) =>
-              setEditing({ ...editing, excerpt: e.target.value })
-            }
-          />
-          <Input
-            label="Date (YYYY-MM-DD)"
-            value={editing.date}
-            onChange={(e) => setEditing({ ...editing, date: e.target.value })}
-          />
-          <Input
-            label="Category"
-            value={editing.category}
-            onChange={(e) =>
-              setEditing({ ...editing, category: e.target.value })
-            }
-          />
-          <Input
-            label="Author"
-            value={editing.author}
-            onChange={(e) => setEditing({ ...editing, author: e.target.value })}
-          />
-          <Input
-            label="Read time"
-            value={editing.readTime}
-            onChange={(e) =>
-              setEditing({ ...editing, readTime: e.target.value })
-            }
-          />
-          <Input
-            label="Cover image URL"
-            value={editing.image}
-            onChange={(e) => setEditing({ ...editing, image: e.target.value })}
-          />
-          <Input
-            label="Image alt"
-            value={editing.imageAlt}
-            onChange={(e) =>
-              setEditing({ ...editing, imageAlt: e.target.value })
-            }
-          />
-          <TextArea
-            label="Body (paragraphs separated by a blank line)"
-            rows={12}
-            value={bodyText}
-            onChange={(e) => setBodyText(e.target.value)}
-          />
+          {showPreview ? (
+            <article className="max-w-3xl space-y-6 rounded-[var(--radius-card)] border border-border bg-card p-6 md:p-8">
+              {editing.image.trim() ? (
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-muted">
+                  <Image
+                    src={editing.image}
+                    alt={editing.imageAlt || editing.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 768px"
+                  />
+                </div>
+              ) : null}
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-muted">
+                  {editing.category || "Category"} · {editing.date || "Date"}
+                </p>
+                <h1 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
+                  {editing.title.trim() || "Untitled article"}
+                </h1>
+                <p className="mt-2 text-sm text-muted">
+                  {editing.author.trim() || "Author"}
+                  {editing.readTime ? ` · ${editing.readTime}` : ""}
+                </p>
+              </div>
+              {editing.excerpt.trim() ? (
+                <p className="text-lg leading-relaxed text-muted">
+                  {editing.excerpt}
+                </p>
+              ) : null}
+              <div className="space-y-4">
+                {previewParagraphs.length > 0 ? (
+                  previewParagraphs.map((block, index) =>
+                    block.type === "paragraph" ? (
+                      <p
+                        key={`${index}-${block.text.slice(0, 24)}`}
+                        className="text-base leading-relaxed text-foreground"
+                      >
+                        {block.text}
+                      </p>
+                    ) : null,
+                  )
+                ) : (
+                  <p className="text-sm text-muted">No body text yet.</p>
+                )}
+              </div>
+            </article>
+          ) : (
+            <div className="max-w-2xl space-y-4 rounded-[var(--radius-card)] border border-border bg-card p-6">
+              <Input
+                label="Title"
+                value={editing.title}
+                onChange={(e) =>
+                  setEditing({ ...editing, title: e.target.value })
+                }
+              />
+              <TextArea
+                label="Excerpt"
+                rows={2}
+                value={editing.excerpt}
+                onChange={(e) =>
+                  setEditing({ ...editing, excerpt: e.target.value })
+                }
+              />
+              <Input
+                label="Date (YYYY-MM-DD)"
+                value={editing.date}
+                onChange={(e) =>
+                  setEditing({ ...editing, date: e.target.value })
+                }
+              />
+              <Input
+                label="Category"
+                value={editing.category}
+                onChange={(e) =>
+                  setEditing({ ...editing, category: e.target.value })
+                }
+              />
+              <Input
+                label="Author"
+                value={editing.author}
+                onChange={(e) =>
+                  setEditing({ ...editing, author: e.target.value })
+                }
+              />
+              <Input
+                label="Read time"
+                value={editing.readTime}
+                onChange={(e) =>
+                  setEditing({ ...editing, readTime: e.target.value })
+                }
+              />
+              <Input
+                label="Cover image URL"
+                value={editing.image}
+                onChange={(e) =>
+                  setEditing({ ...editing, image: e.target.value })
+                }
+                hint="Cloudinary or other https image URL"
+              />
+              <Input
+                label="Image alt"
+                value={editing.imageAlt}
+                onChange={(e) =>
+                  setEditing({ ...editing, imageAlt: e.target.value })
+                }
+              />
+              <TextArea
+                label="Body (paragraphs separated by a blank line)"
+                rows={12}
+                value={bodyText}
+                onChange={(e) => setBodyText(e.target.value)}
+              />
+            </div>
+          )}
+
           <div className="flex gap-3">
             <Button
               type="button"
               disabled={saving || !editing.title.trim()}
               onClick={() => {
                 const id =
-                  editing.id || slugify(editing.title) || `article-${Date.now()}`;
+                  editing.id ||
+                  slugify(editing.title) ||
+                  `article-${Date.now()}`;
                 const nextItem: Article = {
                   ...editing,
                   id,
@@ -273,6 +370,7 @@ export default function AdminBlogPage() {
               onClick={() => {
                 setEditing(null);
                 setBodyText("");
+                setShowPreview(false);
               }}
             >
               Cancel

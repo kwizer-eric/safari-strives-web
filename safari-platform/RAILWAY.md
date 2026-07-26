@@ -31,14 +31,21 @@ Three Railway services: **PostgreSQL**, **backend** (FastAPI), **frontend** (Nex
 | `ENVIRONMENT` | `production` |
 | `SECRET_KEY` | Generate: `python -c "import secrets; print(secrets.token_urlsafe(48))"` |
 | `CORS_ORIGINS` | `https://YOUR-FRONTEND.up.railway.app` (set after frontend deploy) |
-| `RUN_SEED` | `1` (first deploy only — seeds CMS + admin, then **remove**) |
-| `ADMIN_EMAIL` | `admin@safaristrives.org` |
-| `ADMIN_PASSWORD` | Strong password for production admin |
+| `ADMIN_EMAIL` | Optional — only if you create an admin via CLI |
+| `ADMIN_PASSWORD` | Strong password if using CLI admin create |
 
 Railway auto-runs `bash scripts/start.sh` which:
 - Runs `alembic upgrade head`
-- Seeds if `RUN_SEED=1`
 - Starts uvicorn on `$PORT`
+
+**No auto-seed on deploy.** Content is added through the admin dashboard. For a brand-new empty DB, create an admin once:
+
+```bash
+railway run --service backend python -m scripts.create_admin \
+  --email admin@safaristrives.org --password 'YOUR_STRONG_PASSWORD'
+```
+
+Optional local/dev seed scripts (`seed_cms_content`, `seed_program_pages`) still exist for demos — they are **not** run in production.
 
 ### Verify backend
 
@@ -76,7 +83,7 @@ Update backend `CORS_ORIGINS` to your frontend URL and redeploy backend.
 ## 5. Admin login
 
 - URL: `https://YOUR-FRONTEND.up.railway.app/admin/login`
-- Email/password from `ADMIN_EMAIL` / `ADMIN_PASSWORD` (or seed defaults if you used those)
+- Email/password from the admin you created with `create_admin` (see above)
 
 ## Local vs Railway
 
@@ -96,7 +103,8 @@ railway link
 
 # Run one-off commands against production DB
 railway run --service backend alembic upgrade head
-railway run --service backend python -m scripts.seed_cms_content
+railway run --service backend python -m scripts.create_admin \
+  --email admin@safaristrives.org --password 'YOUR_STRONG_PASSWORD'
 ```
 
 ## Troubleshooting
@@ -109,7 +117,7 @@ railway run --service backend python -m scripts.seed_cms_content
 | Frontend 404 on API calls | Rebuild frontend with correct `NEXT_PUBLIC_API_URL` |
 | CORS errors | Set `CORS_ORIGINS` to exact frontend URL (no trailing slash) |
 | App crashes on boot in prod | Set `SECRET_KEY` and `ENVIRONMENT=production` |
-| Empty homepage | Run seeds once with `RUN_SEED=1` or use `railway run` seed commands |
+| Empty homepage | Add content in admin (`/admin/home`, etc.). Create an admin with `create_admin` if you have none. |
 
 ## Custom domains
 

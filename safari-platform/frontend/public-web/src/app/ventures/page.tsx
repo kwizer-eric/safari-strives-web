@@ -3,7 +3,7 @@ import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { VenturesHero } from "@/components/sections/VenturesHero";
 import { VenturesGrid } from "@/components/sections/VenturesGrid";
 import { VenturesMission } from "@/components/sections/VenturesMission";
-import { getAboutContent, getVenturesContent } from "@/lib/content";
+import { getVenturesContent } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
 
@@ -14,20 +14,13 @@ export const metadata: Metadata = {
 };
 
 export default async function VenturesPage() {
-  const [{ page, ventures }, about] = await Promise.all([
-    getVenturesContent(),
-    getAboutContent(),
-  ]);
+  const { page, ventures } = await getVenturesContent();
 
   return (
     <MarketingChrome>
       <main>
         <VenturesHero page={page} />
-        <VenturesGrid
-          ventures={ventures}
-          videoId={about.page.hero.videoId}
-          videoStart={about.page.hero.videoStart}
-        />
+        <VenturesGrid ventures={ventures} />
         <VenturesMission mission={page.mission} />
       </main>
     </MarketingChrome>
