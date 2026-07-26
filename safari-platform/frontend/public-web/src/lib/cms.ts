@@ -88,9 +88,8 @@ async function cmsFetch<T>(
         "content-type": "application/json",
         ...(init?.headers ?? {}),
       },
-      // Admin edits should show up on the public site within a minute.
-      next: init?.method && init.method !== "GET" ? undefined : { revalidate: 60 },
-      cache: init?.method && init.method !== "GET" ? "no-store" : undefined,
+      // no-store on reads so `next build` does not prerender against a live API.
+      cache: "no-store",
     });
     if (res.status === 404) return null;
     if (!res.ok) {

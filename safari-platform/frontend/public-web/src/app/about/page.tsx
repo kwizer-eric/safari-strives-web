@@ -7,6 +7,8 @@ import { AboutPartners } from "@/components/sections/AboutPartners";
 import { AboutCloser } from "@/components/sections/AboutCloser";
 import { getAboutContent } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "About | Safari Strives",
   description:

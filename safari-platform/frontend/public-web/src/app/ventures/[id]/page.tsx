@@ -7,6 +7,8 @@ import { VentureDetailMore } from "@/components/sections/VentureDetailMore";
 import { VenturesMission } from "@/components/sections/VenturesMission";
 import { getVentureById } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 type VentureDetailPageProps = {
   params: Promise<{ id: string }>;
 };

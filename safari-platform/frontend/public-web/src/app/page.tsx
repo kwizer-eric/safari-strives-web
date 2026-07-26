@@ -8,6 +8,8 @@ import { TestimonialsMarquee } from "@/components/sections/TestimonialsMarquee";
 import { getHomeContent } from "@/lib/home-content";
 import { getSiteSettings } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [{ home, featuredArticles, testimonials }, site] = await Promise.all([
     getHomeContent(),

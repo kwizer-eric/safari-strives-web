@@ -4,6 +4,8 @@ import { ArticleDetail } from "@/components/sections/ArticleDetail";
 import { ArticleRelated } from "@/components/sections/ArticleRelated";
 import { getArticleById } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 type ArticleDetailPageProps = {
   params: Promise<{ id: string }>;
 };

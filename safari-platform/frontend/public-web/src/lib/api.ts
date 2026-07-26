@@ -64,9 +64,8 @@ export type PageResponse = {
 export async function getPage(slug: string): Promise<PageResponse | null> {
   try {
     const res = await fetch(`${API_URL}/pages/${slug}`, {
-      // Program page copy changes rarely; revalidate periodically rather than
-      // on every request or (default) caching forever across deploys.
-      next: { revalidate: 60 },
+      // no-store: do not statically prerender at build time (Railway has no API yet).
+      cache: "no-store",
     });
 
     if (res.status === 404) {

@@ -3,6 +3,8 @@ import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { FieldNotesGrid } from "@/components/sections/FieldNotesGrid";
 import { getArticles } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Field Notes | Safari Strives",
   description:

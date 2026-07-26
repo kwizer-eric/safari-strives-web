@@ -5,6 +5,8 @@ import { VenturesGrid } from "@/components/sections/VenturesGrid";
 import { VenturesMission } from "@/components/sections/VenturesMission";
 import { getAboutContent, getVenturesContent } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Ventures | Safari Strives",
   description:
