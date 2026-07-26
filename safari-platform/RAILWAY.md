@@ -105,6 +105,7 @@ railway run --service backend python -m scripts.seed_cms_content
 |-------|-----|
 | `database: unreachable` | Check `DATABASE_URL` reference to Postgres service |
 | Railpack: cannot detect start command | Root Directory must be `safari-platform/frontend`, Config path `/safari-platform/frontend/railway.toml`, and `package.json` must have a `"start"` script (push latest code) |
+| `prerender-error` / `fetch failed` / `ECONNREFUSED` on build | App uses `force-dynamic` so CMS pages are not prerendered at build time; push latest frontend and redeploy. Also set `NEXT_PUBLIC_API_URL` to the live backend URL |
 | Frontend 404 on API calls | Rebuild frontend with correct `NEXT_PUBLIC_API_URL` |
 | CORS errors | Set `CORS_ORIGINS` to exact frontend URL (no trailing slash) |
 | App crashes on boot in prod | Set `SECRET_KEY` and `ENVIRONMENT=production` |

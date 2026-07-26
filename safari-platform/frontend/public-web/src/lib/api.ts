@@ -58,21 +58,26 @@ export type PageResponse = {
 
 /**
  * Server-side fetch of a published page by slug. Returns null on 404 (missing
- * or unpublished) so callers can trigger notFound() instead of throwing.
+ * or unpublished) or network failure so callers can trigger notFound() instead
+ * of crashing the build when the API is unreachable.
  */
 export async function getPage(slug: string): Promise<PageResponse | null> {
-  const res = await fetch(`${API_URL}/pages/${slug}`, {
-    // Program page copy changes rarely; revalidate periodically rather than
-    // on every request or (default) caching forever across deploys.
-    next: { revalidate: 60 },
-  });
+  try {
+    const res = await fetch(`${API_URL}/pages/${slug}`, {
+      // Program page copy changes rarely; revalidate periodically rather than
+      // on every request or (default) caching forever across deploys.
+      next: { revalidate: 60 },
+    });
 
-  if (res.status === 404) {
+    if (res.status === 404) {
+      return null;
+    }
+    if (!res.ok) {
+      throw new Error(`Failed to fetch page '${slug}': ${res.status}`);
+    }
+
+    return res.json() as Promise<PageResponse>;
+  } catch {
     return null;
   }
-  if (!res.ok) {
-    throw new Error(`Failed to fetch page '${slug}': ${res.status}`);
-  }
-
-  return res.json() as Promise<PageResponse>;
 }

@@ -15,6 +15,10 @@ export const metadata: Metadata = {
     "Safari Strives provides the space, tools, media capacity, and operator-led support that help local businesses scale in secondary cities like Rubavu.",
 };
 
+// CMS pages fetch the API at request time. Without this, `next build` tries to
+// prerender them and fails when the backend is not reachable (e.g. Railway).
+export const dynamic = "force-dynamic";
+
 export default function RootLayout({
   children,
 }: Readonly<{
