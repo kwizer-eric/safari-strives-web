@@ -61,7 +61,7 @@ Create an admin user:
 
 ```bash
 docker compose -f docker-compose.prod.yml exec api \
-  python -m scripts.create_admin --email admin@example.com --password 'change-me'
+  python -m scripts.create_admin --email YOUR_EMAIL --password YOUR_PASSWORD
 ```
 
 ### Railway / Render / Fly

@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { parseExternalMediaUrl } from "@/lib/media-url";
+import { parseExternalMediaUrl, shouldUnoptimizeCmsImage } from "@/lib/media-url";
 
 type HeroBackgroundVideoProps = {
   src: string;
@@ -9,12 +10,9 @@ type HeroBackgroundVideoProps = {
 };
 
 /**
- * Heroes: external video only (Cloudflare, Drive, YouTube).
- *
- * Drive share links cannot autoplay inside Google's /preview iframe, and our
- * old pointer-events-none blocked the play button — so Drive looked "broken".
- * We try a direct <video> stream first; if Google blocks it, fall back to the
- * preview iframe with clicks enabled so playback still works.
+ * Heroes: Cloudinary / Cloudflare / YouTube / Drive video as primary.
+ * If the CMS URL is actually a photo (incl. Cloudinary /image/upload/),
+ * render a still image instead of a broken <video>.
  */
 export function HeroBackgroundVideo({ src, label }: HeroBackgroundVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -48,6 +46,20 @@ export function HeroBackgroundVideo({ src, label }: HeroBackgroundVideoProps) {
         className="h-full w-full bg-dark"
         role="img"
         aria-label={label || "Hero background"}
+      />
+    );
+  }
+
+  if (parsed.kind === "image") {
+    return (
+      <Image
+        src={parsed.embedUrl}
+        alt={label || "Hero background"}
+        fill
+        className="object-cover"
+        priority
+        sizes="100vw"
+        unoptimized={shouldUnoptimizeCmsImage(parsed.embedUrl)}
       />
     );
   }

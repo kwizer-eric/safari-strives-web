@@ -26,7 +26,7 @@ const users: User[] = [
   {
     id: id("usr", 1),
     name: "Ada Admin",
-    email: "admin@safari.local",
+    email: "staff@safari.local",
     role: "admin",
     createdAt: nowIso,
   },

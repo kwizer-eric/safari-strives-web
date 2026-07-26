@@ -10,7 +10,7 @@ import {
   type ProgramPage,
   type ProgramPageSummary,
 } from "@/lib/cms";
-import { mediaUrlValidationMessage } from "@/lib/media-url";
+import { mediaUrlValidationMessage, looksLikeImageUrl } from "@/lib/media-url";
 
 type MediaKind = "video" | "photo";
 
@@ -31,10 +31,6 @@ const PROGRAM_PAGES = [
     path: "/the-hub",
   },
 ] as const;
-
-function looksLikeImage(url: string): boolean {
-  return /\.(jpg|jpeg|png|webp|gif)(\?|$)/i.test(url.trim());
-}
 
 function toReplaceBody(page: ProgramPage): Omit<ProgramPage, "id"> {
   const { id: _id, ...rest } = page;
@@ -106,7 +102,7 @@ export default function AdminOurModelPage() {
       const url = full.hero_video_url ?? "";
       setEditing(full);
       setMediaUrl(url);
-      setMediaKind(url && looksLikeImage(url) ? "photo" : "video");
+      setMediaKind(url && looksLikeImageUrl(url) ? "photo" : "video");
     } catch (err) {
       setError((err as Error).message);
     } finally {

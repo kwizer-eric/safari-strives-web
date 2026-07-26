@@ -32,6 +32,7 @@ export function VenturesHero({ page }: VenturesHeroProps) {
             className="object-cover"
             priority
             sizes="100vw"
+            unoptimized
           />
         ) : (
           <div

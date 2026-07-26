@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@safari/shared";
+import { CmsImage } from "@/components/ui/CmsImage";
 import { venturePosterUrl } from "@/lib/media-url";
 import type { Venture } from "@/types/content";
 
@@ -32,7 +32,7 @@ export function VentureCard({
         disabled={!venture.videoUrl?.trim()}
       >
         {poster ? (
-          <Image
+          <CmsImage
             src={poster}
             alt={venture.imageAlt || `${venture.founder} portrait`}
             fill

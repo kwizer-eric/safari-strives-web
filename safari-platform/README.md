@@ -39,7 +39,7 @@ cp .env.example .env
 alembic upgrade head
 python -m scripts.seed_cms_content
 python -m scripts.seed_program_pages
-python -m scripts.create_admin --email admin@safaristrives.org --password 'admin123'
+python -m scripts.create_admin --email YOUR_EMAIL --password YOUR_PASSWORD
 npm run dev
 ```
 

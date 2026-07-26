@@ -4,10 +4,9 @@ export default function LoginPage() {
   return (
     <LoginForm
       title="Admin console"
-      subtitle="Use admin@safaristrives.org and your staff password."
+      subtitle="Sign in with your staff account."
       allowedRoles={["admin"]}
       redirectTo="/admin/overview"
-      defaultEmail="admin@safaristrives.org"
       brandName="Safari Admin"
       brandTagline="Steady work behind the scenes."
       showDemoHint={false}

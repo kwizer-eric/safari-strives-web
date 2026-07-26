@@ -31,7 +31,7 @@ sudo -u postgres psql -c "CREATE DATABASE safari_strives;" 2>/dev/null || true
 alembic upgrade head
 python -m scripts.seed_cms_content
 python -m scripts.seed_program_pages
-python -m scripts.create_admin --email admin@safaristrives.org --password 'admin123'
+python -m scripts.create_admin --email YOUR_EMAIL --password YOUR_PASSWORD
 
 # 5. Run API
 uvicorn app.main:app --reload --host 0.0.0.0 --port 4000
@@ -39,7 +39,7 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 4000
 
 Or use `npm run dev` from `backend/` (same as step 5).
 
-Default admin: `admin@safaristrives.org` / `admin123`
+Create your own admin credentials with `create_admin` — do not commit real passwords.
 
 Then start the frontend:
 
@@ -147,7 +147,7 @@ Create a staff user:
 
 ```bash
 docker compose -f docker-compose.prod.yml exec api \
-  python -m scripts.create_admin --email admin@example.com --password 'change-me'
+  python -m scripts.create_admin --email YOUR_EMAIL --password YOUR_PASSWORD
 ```
 
 Full deploy guide: [../DEPLOY.md](../DEPLOY.md).

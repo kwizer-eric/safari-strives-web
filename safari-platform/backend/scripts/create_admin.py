@@ -3,9 +3,11 @@
 There is no public signup endpoint on purpose: staff accounts are created
 out-of-band by whoever has shell/DB access, not self-service over HTTP.
 
+Pass email and password yourself — never commit real credentials.
+
 Usage:
-    python -m scripts.create_admin --email admin@safaristrives.org --password 'change-me' [--role admin]
-    python -m scripts.create_admin --email admin@safaristrives.org --password 'new' --reset-password
+    python -m scripts.create_admin --email YOUR_EMAIL --password YOUR_PASSWORD [--role admin]
+    python -m scripts.create_admin --email YOUR_EMAIL --password YOUR_PASSWORD --reset-password
 """
 
 import argparse

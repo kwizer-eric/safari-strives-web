@@ -16,6 +16,7 @@ import {
   getPublishedCmsPage,
   latestArticles,
 } from "@/lib/cms";
+import { looksLikeImageUrl } from "@/lib/media-url";
 
 function requireItems<T>(
   collection: { payload?: { items?: T[] } } | null,
@@ -174,7 +175,7 @@ function toModelPageContent(page: PageResponse): ModelPageContent {
     .filter(Boolean);
 
   const mediaUrl = page.hero_video_url ?? "";
-  const looksLikeImage = /\.(jpg|jpeg|png|webp|gif)(\?|$)/i.test(mediaUrl);
+  const isImage = looksLikeImageUrl(mediaUrl);
 
   return {
     hero: {
@@ -185,8 +186,9 @@ function toModelPageContent(page: PageResponse): ModelPageContent {
       subhead: {
         line1: page.hero_subhead ?? page.hero_body ?? "",
       },
-      heroVideo: looksLikeImage ? "" : mediaUrl,
-      image: looksLikeImage ? mediaUrl : "",
+      // Video is primary; only treat clearly-photo URLs as still backgrounds.
+      heroVideo: isImage ? "" : mediaUrl,
+      image: isImage ? mediaUrl : "",
       imageAlt: page.hero_media_alt ?? page.hero_title,
     },
     audience: {

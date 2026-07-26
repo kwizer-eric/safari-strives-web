@@ -63,6 +63,7 @@ export function AboutPartners({ copy, partners }: AboutPartnersProps) {
                 width={220}
                 height={80}
                 className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
+                unoptimized
               />
             </a>
           ))}

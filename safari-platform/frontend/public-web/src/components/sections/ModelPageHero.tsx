@@ -33,6 +33,7 @@ export function ModelPageHero({ hero, headingId }: ModelPageHeroProps) {
             className="object-cover"
             priority
             sizes="100vw"
+            unoptimized
           />
         ) : (
           <div

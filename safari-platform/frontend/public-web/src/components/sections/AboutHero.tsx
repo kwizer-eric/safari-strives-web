@@ -34,6 +34,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
               className="object-cover"
               priority
               sizes="100vw"
+              unoptimized
             />
           ) : (
             <div

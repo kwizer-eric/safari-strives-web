@@ -1,17 +1,20 @@
 /**
  * Normalize and classify external media links for heroes and CMS fields.
- * Local paths (/videos/...), data URLs, and relative uploads are rejected.
  *
- * Why: heroes need muted autoplay. YouTube and direct Cloudflare URLs support
- * that natively. Google Drive share links do not — we convert them to a
- * streamable URL for <video>, with /preview iframe as a last resort.
+ * Primary video hosts: Cloudinary, Cloudflare Stream/R2, YouTube, Google Drive.
+ * Cloudinary image/video URLs often have no file extension — detect by path
+ * (`/image/upload/` vs `/video/upload/`), not only by `.jpg` / `.mp4`.
  */
 
-export type ExternalMediaKind = "youtube" | "google-drive" | "direct-video";
+export type ExternalMediaKind =
+  | "youtube"
+  | "google-drive"
+  | "direct-video"
+  | "image";
 
 export type ParsedExternalMedia = {
   kind: ExternalMediaKind;
-  /** URL for <video src> or iframe src (primary render target) */
+  /** URL for <video src>, iframe src, or <img src> */
   embedUrl: string;
   /** Drive-only: HTML5 video stream attempt before iframe fallback */
   streamUrl?: string;
@@ -19,7 +22,7 @@ export type ParsedExternalMedia = {
 };
 
 const ALLOWED_HINT =
-  "Use an https link from Cloudflare (Stream/R2), Google Drive, or YouTube.";
+  "Use an https link from Cloudinary, Cloudflare (Stream/R2), Google Drive, or YouTube.";
 
 export function isHttpsUrl(value: string): boolean {
   try {
@@ -28,6 +31,11 @@ export function isHttpsUrl(value: string): boolean {
   } catch {
     return false;
   }
+}
+
+export function isCloudinaryHost(hostname: string): boolean {
+  const host = hostname.replace(/^www\./, "").toLowerCase();
+  return host === "res.cloudinary.com" || host.endsWith(".cloudinary.com");
 }
 
 /** Reject local public paths, data URLs, and non-https links. */
@@ -48,6 +56,63 @@ export function mediaUrlValidationMessage(value: string): string | null {
     return `Enter a valid https URL. ${ALLOWED_HINT}`;
   }
   return null;
+}
+
+/**
+ * True for photo URLs — including Cloudinary `/image/upload/` paths that
+ * have no .jpg/.png suffix (common delivery URLs).
+ */
+export function looksLikeImageUrl(raw: string): boolean {
+  const trimmed = raw.trim();
+  if (!trimmed) return false;
+
+  if (/\.(jpg|jpeg|png|webp|gif|avif|svg)(\?|#|$)/i.test(trimmed)) {
+    return true;
+  }
+
+  try {
+    const url = new URL(trimmed);
+    if (!isCloudinaryHost(url.hostname)) return false;
+    const path = url.pathname.toLowerCase();
+    if (path.includes("/image/upload/")) return true;
+    if (path.includes("/image/fetch/")) return true;
+    // Explicit video path is never an image
+    if (path.includes("/video/upload/")) return false;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+export function isCloudinaryVideoUrl(raw: string): boolean {
+  try {
+    const url = new URL(raw.trim());
+    if (!isCloudinaryHost(url.hostname)) return false;
+    return url.pathname.toLowerCase().includes("/video/upload/");
+  } catch {
+    return false;
+  }
+}
+
+/** Still frame from a Cloudinary video for cards / posters. */
+export function cloudinaryVideoPosterUrl(raw: string): string | null {
+  try {
+    const url = new URL(raw.trim());
+    if (!isCloudinaryHost(url.hostname)) return null;
+    if (!url.pathname.toLowerCase().includes("/video/upload/")) return null;
+
+    // Insert so_0 (first frame) after /video/upload/ and force .jpg delivery.
+    let path = url.pathname.replace(
+      /\/video\/upload\//i,
+      "/video/upload/so_0/",
+    );
+    path = path.replace(/\.(mp4|webm|mov|m3u8)$/i, "");
+    if (!/\.jpe?g$/i.test(path)) path = `${path}.jpg`;
+    url.pathname = path;
+    return url.toString();
+  } catch {
+    return null;
+  }
 }
 
 function youtubeIdFromUrl(url: URL): string | null {
@@ -83,24 +148,41 @@ export function youtubeIdFromMediaUrl(raw: string): string | null {
   }
 }
 
-/** Poster image for a venturist card from video URL or existing image. */
+/**
+ * Poster for a venturist card. Video is primary — prefer a frame from the
+ * video URL (YouTube / Cloudinary), then fall back to a still image.
+ */
 export function venturePosterUrl(image: string, videoUrl?: string): string {
+  const video = videoUrl?.trim() ?? "";
+  if (video) {
+    const ytId = youtubeIdFromMediaUrl(video);
+    if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+    const cloudPoster = cloudinaryVideoPosterUrl(video);
+    if (cloudPoster) return cloudPoster;
+  }
   if (image.trim()) return image.trim();
-  const ytId = videoUrl ? youtubeIdFromMediaUrl(videoUrl) : null;
-  if (ytId) return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
   return "";
+}
+
+/** Use unoptimized next/image for Cloudinary / arbitrary https CMS assets. */
+export function shouldUnoptimizeCmsImage(src: string): boolean {
+  const trimmed = src.trim();
+  if (!trimmed || trimmed.startsWith("/")) return false;
+  try {
+    const url = new URL(trimmed);
+    return isCloudinaryHost(url.hostname) || url.protocol === "https:";
+  } catch {
+    return false;
+  }
 }
 
 function googleDriveFileId(url: URL): string | null {
   const host = url.hostname.replace(/^www\./, "");
   if (host !== "drive.google.com" && host !== "docs.google.com") return null;
 
-  // https://drive.google.com/file/d/FILE_ID/view
   const fileMatch = url.pathname.match(/\/file\/d\/([^/]+)/);
   if (fileMatch?.[1]) return fileMatch[1];
 
-  // https://drive.google.com/open?id=FILE_ID
-  // https://drive.google.com/uc?id=FILE_ID&export=download
   const idParam = url.searchParams.get("id");
   if (idParam) return idParam;
 
@@ -122,6 +204,15 @@ export function parseExternalMediaUrl(raw: string): ParsedExternalMedia | null {
     return null;
   }
 
+  // Photos first — Cloudinary image URLs must not be fed into <video>.
+  if (looksLikeImageUrl(originalUrl)) {
+    return {
+      kind: "image",
+      embedUrl: originalUrl,
+      originalUrl,
+    };
+  }
+
   const ytId = youtubeIdFromUrl(url);
   if (ytId) {
     return {
@@ -135,14 +226,13 @@ export function parseExternalMediaUrl(raw: string): ParsedExternalMedia | null {
   if (driveId) {
     return {
       kind: "google-drive",
-      // confirm=t skips the large-file virus-scan interstitial when possible
       streamUrl: `https://drive.google.com/uc?export=download&confirm=t&id=${driveId}`,
       embedUrl: `https://drive.google.com/file/d/${driveId}/preview`,
       originalUrl,
     };
   }
 
-  // Cloudflare Stream/R2 and other direct https video URLs
+  // Cloudinary video, Cloudflare Stream/R2, and other direct https video URLs
   return {
     kind: "direct-video",
     embedUrl: originalUrl,
