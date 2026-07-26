@@ -111,10 +111,29 @@ Rich text fields (`main_description`, `final_cta`, feature `description`) are **
 
 ```bash
 # frontend/.env.local
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
 ```
 
 CORS allows `http://localhost:3000` by default (`CORS_ORIGINS` in `.env`).
+
+## Production (Docker)
+
+```bash
+cp .env.example .env
+# Set SECRET_KEY, CORS_ORIGINS (Vercel URL), and a strong POSTGRES_PASSWORD
+
+docker compose -f docker-compose.prod.yml up -d --build
+curl http://localhost:4000/api/v1/health
+```
+
+Create a staff user:
+
+```bash
+docker compose -f docker-compose.prod.yml exec api \
+  python -m scripts.create_admin --email admin@example.com --password 'change-me'
+```
+
+Full deploy guide: [../DEPLOY.md](../DEPLOY.md).
 
 ## Next up
 

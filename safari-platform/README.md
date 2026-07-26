@@ -42,7 +42,9 @@ API: http://localhost:4000/api/v1
 
 See [backend/README.md](./backend/README.md) for full backend docs.
 
-## Run everything (optional)
+## Deploy
+
+See **[DEPLOY.md](./DEPLOY.md)** for Vercel (frontend) + Docker (API) setup.
 
 From `safari-platform/`:
 

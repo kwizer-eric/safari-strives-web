@@ -1,0 +1,53 @@
+# Production-style stack: Postgres + FastAPI API.
+#
+# Usage (from safari-platform/backend):
+#   cp .env.example .env   # then set SECRET_KEY + CORS_ORIGINS
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# API:  http://localhost:4000/api/v1
+# Docs: http://localhost:4000/docs
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: safari-strives-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-safari_strives}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - safari_strives_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-safari_strives}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  api:
+    build: .
+    container_name: safari-strives-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${PORT:-4000}:4000"
+    environment:
+      PORT: "4000"
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://postgres:postgres@db:5432/safari_strives}
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-60}
+      ALGORITHM: ${ALGORITHM:-HS256}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000}
+      PROJECT_NAME: ${PROJECT_NAME:-Safari Strives API}
+
+volumes:
+  safari_strives_pgdata:

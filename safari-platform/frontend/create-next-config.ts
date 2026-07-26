@@ -13,6 +13,9 @@ export function createNextConfig(
   const monorepoRoot = path.resolve(appDir, "..");
 
   return {
+    // Trace files from the frontend workspace root so @safari/* packages
+    // are included in the Vercel serverless bundle.
+    outputFileTracingRoot: monorepoRoot,
     turbopack: {
       root: monorepoRoot,
     },
