@@ -20,7 +20,8 @@ Three Railway services: **PostgreSQL**, **backend** (FastAPI), **frontend** (Nex
 
 1. **New Service** → **GitHub Repo** → select this repository
 2. **Settings → Root Directory:** `safari-platform/backend`
-3. **Settings → Networking → Generate Domain** (e.g. `https://safari-api.up.railway.app`)
+3. **Settings → Config-as-code path:** `/safari-platform/backend/railway.toml`
+4. **Settings → Networking → Generate Domain** (e.g. `https://safari-api.up.railway.app`)
 
 ### Backend variables
 
@@ -50,7 +51,10 @@ curl https://YOUR-BACKEND.up.railway.app/api/v1/health
 
 1. **New Service** → same GitHub repo
 2. **Settings → Root Directory:** `safari-platform/frontend`
-3. **Settings → Networking → Generate Domain**
+3. **Settings → Config-as-code path** (important): `/safari-platform/frontend/railway.toml`
+   - Railway does **not** auto-find `railway.toml` inside Root Directory
+4. **Settings → Deploy → Custom Start Command** (if detection still fails): `npm run start`
+5. **Settings → Networking → Generate Domain**
 
 ### Frontend variables (set **before** first build)
 
@@ -100,6 +104,7 @@ railway run --service backend python -m scripts.seed_cms_content
 | Issue | Fix |
 |-------|-----|
 | `database: unreachable` | Check `DATABASE_URL` reference to Postgres service |
+| Railpack: cannot detect start command | Root Directory must be `safari-platform/frontend`, Config path `/safari-platform/frontend/railway.toml`, and `package.json` must have a `"start"` script (push latest code) |
 | Frontend 404 on API calls | Rebuild frontend with correct `NEXT_PUBLIC_API_URL` |
 | CORS errors | Set `CORS_ORIGINS` to exact frontend URL (no trailing slash) |
 | App crashes on boot in prod | Set `SECRET_KEY` and `ENVIRONMENT=production` |
