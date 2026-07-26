@@ -6,6 +6,8 @@ import { ModelPageFeatures } from "@/components/sections/ModelPageFeatures";
 import { ModelPageCloser } from "@/components/sections/ModelPageCloser";
 import { getProgramPage } from "@/lib/content";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Green Enterprise Lab | Safari Strives",
   description:
@@ -38,3 +40,4 @@ export default async function GreenEnterpriseLabPage() {
     </MarketingChrome>
   );
 }
+
