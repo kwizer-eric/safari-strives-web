@@ -46,7 +46,11 @@ export function AboutPartners({ copy, partners }: AboutPartnersProps) {
               href={partner.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={`Visit ${partner.name} (opens in new tab)`}
+              aria-label={
+                partner.name.trim()
+                  ? `Visit ${partner.name} (opens in new tab)`
+                  : "Visit partner website (opens in new tab)"
+              }
               className={cn(
                 "flex h-[120px] w-[280px] shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-border bg-card p-6 transition-opacity hover:opacity-90 md:h-[140px] md:w-[320px]",
                 partner.logoOnWhite && "bg-white",

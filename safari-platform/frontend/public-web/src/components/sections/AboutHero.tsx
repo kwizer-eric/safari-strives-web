@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { Button, Container } from "@safari/ui";
 import { YouTubeVideoModal } from "@/components/ui/YouTubeVideoModal";
@@ -20,10 +21,27 @@ export function AboutHero({ hero }: AboutHeroProps) {
         className="sticky top-0 z-0 min-h-[92vh]"
       >
         <div className="absolute inset-0 overflow-hidden">
-          <HeroBackgroundVideo
-            src={hero.heroVideo}
-            label={hero.imageAlt || "About hero video"}
-          />
+          {hero.heroVideo.trim() ? (
+            <HeroBackgroundVideo
+              src={hero.heroVideo}
+              label={hero.imageAlt || "About hero video"}
+            />
+          ) : hero.image.trim() ? (
+            <Image
+              src={hero.image}
+              alt={hero.imageAlt || "About hero"}
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+          ) : (
+            <div
+              className="h-full w-full bg-dark"
+              role="img"
+              aria-label={hero.imageAlt || "About hero"}
+            />
+          )}
           <div className="pointer-events-none absolute inset-0 bg-dark/60" />
         </div>
 
@@ -45,13 +63,15 @@ export function AboutHero({ hero }: AboutHeroProps) {
                 </span>
               ))}
             </p>
-            <Button
-              variant="secondary"
-              onClick={() => setVideoOpen(true)}
-              className="mt-8 border-white/40 text-white hover:bg-white/10"
-            >
-              {hero.watchVideoLabel}
-            </Button>
+            {hero.videoId.trim() ? (
+              <Button
+                variant="secondary"
+                onClick={() => setVideoOpen(true)}
+                className="mt-8 border-white/40 text-white hover:bg-white/10"
+              >
+                {hero.watchVideoLabel}
+              </Button>
+            ) : null}
           </div>
         </Container>
       </section>

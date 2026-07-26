@@ -1,3 +1,6 @@
+"use client";
+
+import Image from "next/image";
 import { Container } from "@safari/ui";
 import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
 import type { VenturesPagePayload } from "@/types/content";
@@ -7,16 +10,36 @@ type VenturesHeroProps = {
 };
 
 export function VenturesHero({ page }: VenturesHeroProps) {
+  const hasVideo = Boolean(page.heroVideo?.trim());
+  const hasPhoto = Boolean(page.heroImage?.trim());
+
   return (
     <section
       aria-labelledby="ventures-hero-heading"
       className="sticky top-0 z-0 min-h-[92vh]"
     >
       <div className="absolute inset-0 overflow-hidden">
-        <HeroBackgroundVideo
-          src={page.heroVideo}
-          label={page.heroImageAlt || "Ventures hero video"}
-        />
+        {hasVideo ? (
+          <HeroBackgroundVideo
+            src={page.heroVideo}
+            label={page.heroImageAlt || "Ventures hero video"}
+          />
+        ) : hasPhoto ? (
+          <Image
+            src={page.heroImage}
+            alt={page.heroImageAlt || "Ventures hero"}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
+        ) : (
+          <div
+            className="h-full w-full bg-dark"
+            role="img"
+            aria-label={page.heroImageAlt || "Ventures hero"}
+          />
+        )}
         <div className="pointer-events-none absolute inset-0 bg-dark/65" />
       </div>
 
