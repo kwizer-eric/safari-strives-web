@@ -2,18 +2,17 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { DEFAULT_BACKEND_URL } from "@safari/shared";
 import { PageHeader, StatCard, Alert } from "@safari/ui";
 import { useAuth } from "@safari/auth";
 import { readApplyUrl } from "@/lib/apply-url";
+import { getApiBaseUrl } from "@/lib/api-base-url";
 import {
   listAdminCmsCollections,
   listAdminCmsPages,
   type HomePayload,
 } from "@/lib/cms";
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? `${DEFAULT_BACKEND_URL}/api/v1`;
+const API_URL = getApiBaseUrl();
 
 const shortcuts = [
   { label: "Home", href: "/admin/home" },

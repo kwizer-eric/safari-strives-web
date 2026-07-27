@@ -8,7 +8,7 @@ Three Railway services: **PostgreSQL**, **backend** (FastAPI), **frontend** (Nex
 │  (plugin)   │     │  FastAPI     │     │    Next.js      │
 └─────────────┘     └──────────────┘     └─────────────────┘
                            ▲                      │
-                           └──── NEXT_PUBLIC_API_URL
+                           └──── API_URL / NEXT_PUBLIC_API_URL
 ```
 
 ## 1. Create Railway project
@@ -65,14 +65,17 @@ curl https://YOUR-BACKEND.up.railway.app/api/v1/health
 
 | Variable | Value |
 |----------|--------|
-| `NEXT_PUBLIC_API_URL` | `https://YOUR-BACKEND.up.railway.app/api/v1` |
+| `API_URL` | `https://YOUR-BACKEND.up.railway.app/api/v1` (server-side / SSR; readable at runtime) |
+| `NEXT_PUBLIC_API_URL` | Same URL (browser / admin client; baked at **build** time) |
 | `NODE_VERSION` | `20` |
 
-> `NEXT_PUBLIC_*` vars are baked in at **build time**. Redeploy frontend after changing them.
+> Set **both** to the same backend `/api/v1` URL. `API_URL` is preferred for server CMS fetches so SSR does not silently fall back to `localhost:4000`. Redeploy after changing `NEXT_PUBLIC_*`.
 
 ### Verify frontend
 
 Open `https://YOUR-FRONTEND.up.railway.app`
+
+If `/admin/login` works but `/` does not, the public site is failing CMS SSR — see Troubleshooting below.
 
 ## 4. Link CORS (after frontend URL is known)
 
@@ -103,6 +106,10 @@ railway link
 railway run --service backend alembic upgrade head
 railway run --service backend python -m scripts.create_admin \
   --email YOUR_EMAIL --password YOUR_PASSWORD
+
+# One-time CMS seed (insert-only; do NOT put this in start.sh)
+railway run --service backend python -m scripts.seed_cms_content
+railway run --service backend python -m scripts.seed_program_pages
 ```
 
 ## Troubleshooting
@@ -111,8 +118,9 @@ railway run --service backend python -m scripts.create_admin \
 |-------|-----|
 | `database: unreachable` | Check `DATABASE_URL` reference to Postgres service |
 | Railpack: cannot detect start command | Root Directory must be `safari-platform/frontend`, Config path `/safari-platform/frontend/railway.toml`, and `package.json` must have a `"start"` script (push latest code) |
-| `prerender-error` / `fetch failed` / `ECONNREFUSED` on build | App uses `force-dynamic` so CMS pages are not prerendered at build time; push latest frontend and redeploy. Also set `NEXT_PUBLIC_API_URL` to the live backend URL |
-| Frontend 404 on API calls | Rebuild frontend with correct `NEXT_PUBLIC_API_URL` |
+| `prerender-error` / `fetch failed` / `ECONNREFUSED` on build | App uses `force-dynamic` so CMS pages are not prerendered at build time; push latest frontend and redeploy. Also set `API_URL` + `NEXT_PUBLIC_API_URL` to the live backend URL |
+| `/` 404 or “Content API unreachable”, but `/admin/login` works | Admin login does not need CMS. Public `/` does. (1) Set `API_URL` and `NEXT_PUBLIC_API_URL` to `https://YOUR-BACKEND/api/v1` and redeploy frontend. (2) Confirm `GET /api/v1/cms/pages/home` and `.../collections/site\|articles\|testimonials` return 200 with content. (3) If empty, run one-time `seed_cms_content` + `seed_program_pages` (not on every deploy) |
+| Frontend 404 on API calls | Rebuild frontend with correct `API_URL` / `NEXT_PUBLIC_API_URL` |
 | CORS errors | Set `CORS_ORIGINS` to exact frontend URL (no trailing slash) |
 | App crashes on boot in prod | Set `SECRET_KEY` and `ENVIRONMENT=production` |
 | Empty homepage | Add content in admin (`/admin/home`, etc.). Create an admin with `create_admin` if you have none. |

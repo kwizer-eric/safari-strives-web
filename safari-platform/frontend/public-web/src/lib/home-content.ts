@@ -30,7 +30,8 @@ function asHomePayload(payload: unknown): HomePayload | null {
 
 /**
  * Homepage content from the CMS only — no static mock fallbacks.
- * Missing/unpublished content → 404 so we never silently show seed TS files.
+ * Missing/unpublished CMS (API 404 or empty items) → notFound().
+ * Network / misconfigured API URL errors propagate to error.tsx.
  */
 export async function getHomeContent(): Promise<HomeContent> {
   const [page, articlesCollection, testimonialsCollection] = await Promise.all([

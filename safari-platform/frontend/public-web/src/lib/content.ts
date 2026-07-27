@@ -18,6 +18,7 @@ import {
 } from "@/lib/cms";
 import { looksLikeImageUrl } from "@/lib/media-url";
 
+/** Empty or missing published collection → notFound (not network errors — those throw). */
 function requireItems<T>(
   collection: { payload?: { items?: T[] } } | null,
   key: string,
@@ -29,6 +30,7 @@ function requireItems<T>(
   return items;
 }
 
+/** Published `site` collection. Missing/incomplete → notFound; API down → throws. */
 export async function getSiteSettings(): Promise<SiteSettings> {
   const collection = await getPublishedCmsCollection<Partial<SiteSettings>>("site");
   const payload = collection?.payload;

@@ -1,8 +1,4 @@
-import { DEFAULT_BACKEND_URL } from "@safari/shared";
-
-// DEFAULT_BACKEND_URL has no /api/v1 suffix (it's shared with the demo
-// api-client package, which targets a different route shape).
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? `${DEFAULT_BACKEND_URL}/api/v1`;
+import { getApiBaseUrl } from "@/lib/api-base-url";
 
 export type PageFeatureResponse = {
   id: number;
@@ -57,26 +53,29 @@ export type PageResponse = {
 };
 
 /**
- * Server-side fetch of a published page by slug. Returns null on 404 (missing
- * or unpublished) or network failure so callers can trigger notFound() instead
- * of crashing the build when the API is unreachable.
+ * Server-side fetch of a published page by slug.
+ * Returns null only on API 404 (missing/unpublished).
+ * Network / 5xx errors throw so callers do not confuse them with notFound().
  */
 export async function getPage(slug: string): Promise<PageResponse | null> {
+  const url = `${getApiBaseUrl()}/pages/${slug}`;
+  let res: Response;
   try {
-    const res = await fetch(`${API_URL}/pages/${slug}`, {
+    res = await fetch(url, {
       // no-store: do not statically prerender at build time (Railway has no API yet).
       cache: "no-store",
     });
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    throw new Error(`CMS API unreachable (${url}): ${detail}`);
+  }
 
-    if (res.status === 404) {
-      return null;
-    }
-    if (!res.ok) {
-      throw new Error(`Failed to fetch page '${slug}': ${res.status}`);
-    }
-
-    return res.json() as Promise<PageResponse>;
-  } catch {
+  if (res.status === 404) {
     return null;
   }
+  if (!res.ok) {
+    throw new Error(`Failed to fetch page '${slug}': ${res.status}`);
+  }
+
+  return res.json() as Promise<PageResponse>;
 }

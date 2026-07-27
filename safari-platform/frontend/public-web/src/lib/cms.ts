@@ -1,8 +1,5 @@
-import { DEFAULT_BACKEND_URL } from "@safari/shared";
 import type { Article, Testimonial } from "@/types/content";
-
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? `${DEFAULT_BACKEND_URL}/api/v1`;
+import { getApiBaseUrl } from "@/lib/api-base-url";
 
 export type HomeHero = {
   headline: string;
@@ -78,8 +75,10 @@ async function cmsFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T | null> {
+  const url = `${getApiBaseUrl()}${path}`;
+  let res: Response;
   try {
-    const res = await fetch(`${API_URL}${path}`, {
+    res = await fetch(url, {
       ...init,
       headers: {
         "content-type": "application/json",
@@ -88,14 +87,16 @@ async function cmsFetch<T>(
       // no-store on reads so `next build` does not prerender against a live API.
       cache: "no-store",
     });
-    if (res.status === 404) return null;
-    if (!res.ok) {
-      throw new Error(`CMS request failed (${res.status}): ${path}`);
-    }
-    return (await res.json()) as T;
-  } catch {
-    return null;
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    throw new Error(`CMS API unreachable (${url}): ${detail}`);
   }
+  // Genuine missing/unpublished resource — callers may call notFound().
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    throw new Error(`CMS request failed (${res.status}): ${path}`);
+  }
+  return (await res.json()) as T;
 }
 
 export async function getPublishedCmsPage<TPayload>(
@@ -139,7 +140,7 @@ async function throwAdminCmsError(
 }
 
 export async function listAdminCmsPages(token: string): Promise<CmsPage[]> {
-  const res = await fetch(`${API_URL}/admin/cms/pages`, {
+  const res = await fetch(`${getApiBaseUrl()}/admin/cms/pages`, {
     cache: "no-store",
     headers: adminHeaders(token),
   });
@@ -152,7 +153,7 @@ export async function patchAdminCmsPage<TPayload = Record<string, unknown>>(
   pageId: number,
   body: { payload?: TPayload; title?: string; is_published?: boolean },
 ): Promise<CmsPage<TPayload>> {
-  const res = await fetch(`${API_URL}/admin/cms/pages/${pageId}`, {
+  const res = await fetch(`${getApiBaseUrl()}/admin/cms/pages/${pageId}`, {
     method: "PATCH",
     headers: adminHeaders(token),
     body: JSON.stringify(body),
@@ -165,7 +166,7 @@ export async function patchAdminCmsPage<TPayload = Record<string, unknown>>(
 export async function listAdminCmsCollections(
   token: string,
 ): Promise<CmsCollection[]> {
-  const res = await fetch(`${API_URL}/admin/cms/collections`, {
+  const res = await fetch(`${getApiBaseUrl()}/admin/cms/collections`, {
     cache: "no-store",
     headers: adminHeaders(token),
   });
@@ -184,12 +185,15 @@ export async function patchAdminCmsCollection<
     is_published?: boolean;
   },
 ): Promise<CmsCollection<TPayload>> {
-  const res = await fetch(`${API_URL}/admin/cms/collections/${collectionId}`, {
-    method: "PATCH",
-    headers: adminHeaders(token),
-    body: JSON.stringify(body),
-    cache: "no-store",
-  });
+  const res = await fetch(
+    `${getApiBaseUrl()}/admin/cms/collections/${collectionId}`,
+    {
+      method: "PATCH",
+      headers: adminHeaders(token),
+      body: JSON.stringify(body),
+      cache: "no-store",
+    },
+  );
   if (!res.ok) {
     await throwAdminCmsError(res, "Failed to update CMS collection");
   }
@@ -289,7 +293,7 @@ export type ProgramPageSummary = {
 export async function listAdminProgramPages(
   token: string,
 ): Promise<ProgramPageSummary[]> {
-  const res = await fetch(`${API_URL}/admin/pages`, {
+  const res = await fetch(`${getApiBaseUrl()}/admin/pages`, {
     cache: "no-store",
     headers: adminHeaders(token),
   });
@@ -301,7 +305,7 @@ export async function getAdminProgramPage(
   token: string,
   pageId: number,
 ): Promise<ProgramPage> {
-  const res = await fetch(`${API_URL}/admin/pages/${pageId}`, {
+  const res = await fetch(`${getApiBaseUrl()}/admin/pages/${pageId}`, {
     cache: "no-store",
     headers: adminHeaders(token),
   });
@@ -314,7 +318,7 @@ export async function putAdminProgramPage(
   pageId: number,
   body: Omit<ProgramPage, "id">,
 ): Promise<ProgramPage> {
-  const res = await fetch(`${API_URL}/admin/pages/${pageId}`, {
+  const res = await fetch(`${getApiBaseUrl()}/admin/pages/${pageId}`, {
     method: "PUT",
     headers: adminHeaders(token),
     body: JSON.stringify(body),
