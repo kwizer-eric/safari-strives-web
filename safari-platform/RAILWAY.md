@@ -70,6 +70,8 @@ curl https://YOUR-BACKEND.up.railway.app/api/v1/health
 | `NODE_VERSION` | `20` |
 
 > Set **both** to the same backend `/api/v1` URL. `API_URL` is preferred for server CMS fetches so SSR does not silently fall back to `localhost:4000`. Redeploy after changing `NEXT_PUBLIC_*`.
+>
+> Repo also ships [`public-web/.env.production`](frontend/public-web/.env.production) pointing at the current Railway backend so builds work even if Variables were forgotten — update that file if the backend domain changes.
 
 ### Verify frontend
 
@@ -119,7 +121,7 @@ railway run --service backend python -m scripts.seed_program_pages
 | `database: unreachable` | Check `DATABASE_URL` reference to Postgres service |
 | Railpack: cannot detect start command | Root Directory must be `safari-platform/frontend`, Config path `/safari-platform/frontend/railway.toml`, and `package.json` must have a `"start"` script (push latest code) |
 | `prerender-error` / `fetch failed` / `ECONNREFUSED` on build | App uses `force-dynamic` so CMS pages are not prerendered at build time; push latest frontend and redeploy. Also set `API_URL` + `NEXT_PUBLIC_API_URL` to the live backend URL |
-| `/` thin/empty but `/admin/login` works | Public routes soft-fail: missing CMS uses defaults + empty sections (site stays **200**). Set `API_URL` + `NEXT_PUBLIC_API_URL`, then publish/seed content to fill sections. |
+| `/` thin/empty but `/admin/login` works | Public routes soft-fail: missing CMS uses defaults + empty sections (site stays **200**). **Most common on Railway:** frontend built without `API_URL` / `NEXT_PUBLIC_API_URL`, so SSR calls `localhost:4000` and falls back to empty shells. Ship [`public-web/.env.production`](frontend/public-web/.env.production) or set both vars on the frontend service to `https://YOUR-BACKEND.up.railway.app/api/v1`, then **redeploy**. Also set backend `CORS_ORIGINS` to the frontend URL. |
 | Empty articles/testimonials/team in DB | Site still loads. Re-run `railway run --service backend python -m scripts.seed_cms_content` to backfill empty `items` and empty hero media (use `--force` only to overwrite admin edits). Also run `python -m scripts.seed_program_pages` to backfill empty program hero media. |
 | Frontend 404 on API calls | Rebuild frontend with correct `API_URL` / `NEXT_PUBLIC_API_URL` |
 | CORS errors | Set `CORS_ORIGINS` to exact frontend URL (no trailing slash) |
