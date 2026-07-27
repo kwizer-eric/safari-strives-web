@@ -12,7 +12,26 @@ export function FieldNotesGrid({ articles }: FieldNotesGridProps) {
   const featured = latestArticles(articles, 1)[0];
   const rest = articles.filter((article) => article.id !== featured?.id);
 
-  if (!featured) return null;
+  if (!featured) {
+    return (
+      <section
+        aria-labelledby="field-notes-grid-heading"
+        className="bg-background pt-28 pb-16 md:pt-36 md:pb-24"
+      >
+        <Container>
+          <h1
+            id="field-notes-grid-heading"
+            className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl"
+          >
+            Field Notes
+          </h1>
+          <p className="mt-4 text-base text-muted md:text-lg">
+            No field notes published yet. Check back soon.
+          </p>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section

@@ -16,62 +16,45 @@ import {
   getPublishedCmsPage,
   latestArticles,
 } from "@/lib/cms";
+import {
+  DEFAULT_ABOUT,
+  DEFAULT_SITE,
+  DEFAULT_VENTURES_PAGE,
+  defaultModelPage,
+} from "@/lib/cms-defaults";
 import { looksLikeImageUrl } from "@/lib/media-url";
 
-/** Empty or missing published collection → notFound (not network errors — those throw). */
-function requireItems<T>(
+/** Missing/empty collection → [] (never take the site down). */
+function readItems<T>(
   collection: { payload?: { items?: T[] } } | null,
-  key: string,
 ): T[] {
   const items = collection?.payload?.items;
-  if (!Array.isArray(items) || items.length === 0) {
-    notFound();
-  }
-  return items;
+  return Array.isArray(items) ? items : [];
 }
 
-/** Published `site` collection. Missing/incomplete → notFound; API down → throws. */
+/** Always returns SiteSettings — merges CMS onto defaults. */
 export async function getSiteSettings(): Promise<SiteSettings> {
-  const collection = await getPublishedCmsCollection<Partial<SiteSettings>>("site");
+  const collection =
+    await getPublishedCmsCollection<Partial<SiteSettings>>("site");
   const payload = collection?.payload;
-  if (!payload?.name || !payload.navLinks || !payload.footerColumns) {
-    notFound();
-  }
 
   return {
-    name: payload.name,
-    logo: payload.logo ?? "/logo/logo.png",
-    logoWhite: payload.logoWhite ?? "/logo/logowhite.png",
-    tagline: payload.tagline ?? { line1: "", line2: "" },
-    description: payload.description ?? "",
-    email: payload.email ?? "",
-    donateHref: payload.donateHref ?? "#",
-    applyUrl: payload.applyUrl ?? "/applicant/login",
-    locations: payload.locations ?? [],
-    social: payload.social ?? {
-      linkedin: "#",
-      facebook: "#",
-      instagram: "#",
-    },
-    navLinks: payload.navLinks,
-    ourModelLinks: payload.ourModelLinks ?? [
-      {
-        title: "Venture Accelerator",
-        description: "Model-to-market support for founders in Rubavu",
-        href: "/our-model",
-      },
-      {
-        title: "Green Enterprise Lab",
-        description: "Hands-on enterprise building on the ground",
-        href: "/green-enterprise-lab",
-      },
-      {
-        title: "The Hub",
-        description: "Shared workspace and community for local businesses",
-        href: "/the-hub",
-      },
-    ],
-    footerColumns: payload.footerColumns,
+    name: payload?.name?.trim() || DEFAULT_SITE.name,
+    logo: payload?.logo ?? DEFAULT_SITE.logo,
+    logoWhite: payload?.logoWhite ?? DEFAULT_SITE.logoWhite,
+    tagline: payload?.tagline ?? DEFAULT_SITE.tagline,
+    description: payload?.description ?? DEFAULT_SITE.description,
+    email: payload?.email ?? DEFAULT_SITE.email,
+    donateHref: payload?.donateHref ?? DEFAULT_SITE.donateHref,
+    applyUrl: payload?.applyUrl ?? DEFAULT_SITE.applyUrl,
+    locations: payload?.locations ?? DEFAULT_SITE.locations,
+    social: payload?.social ?? DEFAULT_SITE.social,
+    navLinks:
+      Array.isArray(payload?.navLinks) && payload.navLinks.length > 0
+        ? payload.navLinks
+        : DEFAULT_SITE.navLinks,
+    ourModelLinks: payload?.ourModelLinks ?? DEFAULT_SITE.ourModelLinks,
+    footerColumns: payload?.footerColumns ?? DEFAULT_SITE.footerColumns,
   };
 }
 
@@ -86,11 +69,14 @@ export async function getAboutContent(): Promise<{
     getPublishedCmsCollection<{ items: AboutPartner[] }>("partners"),
   ]);
 
-  if (!page?.payload?.hero || !page.payload.mission) notFound();
+  const pagePayload =
+    page?.payload?.hero && page.payload.mission
+      ? page.payload
+      : DEFAULT_ABOUT;
 
   // Only show partners with a real logo URL — seed items ship with empty logos
   // and we must not fall back to the Safari mark (that duplicated six times).
-  const partners = requireItems(partnersCol, "partners")
+  const partners = readItems(partnersCol)
     .map((partner) => ({
       ...partner,
       href: partner.href?.trim() || "#",
@@ -99,8 +85,8 @@ export async function getAboutContent(): Promise<{
     .filter((partner) => Boolean(partner.logo));
 
   return {
-    page: page.payload,
-    team: requireItems(teamCol, "team-members"),
+    page: pagePayload,
+    team: readItems(teamCol),
     partners,
   };
 }
@@ -113,10 +99,10 @@ export async function getVenturesContent(): Promise<{
     getPublishedCmsPage<VenturesPagePayload>("ventures"),
     getPublishedCmsCollection<{ items: Venture[] }>("ventures"),
   ]);
-  if (!page?.payload?.headline) notFound();
+
   return {
-    page: page.payload,
-    ventures: requireItems(venturesCol, "ventures"),
+    page: page?.payload?.headline ? page.payload : DEFAULT_VENTURES_PAGE,
+    ventures: readItems(venturesCol),
   };
 }
 
@@ -139,7 +125,7 @@ export async function getArticles(): Promise<Article[]> {
   const collection = await getPublishedCmsCollection<{ items: Article[] }>(
     "articles",
   );
-  return requireItems(collection, "articles");
+  return readItems(collection);
 }
 
 export async function getArticleById(id: string): Promise<{
@@ -162,7 +148,7 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   const collection = await getPublishedCmsCollection<{ items: Testimonial[] }>(
     "testimonials",
   );
-  return requireItems(collection, "testimonials");
+  return readItems(collection);
 }
 
 function toModelPageContent(page: PageResponse): ModelPageContent {
@@ -237,6 +223,6 @@ export async function getProgramPage(
   slug: string,
 ): Promise<ModelPageContent> {
   const page = await getPage(slug);
-  if (!page) notFound();
+  if (!page) return defaultModelPage(slug);
   return toModelPageContent(page);
 }

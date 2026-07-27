@@ -122,6 +122,8 @@ type AboutTeamProps = {
 };
 
 export function AboutTeam({ team, members }: AboutTeamProps) {
+  if (members.length === 0) return null;
+
   return (
     <section
       id="team"

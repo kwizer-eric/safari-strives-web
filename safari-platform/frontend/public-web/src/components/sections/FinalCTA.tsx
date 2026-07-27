@@ -12,6 +12,8 @@ type FinalCTAProps = {
 };
 
 export function FinalCTA({ finalCta, donateHref }: FinalCTAProps) {
+  if (!finalCta.line1.trim() && !finalCta.line2.trim()) return null;
+
   return (
     <section
       aria-labelledby="final-cta-heading"

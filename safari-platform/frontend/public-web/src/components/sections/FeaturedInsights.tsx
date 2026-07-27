@@ -9,6 +9,8 @@ type FeaturedInsightsProps = {
 };
 
 export function FeaturedInsights({ title, articles }: FeaturedInsightsProps) {
+  if (articles.length === 0) return null;
+
   return (
     <section
       id="insights"

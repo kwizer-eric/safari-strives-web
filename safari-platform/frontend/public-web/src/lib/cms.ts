@@ -89,12 +89,14 @@ async function cmsFetch<T>(
     });
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
-    throw new Error(`CMS API unreachable (${url}): ${detail}`);
+    console.error(`[cms] unreachable ${url}: ${detail}`);
+    return null;
   }
-  // Genuine missing/unpublished resource — callers may call notFound().
+  // Missing/unpublished — soft null so marketing pages stay up.
   if (res.status === 404) return null;
   if (!res.ok) {
-    throw new Error(`CMS request failed (${res.status}): ${path}`);
+    console.error(`[cms] request failed (${res.status}): ${path}`);
+    return null;
   }
   return (await res.json()) as T;
 }

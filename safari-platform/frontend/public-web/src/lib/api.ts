@@ -54,8 +54,7 @@ export type PageResponse = {
 
 /**
  * Server-side fetch of a published page by slug.
- * Returns null only on API 404 (missing/unpublished).
- * Network / 5xx errors throw so callers do not confuse them with notFound().
+ * Returns null on 404, network failure, or non-OK so marketing routes stay up.
  */
 export async function getPage(slug: string): Promise<PageResponse | null> {
   const url = `${getApiBaseUrl()}/pages/${slug}`;
@@ -67,14 +66,16 @@ export async function getPage(slug: string): Promise<PageResponse | null> {
     });
   } catch (err) {
     const detail = err instanceof Error ? err.message : String(err);
-    throw new Error(`CMS API unreachable (${url}): ${detail}`);
+    console.error(`[pages] unreachable ${url}: ${detail}`);
+    return null;
   }
 
   if (res.status === 404) {
     return null;
   }
   if (!res.ok) {
-    throw new Error(`Failed to fetch page '${slug}': ${res.status}`);
+    console.error(`[pages] failed to fetch '${slug}': ${res.status}`);
+    return null;
   }
 
   return res.json() as Promise<PageResponse>;

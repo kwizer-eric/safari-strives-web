@@ -11,6 +11,8 @@ type InMotionProps = {
 };
 
 export function InMotion({ inMotion }: InMotionProps) {
+  if (!inMotion.cards.length) return null;
+
   const duplicated = [...inMotion.cards, ...inMotion.cards];
 
   return (

@@ -17,6 +17,21 @@ export function VenturesGrid({ ventures }: VenturesGridProps) {
     ? youtubeIdFromMediaUrl(active.videoUrl)
     : null;
 
+  if (ventures.length === 0) {
+    return (
+      <section
+        aria-label="Ventures"
+        className="relative z-10 scroll-mt-28 bg-background py-16 md:py-24"
+      >
+        <Container>
+          <p className="text-base text-muted md:text-lg">
+            No ventures published yet. Check back soon.
+          </p>
+        </Container>
+      </section>
+    );
+  }
+
   return (
     <section
       aria-label="Ventures"

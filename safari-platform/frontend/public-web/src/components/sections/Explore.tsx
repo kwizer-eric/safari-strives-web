@@ -9,6 +9,7 @@ type ExploreProps = {
 };
 
 export function Explore({ explore }: ExploreProps) {
+  if (!explore.pillars.length) return null;
   return (
     <ProgramScrollSection title={explore.title} pillars={explore.pillars} />
   );

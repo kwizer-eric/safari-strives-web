@@ -9,6 +9,8 @@ type AboutPartnersProps = {
 };
 
 export function AboutPartners({ copy, partners }: AboutPartnersProps) {
+  if (partners.length === 0) return null;
+
   // Two identical halves so `animate-marquee` (-50%) loops seamlessly; extra copies fill wide viewports.
   const half = [...partners, ...partners];
   const duplicated = [...half, ...half];

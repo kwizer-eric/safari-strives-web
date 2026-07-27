@@ -6,6 +6,8 @@ type TestimonialsMarqueeProps = {
 };
 
 export function TestimonialsMarquee({ testimonials }: TestimonialsMarqueeProps) {
+  if (testimonials.length === 0) return null;
+
   const duplicated = [...testimonials, ...testimonials];
 
   return (

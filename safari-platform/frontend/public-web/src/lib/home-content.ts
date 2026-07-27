@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import type { Article, Testimonial } from "@/types/content";
 import {
   getPublishedCmsCollection,
@@ -6,6 +5,7 @@ import {
   latestArticles,
   type HomePayload,
 } from "@/lib/cms";
+import { DEFAULT_HOME } from "@/lib/cms-defaults";
 
 export type HomeContent = {
   home: HomePayload;
@@ -29,31 +29,28 @@ function asHomePayload(payload: unknown): HomePayload | null {
 }
 
 /**
- * Homepage content from the CMS only — no static mock fallbacks.
- * Missing/unpublished CMS (API 404 or empty items) → notFound().
- * Network / misconfigured API URL errors propagate to error.tsx.
+ * Homepage content from the CMS. Missing/unreachable data falls back to
+ * DEFAULT_HOME and empty lists — never takes the public site down.
  */
 export async function getHomeContent(): Promise<HomeContent> {
-  const [page, articlesCollection, testimonialsCollection] = await Promise.all([
-    getPublishedCmsPage<HomePayload>("home"),
-    getPublishedCmsCollection<{ items: Article[] }>("articles"),
-    getPublishedCmsCollection<{ items: Testimonial[] }>("testimonials"),
-  ]);
+  const page = await getPublishedCmsPage<HomePayload>("home");
+  const home = asHomePayload(page?.payload) ?? DEFAULT_HOME;
 
-  const home = asHomePayload(page?.payload);
-  if (!home) notFound();
+  const articlesCollection = await getPublishedCmsCollection<{
+    items: Article[];
+  }>("articles");
+  const testimonialsCollection = await getPublishedCmsCollection<{
+    items: Testimonial[];
+  }>("testimonials");
 
   const articleItems = articlesCollection?.payload?.items;
-  if (!Array.isArray(articleItems) || articleItems.length === 0) notFound();
-
   const testimonialItems = testimonialsCollection?.payload?.items;
-  if (!Array.isArray(testimonialItems) || testimonialItems.length === 0) {
-    notFound();
-  }
 
   return {
     home,
-    featuredArticles: latestArticles(articleItems, 3),
-    testimonials: testimonialItems,
+    featuredArticles: Array.isArray(articleItems)
+      ? latestArticles(articleItems, 3)
+      : [],
+    testimonials: Array.isArray(testimonialItems) ? testimonialItems : [],
   };
 }

@@ -8,7 +8,9 @@ admin "Page Editor" / "Collection Editor" screens can render + edit them
 without a migration per content change.
 
 Safe to re-run by default: existing rows are **skipped** so admin edits
-survive redeploys. Pass `--force` only when you intentionally want to
+survive redeploys. Exception: collections that already exist with an
+**empty** `items` list are backfilled from seed (non-empty admin content
+is left alone). Pass `--force` only when you intentionally want to
 overwrite CMS content with seed defaults.
 
 Usage:
@@ -1268,15 +1270,39 @@ def _upsert_collection(
         collection = CmsCollection(**data)
         db.add(collection)
         return collection
-    if not force:
+    if force:
+        for field, value in data.items():
+            setattr(collection, field, value)
+        return collection
+
+    # Keep admin edits, but backfill collections that exist with empty items
+    # (common after insert-only seed created the row before items were ready).
+    existing_payload = collection.payload if isinstance(collection.payload, dict) else {}
+    seed_payload = data.get("payload") if isinstance(data.get("payload"), dict) else {}
+    existing_items = existing_payload.get("items")
+    seed_items = seed_payload.get("items")
+    if (
+        isinstance(existing_items, list)
+        and len(existing_items) == 0
+        and isinstance(seed_items, list)
+        and len(seed_items) > 0
+    ):
         print(
-            f"Skip cms_collection '{data['key']}' "
-            "(already exists — admin edits kept)"
+            f"Backfill cms_collection '{data['key']}' "
+            f"(empty items → {len(seed_items)} from seed)"
         )
-        return None
-    for field, value in data.items():
-        setattr(collection, field, value)
-    return collection
+        collection.payload = data["payload"]
+        if "label" in data:
+            collection.label = data["label"]
+        if "is_published" in data:
+            collection.is_published = data["is_published"]
+        return collection
+
+    print(
+        f"Skip cms_collection '{data['key']}' "
+        "(already exists — admin edits kept)"
+    )
+    return None
 
 
 def seed(*, force: bool = False) -> None:
