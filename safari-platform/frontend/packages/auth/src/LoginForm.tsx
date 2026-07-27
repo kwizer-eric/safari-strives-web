@@ -18,6 +18,8 @@ type LoginFormProps = {
   highlights?: string[];
   /** Demo portals can show seeded credentials; real admin login should hide this. */
   showDemoHint?: boolean;
+  /** Split = brand sidebar + card; minimal = centered form only. */
+  variant?: "split" | "minimal";
 };
 
 const defaultHighlights = [
@@ -36,7 +38,9 @@ export function LoginForm({
   brandTagline = "Build the conditions. Scale the work.",
   highlights = defaultHighlights,
   showDemoHint = true,
+  variant = "split",
 }: LoginFormProps) {
+  const isMinimal = variant === "minimal";
   const { login } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState(defaultEmail ?? "");
@@ -65,8 +69,14 @@ export function LoginForm({
   }
 
   return (
-    <div className="grid min-h-screen w-full lg:grid-cols-2">
-      {/* Left: brand panel */}
+    <div
+      className={
+        isMinimal
+          ? "min-h-screen w-full"
+          : "grid min-h-screen w-full lg:grid-cols-2"
+      }
+    >
+      {!isMinimal ? (
       <aside className="relative hidden overflow-hidden bg-dark p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <div
           aria-hidden="true"
@@ -131,9 +141,9 @@ export function LoginForm({
           </div>
         </div>
       </aside>
+      ) : null}
 
-      {/* Right: form panel */}
-      <main className="relative flex items-center justify-center overflow-hidden bg-cream px-4 py-10 sm:px-6 sm:py-16">
+      <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-cream px-4 py-10 sm:px-6 sm:py-16">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl"
@@ -144,26 +154,35 @@ export function LoginForm({
         />
 
         <div className="relative w-full max-w-md">
-          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)]">
-            {/* Accent stripe */}
-            <div
-              className="h-1.5 w-full"
-              style={{
-                background:
-                  "linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)",
-              }}
-            />
-            <div className="p-8 sm:p-10">
+          <div
+            className={
+              isMinimal
+                ? ""
+                : "overflow-hidden rounded-2xl border border-border bg-card shadow-[0_20px_60px_-20px_rgba(0,0,0,0.15)]"
+            }
+          >
+            {!isMinimal ? (
+              <div
+                className="h-1.5 w-full"
+                style={{
+                  background:
+                    "linear-gradient(90deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)",
+                }}
+              />
+            ) : null}
+            <div className={isMinimal ? "p-0" : "p-8 sm:p-10"}>
               <div className="mb-8">
-                <div className="mb-3 inline-flex items-center gap-2">
-                  <span
-                    className="h-1.5 w-1.5 rounded-full bg-accent"
-                    aria-hidden="true"
-                  />
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
-                    Sign in
-                  </p>
-                </div>
+                {!isMinimal ? (
+                  <div className="mb-3 inline-flex items-center gap-2">
+                    <span
+                      className="h-1.5 w-1.5 rounded-full bg-accent"
+                      aria-hidden="true"
+                    />
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                      Sign in
+                    </p>
+                  </div>
+                ) : null}
                 <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-[2rem]">
                   {title}
                 </h1>
@@ -204,17 +223,11 @@ export function LoginForm({
                     />
                     Keep me signed in
                   </label>
-                  <a
-                    href="#"
-                    className="text-sm font-medium text-accent transition-colors hover:text-accent-hover"
-                  >
-                    Need help?
-                  </a>
                 </div>
                 <Button
                   type="submit"
                   disabled={submitting}
-                  className="mt-2 w-full py-3 text-base shadow-lg shadow-accent/25 hover:shadow-accent/40"
+                  className="mt-2 w-full py-3 text-base"
                 >
                   {submitting ? "Signing in..." : "Sign in"}
                 </Button>
@@ -244,23 +257,25 @@ export function LoginForm({
             ) : null}
           </div>
 
-          <p className="mt-6 text-center text-xs text-muted">
-            By continuing you agree to the{" "}
-            <a
-              href="#"
-              className="font-medium text-foreground underline underline-offset-4 hover:text-accent"
-            >
-              terms
-            </a>{" "}
-            and{" "}
-            <a
-              href="#"
-              className="font-medium text-foreground underline underline-offset-4 hover:text-accent"
-            >
-              privacy policy
-            </a>
-            .
-          </p>
+          {!isMinimal ? (
+            <p className="mt-6 text-center text-xs text-muted">
+              By continuing you agree to the{" "}
+              <a
+                href="#"
+                className="font-medium text-foreground underline underline-offset-4 hover:text-accent"
+              >
+                terms
+              </a>{" "}
+              and{" "}
+              <a
+                href="#"
+                className="font-medium text-foreground underline underline-offset-4 hover:text-accent"
+              >
+                privacy policy
+              </a>
+              .
+            </p>
+          ) : null}
         </div>
       </main>
     </div>

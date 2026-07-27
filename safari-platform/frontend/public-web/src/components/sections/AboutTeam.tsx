@@ -116,43 +116,59 @@ function TeamCard({ person }: { person: AboutPerson }) {
   );
 }
 
-type AboutTeamProps = {
-  team: AboutPagePayload["team"];
+type AboutPeopleSectionProps = {
+  id: "board" | "team";
+  copy: AboutPagePayload["board"] | AboutPagePayload["team"];
   members: AboutPerson[];
 };
 
-export function AboutTeam({ team, members }: AboutTeamProps) {
-  if (members.length === 0) return null;
+export function AboutPeopleSection({
+  id,
+  copy,
+  members,
+}: AboutPeopleSectionProps) {
+  const headingId = `about-${id}-heading`;
+  const showWhenEmpty = id === "board";
+  if (members.length === 0 && !showWhenEmpty) return null;
 
   return (
     <section
-      id="team"
-      aria-labelledby="about-team-heading"
+      id={id}
+      aria-labelledby={headingId}
       className="relative z-10 scroll-mt-28 bg-background py-20 md:py-28"
     >
       <Container>
         <div className="mb-12 max-w-3xl md:mb-16">
+          {copy.eyebrow ? (
+            <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-accent">
+              {copy.eyebrow}
+            </p>
+          ) : null}
           <h2
-            id="about-team-heading"
+            id={headingId}
             className="mb-4 text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl lg:text-5xl"
           >
-            {team.title}
+            {copy.title}
           </h2>
-          <p className="text-base leading-relaxed text-muted md:text-lg">
-            {team.intro.split("\n").map((line, index) => (
+          {copy.intro ? (
+            <p className="text-base leading-relaxed text-muted md:text-lg">
+              {copy.intro.split("\n").map((line, index) => (
               <span key={line}>
                 {index > 0 && <br />}
                 {line}
               </span>
-            ))}
-          </p>
+              ))}
+            </p>
+          ) : null}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-          {members.map((person) => (
-            <TeamCard key={person.id} person={person} />
-          ))}
-        </div>
+        {members.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+            {members.map((person) => (
+              <TeamCard key={person.id} person={person} />
+            ))}
+          </div>
+        ) : null}
       </Container>
     </section>
   );

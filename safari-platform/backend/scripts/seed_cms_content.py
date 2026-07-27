@@ -26,7 +26,8 @@ from sqlalchemy.orm import Session
 from app.core.database import SessionLocal
 from app.models.cms import CmsCollection, CmsPage
 
-APPLY_URL = "/applicant/login"
+APPLY_URL = ""
+LEGACY_APPLY_URL = "/applicant/login"
 CONTACT_EMAIL = "safaristrives@gmail.com"
 DONATE_URL = "https://www.paypal.com/donate/?hosted_button_id=69TB3LC2P9C7A"
 
@@ -179,43 +180,39 @@ CMS_PAGES: list[dict] = [
                 ),
             },
             "mission": {
-                "label": "Case study",
+                "label": "Our Journey",
                 "paragraphs": [
                     (
-                        "World Bank President Ajay Banga has called jobs one of the "
-                        "surest paths out of poverty. In Rwanda, many people have "
-                        "not waited for jobs to appear. They have built their own "
-                        "through shops, tailoring, poultry, local products, and "
-                        "businesses carried through unstable conditions."
+                        "Safari Strives began with a question:\n"
+                        "How do people move from survival into sustainable growth?"
                     ),
                     (
-                        "But effort alone does not build a scalable business. "
-                        "Rwanda's business landscape remains 87% informal, showing "
-                        "how many enterprises still lack the growth basics: "
-                        "systems, pricing, tools, visibility, buyer access, and "
-                        "leadership discipline."
+                        "For four years, we tested different approaches on the "
+                        "ground in Gisenyi, from livestock and cash transfers to "
+                        "in-kind financing and direct support. Some created "
+                        "short-term gains, but none solved the underlying business "
+                        "constraints."
                     ),
                     (
-                        "The deeper issue is concentration. In 2024, 60.7% of "
-                        "Rwanda's formal businesses were in Kigali, compared with "
-                        "9.7% in the Western Province, where Rubavu sits. The "
-                        "strongest hubs, accelerators, mentors, buyers, and funding "
-                        "pipelines still sit too close to main cities. Safari "
-                        "Strives builds the missing infrastructure in Rubavu, "
-                        "helping founders produce better, sell better, grow "
-                        "revenue, and make their value visible."
+                        "Then we realized something simple:\n"
+                        "people were already working and selling."
+                    ),
+                    (
+                        "What was missing were the systems, tools, capital, and "
+                        "market access that help businesses grow. That insight "
+                        "shaped Safari Strives today: building the infrastructure "
+                        "that helps local businesses grow revenue, create jobs, "
+                        "and move beyond survival."
                     ),
                 ],
                 "practitionerLed": {
                     "label": "Practitioner-Led",
                     "body": (
-                        "Safari Strives builds the conditions around operating "
-                        "entrepreneurs, businesses that already have effort, "
-                        "demand, and local traction, and helps them become "
-                        "organized, visible, and ready for growth. We run our own "
-                        "enterprise on the same street we serve, managing cash "
-                        "flow, inventory, production, and costs for three years. "
-                        "That is what tells us which conditions actually matter."
+                        "We operate in the same community and face many of the same "
+                        "risks as the entrepreneurs we support. That firsthand "
+                        "experience shapes practical support grounded in real "
+                        "decisions, real constraints, and what it actually takes to "
+                        "grow a business here."
                     ),
                 },
                 "locations": [
@@ -238,7 +235,7 @@ CMS_PAGES: list[dict] = [
             },
             "board": {
                 "eyebrow": "Board",
-                "title": "Board of Directors",
+                "title": "Our Board",
                 "intro": (
                     "Safari Strives is governed by a board that provides "
                     "oversight, accountability, and strategic direction for our "
@@ -1243,6 +1240,12 @@ CMS_COLLECTIONS: list[dict] = [
             ]
         },
     },
+    {
+        "key": "board-members",
+        "label": "Board Members",
+        "is_published": True,
+        "payload": {"items": []},
+    },
 ]
 
 
@@ -1291,6 +1294,77 @@ def _upsert_page(db: Session, data: dict, *, force: bool) -> CmsPage | None:
         if hero:
             merged["hero"] = hero
 
+    # Replace only the legacy About mission copy. Future admin edits with any
+    # other label are preserved.
+    if data["slug"] == "about":
+        existing_mission = merged.get("mission")
+        seed_mission = seed_payload.get("mission")
+        if (
+            isinstance(existing_mission, dict)
+            and existing_mission.get("label") == "Case study"
+            and isinstance(seed_mission, dict)
+        ):
+            merged["mission"] = seed_mission
+            changed = True
+
+        existing_board = merged.get("board")
+        seed_board = seed_payload.get("board")
+        if (
+            isinstance(existing_board, dict)
+            and existing_board.get("title") == "Board of Directors"
+            and isinstance(seed_board, dict)
+        ):
+            merged["board"] = seed_board
+            changed = True
+
+        if isinstance(existing_mission, dict) and isinstance(seed_mission, dict):
+            mission = dict(existing_mission)
+            mission_changed = False
+
+            paragraphs = mission.get("paragraphs")
+            seed_paragraphs = seed_mission.get("paragraphs")
+            if isinstance(paragraphs, list) and isinstance(seed_paragraphs, list):
+                new_paragraphs = list(paragraphs)
+                legacy_breaks = {
+                    0: (
+                        "Safari Strives began with a question: How do people move "
+                        "from survival into sustainable growth?",
+                        seed_paragraphs[0] if len(seed_paragraphs) > 0 else None,
+                    ),
+                    2: (
+                        "Then we realized something simple: people were already "
+                        "working and selling.",
+                        seed_paragraphs[2] if len(seed_paragraphs) > 2 else None,
+                    ),
+                }
+                for idx, (legacy, replacement) in legacy_breaks.items():
+                    if (
+                        idx < len(new_paragraphs)
+                        and isinstance(replacement, str)
+                        and new_paragraphs[idx] == legacy
+                    ):
+                        new_paragraphs[idx] = replacement
+                        mission_changed = True
+                if mission_changed:
+                    mission["paragraphs"] = new_paragraphs
+
+            practitioner = mission.get("practitionerLed")
+            seed_practitioner = seed_mission.get("practitionerLed")
+            if (
+                isinstance(practitioner, dict)
+                and isinstance(seed_practitioner, dict)
+                and isinstance(practitioner.get("body"), str)
+                and practitioner["body"].startswith(
+                    "Safari Strives builds the conditions"
+                )
+            ):
+                mission["practitionerLed"] = seed_practitioner
+                mission_changed = True
+
+            if mission_changed:
+                merged["mission"] = mission
+                changed = True
+
     if not changed:
         print(f"Skip cms_page '{data['slug']}' (already exists — admin edits kept)")
         return None
@@ -1319,6 +1393,17 @@ def _upsert_collection(
     # (common after insert-only seed created the row before items were ready).
     existing_payload = collection.payload if isinstance(collection.payload, dict) else {}
     seed_payload = data.get("payload") if isinstance(data.get("payload"), dict) else {}
+
+    # The old seed sent public Apply CTAs to the applicant login. Clear only
+    # that exact legacy value; preserve every URL configured by an admin.
+    if data["key"] == "site" and existing_payload.get("applyUrl") == LEGACY_APPLY_URL:
+        collection.payload = {**existing_payload, "applyUrl": ""}
+        print(
+            "Backfill cms_collection 'site' "
+            "(legacy applicant login → disabled Apply CTA)"
+        )
+        return collection
+
     existing_items = existing_payload.get("items")
     seed_items = seed_payload.get("items")
     if (

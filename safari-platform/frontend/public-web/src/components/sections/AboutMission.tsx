@@ -4,12 +4,23 @@ import type { AboutPagePayload } from "@/types/content";
 
 const missionTextClass = "text-base leading-relaxed text-muted md:text-lg";
 
+function renderTextWithBreaks(text: string) {
+  const lines = text.split("\n");
+  if (lines.length === 1) return text;
+
+  return lines.map((line, index) => (
+    <span key={`${line}-${index}`}>
+      {index > 0 && <br />}
+      {line}
+    </span>
+  ));
+}
+
 type AboutMissionProps = {
   mission: AboutPagePayload["mission"];
 };
 
 export function AboutMission({ mission }: AboutMissionProps) {
-
   return (
     <section
       id="mission"
@@ -29,7 +40,7 @@ export function AboutMission({ mission }: AboutMissionProps) {
 
           <div className={`space-y-5 ${missionTextClass}`}>
             {mission.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
+              <p key={paragraph}>{renderTextWithBreaks(paragraph)}</p>
             ))}
           </div>
 
@@ -40,7 +51,7 @@ export function AboutMission({ mission }: AboutMissionProps) {
           </div>
 
           <div className={missionTextClass}>
-            <p>{mission.practitionerLed.body}</p>
+            <p>{renderTextWithBreaks(mission.practitionerLed.body)}</p>
           </div>
 
           <div className="hidden lg:block" aria-hidden="true" />

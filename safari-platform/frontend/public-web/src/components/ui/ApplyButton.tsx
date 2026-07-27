@@ -24,7 +24,8 @@ export function ApplyButton({
 
   return (
     <Button
-      href={href}
+      href={href || undefined}
+      disabled={!href}
       variant={variant}
       size={size}
       showArrow={showArrow}

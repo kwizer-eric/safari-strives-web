@@ -17,7 +17,7 @@ export function InMotionCard({ card, className }: InMotionCardProps) {
   return (
     <article
       className={cn(
-        "relative h-[480px] w-[340px] shrink-0 overflow-hidden rounded-2xl md:h-[600px] md:w-[400px]",
+        "relative h-[480px] w-[min(85vw,340px)] shrink-0 snap-start overflow-hidden rounded-2xl md:h-[600px] md:w-[400px] md:snap-none",
         className,
       )}
     >

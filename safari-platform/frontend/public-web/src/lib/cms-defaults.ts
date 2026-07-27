@@ -15,7 +15,7 @@ export const DEFAULT_SITE: SiteSettings = {
   description: "",
   email: "",
   donateHref: "#",
-  applyUrl: "/applicant/login",
+  applyUrl: "",
   locations: [],
   social: {
     linkedin: "#",
@@ -116,7 +116,7 @@ export const DEFAULT_ABOUT: AboutPagePayload = {
     locations: [],
   },
   team: { eyebrow: "", title: "Team", intro: "" },
-  board: { eyebrow: "", title: "Board", intro: "" },
+  board: { eyebrow: "Board", title: "Our Board", intro: "" },
   partners: { eyebrow: "", title: "Partners", intro: "" },
   closer: {
     title: "",

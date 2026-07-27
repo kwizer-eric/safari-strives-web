@@ -8,19 +8,14 @@ import {
   listAdminCmsCollections,
   patchAdminCmsCollection,
 } from "@/lib/cms";
-import {
-  isExternalApplyUrl,
-  writeApplyUrl,
-} from "@/lib/apply-url";
+import { isExternalApplyUrl } from "@/lib/apply-url";
 import type { SiteSettings } from "@/types/content";
-
-const DEFAULT_APPLY_URL = "/applicant/login";
 
 export default function ApplicationLinkPage() {
   const { token } = useAuth();
   const [collectionId, setCollectionId] = useState<number | null>(null);
   const [sitePayload, setSitePayload] = useState<SiteSettings | null>(null);
-  const [url, setUrl] = useState(DEFAULT_APPLY_URL);
+  const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -42,10 +37,7 @@ export default function ApplicationLinkPage() {
       }
       setCollectionId(site.id);
       setSitePayload(site.payload);
-      const fromCms = site.payload.applyUrl?.trim() || DEFAULT_APPLY_URL;
-      setUrl(fromCms);
-      // Keep browser override in sync so Apply Now picks it up immediately.
-      writeApplyUrl(fromCms);
+      setUrl(site.payload.applyUrl?.trim() ?? "");
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -54,6 +46,8 @@ export default function ApplicationLinkPage() {
   }, [token]);
 
   useEffect(() => {
+    // Initial data synchronization with the CMS API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 
@@ -61,10 +55,6 @@ export default function ApplicationLinkPage() {
     event.preventDefault();
     if (!token || collectionId == null || !sitePayload) return;
     const next = url.trim();
-    if (!next) {
-      setError("Enter an application URL.");
-      return;
-    }
     setSaving(true);
     setMessage(null);
     setError(null);
@@ -72,9 +62,10 @@ export default function ApplicationLinkPage() {
       const payload = { ...sitePayload, applyUrl: next };
       await patchAdminCmsCollection(token, collectionId, { payload });
       setSitePayload(payload);
-      writeApplyUrl(next);
       setMessage(
-        "Application link saved to CMS. All Apply Now / Apply Here CTAs use this URL.",
+        next
+          ? "Application link saved. All Apply Now / Apply Here CTAs use this URL."
+          : "Application link cleared. Apply Now / Apply Here CTAs are disabled.",
       );
     } catch (err) {
       setError((err as Error).message);
@@ -83,18 +74,17 @@ export default function ApplicationLinkPage() {
     }
   }
 
-  async function resetDefault() {
+  async function clearLink() {
     if (!token || collectionId == null || !sitePayload) return;
     setSaving(true);
     setMessage(null);
     setError(null);
     try {
-      const payload = { ...sitePayload, applyUrl: DEFAULT_APPLY_URL };
+      const payload = { ...sitePayload, applyUrl: "" };
       await patchAdminCmsCollection(token, collectionId, { payload });
       setSitePayload(payload);
-      setUrl(DEFAULT_APPLY_URL);
-      writeApplyUrl(DEFAULT_APPLY_URL);
-      setMessage("Reset to the default apply URL and saved to CMS.");
+      setUrl("");
+      setMessage("Application link cleared. Apply CTAs are disabled.");
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -140,9 +130,8 @@ export default function ApplicationLinkPage() {
           label="Application form URL"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://forms.gle/… or /applicant/login"
-          hint="Google Form or internal path. Stored as site.applyUrl in the CMS."
-          required
+          placeholder="https://forms.gle/…"
+          hint="Google Form or internal path. Leave empty to disable Apply CTAs."
         />
 
         {url.trim() ? (
@@ -166,10 +155,10 @@ export default function ApplicationLinkPage() {
           <Button
             type="button"
             variant="secondary"
-            disabled={saving}
-            onClick={() => void resetDefault()}
+            disabled={saving || !url.trim()}
+            onClick={() => void clearLink()}
           >
-            Reset to default
+            Clear link
           </Button>
         </div>
       </form>

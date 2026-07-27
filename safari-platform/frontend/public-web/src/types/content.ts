@@ -178,5 +178,3 @@ export type VenturesPagePayload = {
     ctaHref: string;
   };
 };
-
-export const APPLY_URL_STORAGE_KEY = "safari-apply-url";

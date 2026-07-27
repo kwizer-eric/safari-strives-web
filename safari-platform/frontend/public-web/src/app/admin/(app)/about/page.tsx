@@ -20,7 +20,8 @@ import type {
   AboutPerson,
 } from "@/types/content";
 
-type Tab = "hero" | "team" | "partners";
+type Tab = "hero" | "board" | "team" | "partners";
+type PeopleTab = "board" | "team";
 type HeroMediaKind = "video" | "photo";
 
 const emptyPerson = (): AboutPerson => ({
@@ -51,10 +52,12 @@ export default function AdminAboutPage() {
   const { token } = useAuth();
   const [tab, setTab] = useState<Tab>("hero");
   const [pageId, setPageId] = useState<number | null>(null);
+  const [boardId, setBoardId] = useState<number | null>(null);
   const [teamId, setTeamId] = useState<number | null>(null);
   const [partnersId, setPartnersId] = useState<number | null>(null);
   const [payload, setPayload] = useState<AboutPagePayload | null>(null);
   const [heroKind, setHeroKind] = useState<HeroMediaKind>("photo");
+  const [board, setBoard] = useState<AboutPerson[]>([]);
   const [team, setTeam] = useState<AboutPerson[]>([]);
   const [partners, setPartners] = useState<AboutPartner[]>([]);
   const [editingPerson, setEditingPerson] = useState<AboutPerson | null>(null);
@@ -87,6 +90,10 @@ export default function AdminAboutPage() {
       setPayload(about.payload);
       setHeroKind(heroMediaKind(about.payload));
 
+      const boardCol = findCmsCollectionByKey<{ items: AboutPerson[] }>(
+        collections,
+        "board-members",
+      );
       const teamCol = findCmsCollectionByKey<{ items: AboutPerson[] }>(
         collections,
         "team-members",
@@ -95,11 +102,15 @@ export default function AdminAboutPage() {
         collections,
         "partners",
       );
-      if (!teamCol || !partnersCol) {
-        throw new Error("Team or partners collection missing. Seed CMS content.");
+      if (!boardCol || !teamCol || !partnersCol) {
+        throw new Error(
+          "Board, team, or partners collection missing. Seed CMS content.",
+        );
       }
+      setBoardId(boardCol.id);
       setTeamId(teamCol.id);
       setPartnersId(partnersCol.id);
+      setBoard(boardCol.payload?.items ?? []);
       setTeam(teamCol.payload?.items ?? []);
       setPartners(partnersCol.payload?.items ?? []);
     } catch (err) {
@@ -110,6 +121,8 @@ export default function AdminAboutPage() {
   }, [token]);
 
   useEffect(() => {
+    // Initial data synchronization with the CMS API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 
@@ -152,16 +165,20 @@ export default function AdminAboutPage() {
     }
   }
 
-  async function saveTeam(next: AboutPerson[]) {
-    if (!token || teamId == null) return;
+  async function savePeople(kind: PeopleTab, next: AboutPerson[]) {
+    const collectionId = kind === "board" ? boardId : teamId;
+    if (!token || collectionId == null) return;
     setSaving(true);
     setMessage(null);
     setError(null);
     try {
-      await patchAdminCmsCollection(token, teamId, { payload: { items: next } });
-      setTeam(next);
+      await patchAdminCmsCollection(token, collectionId, {
+        payload: { items: next },
+      });
+      if (kind === "board") setBoard(next);
+      else setTeam(next);
       setEditingPerson(null);
-      setMessage("Team saved.");
+      setMessage(`${kind === "board" ? "Board" : "Team"} saved.`);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -191,17 +208,24 @@ export default function AdminAboutPage() {
   if (loading) {
     return (
       <div>
-        <PageHeader title="About" description="Hero, team, and partner logos." />
+        <PageHeader
+          title="About"
+          description="Hero, board, team, and partner logos."
+        />
         <p className="text-sm text-muted">Loading…</p>
       </div>
     );
   }
 
+  const peopleTab: PeopleTab = tab === "board" ? "board" : "team";
+  const currentPeople = peopleTab === "board" ? board : team;
+  const peopleLabel = peopleTab === "board" ? "board" : "team";
+
   return (
     <div>
       <PageHeader
         title="About"
-        description="Hero background (video or photo), team members, and partner logos."
+        description="Hero background, board members, team members, and partner logos."
       />
       {message && (
         <Alert tone="success" className="mb-6">
@@ -219,6 +243,7 @@ export default function AdminAboutPage() {
           {(
             [
               ["hero", "Hero"],
+              ["board", "Board"],
               ["team", "Team"],
               ["partners", "Partners"],
             ] as const
@@ -323,10 +348,12 @@ export default function AdminAboutPage() {
         </form>
       )}
 
-      {tab === "team" && !editingPerson && (
+      {(tab === "board" || tab === "team") && !editingPerson && (
         <div className="space-y-4">
           <div className="flex justify-between gap-3">
-            <p className="text-sm text-muted">{team.length} team members</p>
+            <p className="text-sm text-muted">
+              {currentPeople.length} {peopleLabel} members
+            </p>
             <Button
               type="button"
               size="sm"
@@ -341,7 +368,7 @@ export default function AdminAboutPage() {
           </div>
 
           <ul className="divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
-            {team.map((person) => (
+            {currentPeople.map((person) => (
               <li
                 key={person.id}
                 className="flex flex-wrap items-center justify-between gap-3 p-4"
@@ -381,7 +408,10 @@ export default function AdminAboutPage() {
                     size="sm"
                     variant="danger"
                     onClick={() =>
-                      void saveTeam(team.filter((item) => item.id !== person.id))
+                      void savePeople(
+                        peopleTab,
+                        currentPeople.filter((item) => item.id !== person.id),
+                      )
                     }
                   >
                     Delete
@@ -389,8 +419,10 @@ export default function AdminAboutPage() {
                 </div>
               </li>
             ))}
-            {team.length === 0 && (
-              <li className="p-6 text-sm text-muted">No team members yet.</li>
+            {currentPeople.length === 0 && (
+              <li className="p-6 text-sm text-muted">
+                No {peopleLabel} members yet.
+              </li>
             )}
           </ul>
         </div>
@@ -400,7 +432,9 @@ export default function AdminAboutPage() {
         <div className="max-w-2xl space-y-4 rounded-[var(--radius-card)] border border-border bg-card p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h3 className="text-lg font-semibold">
-              {editingPerson.id ? "Edit member" : "New member"}
+              {editingPerson.id
+                ? `Edit ${peopleLabel} member`
+                : `New ${peopleLabel} member`}
             </h3>
             <Button
               type="button"
@@ -438,6 +472,17 @@ export default function AdminAboutPage() {
             placeholder="Executive Director & Co-Founder"
             required
           />
+          <Input
+            label="Location"
+            value={editingPerson.location}
+            onChange={(e) =>
+              setEditingPerson({
+                ...editingPerson,
+                location: e.target.value,
+              })
+            }
+            placeholder="Rubavu, Rwanda"
+          />
           <TextArea
             label="Bio"
             rows={4}
@@ -467,11 +512,13 @@ export default function AdminAboutPage() {
                   id,
                   imageAlt: `${editingPerson.name.trim()} portrait`,
                 };
-                const exists = team.some((item) => item.id === id);
+                const exists = currentPeople.some((item) => item.id === id);
                 const next = exists
-                  ? team.map((item) => (item.id === id ? nextItem : item))
-                  : [...team, nextItem];
-                void saveTeam(next);
+                  ? currentPeople.map((item) =>
+                      item.id === id ? nextItem : item,
+                    )
+                  : [...currentPeople, nextItem];
+                void savePeople(peopleTab, next);
               }}
             >
               {saving ? "Saving…" : "Save member"}

@@ -4,15 +4,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PageHeader, StatCard, Alert } from "@safari/ui";
 import { useAuth } from "@safari/auth";
-import { readApplyUrl } from "@/lib/apply-url";
-import { getApiBaseUrl } from "@/lib/api-base-url";
 import {
   listAdminCmsCollections,
   listAdminCmsPages,
   type HomePayload,
 } from "@/lib/cms";
-
-const API_URL = getApiBaseUrl();
+import type { SiteSettings } from "@/types/content";
 
 const shortcuts = [
   { label: "Home", href: "/admin/home" },
@@ -24,7 +21,6 @@ const shortcuts = [
 ] as const;
 
 type OverviewStats = {
-  programs: number;
   inMotion: number;
   testimonials: number;
   articles: number;
@@ -34,7 +30,6 @@ type OverviewStats = {
 };
 
 const emptyStats: OverviewStats = {
-  programs: 0,
   inMotion: 0,
   testimonials: 0,
   articles: 0,
@@ -51,8 +46,6 @@ export default function OverviewPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setApplyUrl(readApplyUrl());
-
     async function load() {
       if (!token) {
         setLoading(false);
@@ -61,19 +54,16 @@ export default function OverviewPage() {
       setLoading(true);
       setError(null);
       try {
-        // Program pages live on /pages (typed CMS). Home/collections live on /admin/cms.
-        const [programPagesRes, cmsPages, collections] = await Promise.all([
-          fetch(`${API_URL}/pages`, { cache: "no-store" }),
+        const [cmsPages, collections] = await Promise.all([
           listAdminCmsPages(token),
           listAdminCmsCollections(token),
         ]);
 
-        const programPages = programPagesRes.ok
-          ? ((await programPagesRes.json()) as unknown[])
-          : [];
-
         const home = cmsPages.find((page) => page.slug === "home");
         const homePayload = (home?.payload ?? null) as HomePayload | null;
+        const site = collections.find((item) => item.key === "site");
+        const sitePayload = (site?.payload ?? null) as SiteSettings | null;
+        setApplyUrl(sitePayload?.applyUrl?.trim() ?? "");
 
         const countItems = (key: string) => {
           const collection = collections.find((item) => item.key === key);
@@ -83,7 +73,6 @@ export default function OverviewPage() {
         };
 
         setStats({
-          programs: Array.isArray(programPages) ? programPages.length : 0,
           inMotion: homePayload?.inMotion?.cards?.length ?? 0,
           testimonials: countItems("testimonials"),
           articles: countItems("articles"),
@@ -105,7 +94,7 @@ export default function OverviewPage() {
     <div>
       <PageHeader
         title="Overview"
-        description="Live counts from the CMS and published program pages."
+        description="Live counts from the CMS."
       />
       {error && (
         <Alert tone="danger" className="mb-6">
@@ -117,11 +106,6 @@ export default function OverviewPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Programs"
-          value={stats.programs}
-          hint="Published program pages"
-        />
         <StatCard
           label="Venturists"
           value={stats.ventures}

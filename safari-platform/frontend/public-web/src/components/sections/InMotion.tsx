@@ -32,7 +32,17 @@ export function InMotion({ inMotion }: InMotionProps) {
         </div>
       </Container>
 
-      <div className="relative overflow-hidden">
+      <div
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--site-gutter,32px)] pb-4 [scrollbar-width:none] [-webkit-overflow-scrolling:touch] [&::-webkit-scrollbar]:hidden md:hidden"
+        aria-label="In Motion cards. Swipe horizontally for more."
+        tabIndex={0}
+      >
+        {inMotion.cards.map((card) => (
+          <InMotionCard key={card.id} card={card} />
+        ))}
+      </div>
+
+      <div className="relative hidden overflow-hidden md:block">
         <div className="flex w-max gap-4 animate-marquee motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center md:gap-6">
           {duplicated.map((card, index) => (
             <InMotionCard key={`${card.id}-${index}`} card={card} />

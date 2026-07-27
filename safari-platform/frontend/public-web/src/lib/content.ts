@@ -60,18 +60,26 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 
 export async function getAboutContent(): Promise<{
   page: AboutPagePayload;
+  board: AboutPerson[];
   team: AboutPerson[];
   partners: AboutPartner[];
 }> {
-  const [page, teamCol, partnersCol] = await Promise.all([
+  const [page, boardCol, teamCol, partnersCol] = await Promise.all([
     getPublishedCmsPage<AboutPagePayload>("about"),
+    getPublishedCmsCollection<{ items: AboutPerson[] }>("board-members"),
     getPublishedCmsCollection<{ items: AboutPerson[] }>("team-members"),
     getPublishedCmsCollection<{ items: AboutPartner[] }>("partners"),
   ]);
 
   const pagePayload =
     page?.payload?.hero && page.payload.mission
-      ? page.payload
+      ? {
+          ...DEFAULT_ABOUT,
+          ...page.payload,
+          board: page.payload.board ?? DEFAULT_ABOUT.board,
+          team: page.payload.team ?? DEFAULT_ABOUT.team,
+          partners: page.payload.partners ?? DEFAULT_ABOUT.partners,
+        }
       : DEFAULT_ABOUT;
 
   // Keep partners even without logos — seed often ships names only.
@@ -83,6 +91,7 @@ export async function getAboutContent(): Promise<{
 
   return {
     page: pagePayload,
+    board: readItems(boardCol),
     team: readItems(teamCol),
     partners,
   };

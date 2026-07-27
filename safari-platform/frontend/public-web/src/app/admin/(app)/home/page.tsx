@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useAuth } from "@safari/auth";
@@ -13,10 +12,8 @@ import {
   TextArea,
   type TableColumn,
 } from "@safari/ui";
-import type { Article } from "@/types/content";
 import type { Testimonial } from "@/types/content";
 import {
-  latestArticles,
   listAdminCmsCollections,
   listAdminCmsPages,
   patchAdminCmsCollection,
@@ -34,7 +31,6 @@ type HomeTab =
   | "hero"
   | "what-we-offer"
   | "in-motion"
-  | "blog"
   | "testimonials";
 
 type TestimonialDraft = {
@@ -49,7 +45,6 @@ const TABS: { id: HomeTab; label: string }[] = [
   { id: "hero", label: "Hero" },
   { id: "what-we-offer", label: "What we offer" },
   { id: "in-motion", label: "In Motion" },
-  { id: "blog", label: "Blog" },
   { id: "testimonials", label: "Testimonials" },
 ];
 
@@ -108,7 +103,6 @@ function tabFromSearch(value: string | null): HomeTab {
     value === "hero" ||
     value === "what-we-offer" ||
     value === "in-motion" ||
-    value === "blog" ||
     value === "testimonials"
   ) {
     return value;
@@ -123,7 +117,7 @@ export default function AdminHomePage() {
         <div>
           <PageHeader
             title="Home"
-            description="Manage homepage hero, offers, In Motion, blog preview, and testimonials."
+            description="Manage homepage hero, offers, In Motion, and testimonials."
           />
           <p className="text-sm text-muted">Loading…</p>
         </div>
@@ -147,7 +141,6 @@ function AdminHomePageInner() {
   >(null);
   const [payload, setPayload] = useState<HomePayload | null>(null);
   const [testimonials, setTestimonials] = useState<TestimonialDraft[]>([]);
-  const [articles, setArticles] = useState<Article[]>([]);
 
   const [editingPillar, setEditingPillar] = useState<HomePillar | null>(null);
   const [editingCard, setEditingCard] = useState<HomeInMotionCard | null>(null);
@@ -160,6 +153,8 @@ function AdminHomePageInner() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Sync tab from URL query (?tab=...).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTab(tabFromSearch(searchParams.get("tab")));
   }, [searchParams]);
 
@@ -196,14 +191,6 @@ function AdminHomePageInner() {
         (testimonialsCollection.payload as { items?: Testimonial[] }).items ??
         [];
       setTestimonials(items.map(toDraft));
-
-      const articlesCollection = collections.find(
-        (collection) => collection.key === "articles",
-      );
-      const articleItems =
-        (articlesCollection?.payload as { items?: Article[] } | undefined)
-          ?.items ?? [];
-      setArticles(articleItems);
     } catch (err) {
       setError((err as Error).message);
     } finally {
@@ -212,6 +199,8 @@ function AdminHomePageInner() {
   }, [token]);
 
   useEffect(() => {
+    // Initial data synchronization with the CMS API.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void load();
   }, [load]);
 
@@ -434,14 +423,12 @@ function AdminHomePageInner() {
     [editingTestimonial?.id, saving, testimonials],
   );
 
-  const featuredPreview = latestArticles(articles, 3);
-
   if (loading) {
     return (
       <div>
         <PageHeader
           title="Home"
-          description="Manage homepage hero, offers, In Motion, blog preview, and testimonials."
+          description="Manage homepage hero, offers, In Motion, and testimonials."
         />
         <p className="text-sm text-muted">Loading CMS content…</p>
       </div>
@@ -465,7 +452,7 @@ function AdminHomePageInner() {
     <div>
       <PageHeader
         title="Home"
-        description="Manage homepage media, In Motion cards, blog preview, and testimonials. Section copy is not editable here."
+        description="Manage homepage media, In Motion cards, and testimonials. Section copy is not editable here."
       />
 
       {error && (
@@ -788,47 +775,6 @@ function AdminHomePageInner() {
             getRowKey={(card) => card.id}
             emptyMessage="No In Motion cards yet."
           />
-        </div>
-      )}
-
-      {tab === "blog" && (
-        <div className="rounded-[var(--radius-card)] border border-border bg-card p-6">
-          <h2 className="mb-2 text-lg font-semibold text-foreground">
-            Featured Insights (latest 3)
-          </h2>
-          <p className="mb-6 text-sm text-muted">
-            Read-only preview. Edit posts on the{" "}
-            <Link href="/admin/blog" className="font-medium text-accent hover:underline">
-              Blog
-            </Link>{" "}
-            page — the homepage always shows the newest three.
-          </p>
-          <div className="grid gap-4 md:grid-cols-3">
-            {featuredPreview.map((article) => (
-              <article
-                key={article.id}
-                className="rounded-xl border border-border p-4"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={article.image}
-                  alt={article.imageAlt}
-                  className="mb-3 h-28 w-full rounded-lg object-cover"
-                />
-                <p className="text-xs uppercase tracking-wide text-muted">
-                  {article.date}
-                </p>
-                <p className="mt-1 font-semibold text-foreground">
-                  {article.title}
-                </p>
-              </article>
-            ))}
-            {featuredPreview.length === 0 && (
-              <p className="text-sm text-muted md:col-span-3">
-                No articles in the CMS yet. Add some under Blog.
-              </p>
-            )}
-          </div>
         </div>
       )}
 

@@ -2,8 +2,12 @@ import Link from "next/link";
 import { cn } from "@safari/shared";
 import { CmsImage } from "@/components/ui/CmsImage";
 
+/**
+ * Card/stack width. Laptop and below use a smaller multiplier (shorter cards,
+ * since the media is 1:1); large desktops (2xl) keep the original scale.
+ */
 export const PROGRAM_CARD_WIDTH_CLASS =
-  "w-[calc(((100%-1.75rem)/1.5)*0.9)]";
+  "w-[calc(((100%-1.75rem)/1.5)*0.78)] 2xl:w-[calc(((100%-1.75rem)/1.5)*0.9)]";
 
 type ProgramHorizontalCardProps = {
   title: string;
@@ -34,7 +38,8 @@ export function ProgramHorizontalCard({
       )}
     >
       <Link href={href} className="group flex h-full flex-col">
-        <div className="relative aspect-[16/10] overflow-hidden">
+        {/* Square media only — card height comes from image + text below. */}
+        <div className="relative aspect-square w-full shrink-0 overflow-hidden">
           <CmsImage
             src={image}
             alt={imageAlt}
@@ -43,8 +48,8 @@ export function ProgramHorizontalCard({
             sizes="(max-width: 768px) 63vw, 40vw"
           />
         </div>
-        <div className="flex flex-1 flex-col gap-4 p-7 md:gap-5 md:p-9">
-          <h3 className="text-xl font-bold leading-[1.15] tracking-tight text-foreground md:text-[1.65rem] lg:text-3xl">
+        <div className="flex flex-1 flex-col gap-3 p-5 sm:p-6 md:gap-4 md:p-6">
+          <h3 className="text-lg font-bold leading-[1.15] tracking-tight text-foreground md:text-xl">
             {title}
           </h3>
           <p
