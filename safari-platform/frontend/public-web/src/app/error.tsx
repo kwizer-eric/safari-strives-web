@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 
 type ErrorProps = {
   error: Error & { digest?: string };
@@ -53,12 +52,6 @@ export default function PublicError({ error, reset }: ErrorProps) {
         >
           Try again
         </button>
-        <Link
-          href="/admin/login"
-          className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-accent/40"
-        >
-          Admin login
-        </Link>
       </div>
     </main>
   );
