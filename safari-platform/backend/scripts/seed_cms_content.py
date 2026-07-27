@@ -36,6 +36,12 @@ APPLY_URL = ""
 LEGACY_APPLY_URL = "/applicant/login"
 CONTACT_EMAIL = "safaristrives@gmail.com"
 DONATE_URL = "https://www.paypal.com/donate/?hosted_button_id=69TB3LC2P9C7A"
+SOCIAL_LINKS = {
+    "linkedin": "https://www.linkedin.com/company/safari-strives",
+    "youtube": "https://www.youtube.com/channel/UCP1uOh3zroBYxl_5PFYKKrw",
+    "instagram": "https://www.instagram.com/safaristrives/",
+}
+SOCIAL_PLACEHOLDER_VALUES = {"", "#"}
 
 
 CMS_PAGES: list[dict] = [
@@ -178,7 +184,7 @@ CMS_PAGES: list[dict] = [
                 "imageAlt": "Safari Strives about hero",
                 "heroVideo": "https://res.cloudinary.com/efzpryhb/video/upload/v1785074288/videoplayback_1_en7ryt.webm",
                 "videoId": "njiqUJcuVc4",
-                "videoStart": 15,
+                "videoStart": 0,
                 "legalNote": (
                     "Safari Strives Inc. is a registered not-for-profit corporation "
                     "in the State of Illinois, EIN 39-4883848, and a 501(c)(3) "
@@ -189,8 +195,8 @@ CMS_PAGES: list[dict] = [
                 "label": "Our Journey",
                 "paragraphs": [
                     (
-                        "Safari Strives began with a question:\n"
-                        "How do people move from survival into sustainable growth?"
+                        "Safari Strives began with a question: How do people move "
+                        "from survival into sustainable growth?"
                     ),
                     (
                         "For four years, we tested different approaches on the "
@@ -200,8 +206,8 @@ CMS_PAGES: list[dict] = [
                         "constraints."
                     ),
                     (
-                        "Then we realized something simple:\n"
-                        "people were already working and selling."
+                        "Then we realized something simple: people were already "
+                        "working and selling."
                     ),
                     (
                         "What was missing were the systems, tools, capital, and "
@@ -328,7 +334,7 @@ CMS_COLLECTIONS: list[dict] = [
             "donateHref": DONATE_URL,
             "applyUrl": APPLY_URL,
             "locations": ["Rubavu, Rwanda", "Crestwood, Illinois"],
-            "social": {"linkedin": "#", "facebook": "#", "instagram": "#"},
+            "social": SOCIAL_LINKS,
             "navLinks": [
                 {"label": "Ventures", "href": "/ventures"},
                 {"label": "Our Model", "href": "/our-model"},
@@ -558,6 +564,14 @@ def _upsert_page(db: Session, data: dict, *, force: bool) -> CmsPage | None:
     # Replace only the legacy About mission copy. Future admin edits with any
     # other label are preserved.
     if data["slug"] == "about":
+        # Old seed skipped the first 15s of the Watch video popup.
+        existing_hero_dict = (
+            dict(merged["hero"]) if isinstance(merged.get("hero"), dict) else None
+        )
+        if existing_hero_dict is not None and existing_hero_dict.get("videoStart") == 15:
+            existing_hero_dict["videoStart"] = 0
+            merged["hero"] = existing_hero_dict
+            changed = True
         existing_mission = merged.get("mission")
         seed_mission = seed_payload.get("mission")
         if (
@@ -588,13 +602,13 @@ def _upsert_page(db: Session, data: dict, *, force: bool) -> CmsPage | None:
                 new_paragraphs = list(paragraphs)
                 legacy_breaks = {
                     0: (
-                        "Safari Strives began with a question: How do people move "
-                        "from survival into sustainable growth?",
+                        "Safari Strives began with a question:\n"
+                        "How do people move from survival into sustainable growth?",
                         seed_paragraphs[0] if len(seed_paragraphs) > 0 else None,
                     ),
                     2: (
-                        "Then we realized something simple: people were already "
-                        "working and selling.",
+                        "Then we realized something simple:\n"
+                        "people were already working and selling.",
                         seed_paragraphs[2] if len(seed_paragraphs) > 2 else None,
                     ),
                 }
@@ -659,14 +673,73 @@ def _upsert_collection(
     # Special case: clear legacy Apply URL (single-value migration, safe to always do)
     existing_payload = collection.payload if isinstance(collection.payload, dict) else {}
     seed_payload = data.get("payload") if isinstance(data.get("payload"), dict) else {}
+<<<<<<< HEAD
     
     if data["key"] == "site" and existing_payload.get("applyUrl") == LEGACY_APPLY_URL:
         collection.payload = {**existing_payload, "applyUrl": ""}
         print(
             "Backfill cms_collection 'site' "
             "(legacy applicant login → disabled Apply CTA)"
+=======
+
+    # The old seed sent public Apply CTAs to the applicant login. Clear only
+    # that exact legacy value; preserve every URL configured by an admin.
+    if data["key"] == "site":
+        updated_payload = dict(existing_payload)
+        site_changed = False
+
+        if existing_payload.get("applyUrl") == LEGACY_APPLY_URL:
+            updated_payload["applyUrl"] = ""
+            site_changed = True
+            print(
+                "Backfill cms_collection 'site' "
+                "(legacy applicant login → disabled Apply CTA)"
+            )
+
+        seed_social = (
+            seed_payload.get("social")
+            if isinstance(seed_payload.get("social"), dict)
+            else {}
+>>>>>>> 41b9369 (final)
         )
-        return collection
+        existing_social = (
+            existing_payload.get("social")
+            if isinstance(existing_payload.get("social"), dict)
+            else {}
+        )
+        merged_social = dict(existing_social)
+        social_changed = False
+
+        for key, seed_val in seed_social.items():
+            if not isinstance(seed_val, str) or not seed_val.strip():
+                continue
+            cur = merged_social.get(key)
+            if not isinstance(cur, str) or cur.strip() in SOCIAL_PLACEHOLDER_VALUES:
+                merged_social[key] = seed_val
+                social_changed = True
+
+        legacy_facebook = merged_social.get("facebook")
+        if isinstance(legacy_facebook, str) and legacy_facebook.strip() in SOCIAL_PLACEHOLDER_VALUES:
+            merged_social.pop("facebook", None)
+            social_changed = True
+            if (
+                "youtube" not in merged_social
+                and isinstance(seed_social.get("youtube"), str)
+                and seed_social["youtube"].strip()
+            ):
+                merged_social["youtube"] = seed_social["youtube"]
+
+        if social_changed:
+            updated_payload["social"] = merged_social
+            site_changed = True
+            print(
+                "Backfill cms_collection 'site' "
+                "(placeholder/legacy social links → seed URLs)"
+            )
+
+        if site_changed:
+            collection.payload = updated_payload
+            return collection
 
     print(
         f"Skip cms_collection '{data['key']}' "
