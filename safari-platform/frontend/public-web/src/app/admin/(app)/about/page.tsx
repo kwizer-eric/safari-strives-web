@@ -70,18 +70,18 @@ export default function AdminAboutPage() {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!token) {
+      if (!token) {
       setError("Sign in required.");
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const [pages, collections] = await Promise.all([
-        listAdminCmsPages(token),
-        listAdminCmsCollections(token),
-      ]);
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        const [pages, collections] = await Promise.all([
+          listAdminCmsPages(token),
+          listAdminCmsCollections(token),
+        ]);
       const about = findCmsPageBySlug<AboutPagePayload>(pages, "about");
       if (!about?.payload) {
         throw new Error("About CMS page not found. Seed CMS content.");
@@ -113,11 +113,11 @@ export default function AdminAboutPage() {
       setBoard(boardCol.payload?.items ?? []);
       setTeam(teamCol.payload?.items ?? []);
       setPartners(partnersCol.payload?.items ?? []);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
   }, [token]);
 
   useEffect(() => {
@@ -417,14 +417,14 @@ export default function AdminAboutPage() {
                     Delete
                   </Button>
                 </div>
-              </li>
-            ))}
+                </li>
+              ))}
             {currentPeople.length === 0 && (
               <li className="p-6 text-sm text-muted">
                 No {peopleLabel} members yet.
               </li>
             )}
-          </ul>
+            </ul>
         </div>
       )}
 
@@ -552,7 +552,7 @@ export default function AdminAboutPage() {
           </div>
 
           <ul className="divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
-            {partners.map((partner) => (
+              {partners.map((partner) => (
               <li
                 key={partner.id}
                 className="flex flex-wrap items-center justify-between gap-3 p-4"
@@ -611,12 +611,12 @@ export default function AdminAboutPage() {
                     Delete
                   </Button>
                 </div>
-              </li>
-            ))}
+                </li>
+              ))}
             {partners.length === 0 && (
               <li className="p-6 text-sm text-muted">No partner logos yet.</li>
             )}
-          </ul>
+            </ul>
         </div>
       )}
 

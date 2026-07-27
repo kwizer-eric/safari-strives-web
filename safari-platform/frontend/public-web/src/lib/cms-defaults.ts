@@ -18,9 +18,9 @@ export const DEFAULT_SITE: SiteSettings = {
   applyUrl: "",
   locations: [],
   social: {
-    linkedin: "#",
-    facebook: "#",
-    instagram: "#",
+    linkedin: "https://www.linkedin.com/company/safari-strives",
+    youtube: "https://www.youtube.com/channel/UCP1uOh3zroBYxl_5PFYKKrw",
+    instagram: "https://www.instagram.com/safaristrives/",
   },
   navLinks: [
     { label: "About", href: "/about" },

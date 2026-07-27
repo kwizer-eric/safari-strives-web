@@ -2,23 +2,28 @@
 
 import { useCallback, useEffect } from "react";
 import { X } from "lucide-react";
+import { youtubeIdFromMediaUrl } from "@/lib/media-url";
 
 function buildVideoSrc(
   videoId: string,
   videoStart: number,
   autoplay: boolean,
 ) {
+  const id = youtubeIdFromMediaUrl(videoId) ?? videoId.trim();
   const params = new URLSearchParams({
     autoplay: autoplay ? "1" : "0",
-    start: String(videoStart),
     controls: "1",
     rel: "0",
     cc_load_policy: "0",
     modestbranding: "1",
     playsinline: "1",
   });
+  // Only seek when CMS explicitly sets a positive start offset.
+  if (videoStart > 0) {
+    params.set("start", String(Math.floor(videoStart)));
+  }
 
-  return `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+  return `https://www.youtube-nocookie.com/embed/${id}?${params.toString()}`;
 }
 
 type YouTubeVideoModalProps = {

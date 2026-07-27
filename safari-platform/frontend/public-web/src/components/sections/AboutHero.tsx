@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, Container } from "@safari/ui";
 import { YouTubeVideoModal } from "@/components/ui/YouTubeVideoModal";
 import { HeroBackgroundVideo } from "@/components/ui/HeroBackgroundVideo";
+import { youtubeIdFromMediaUrl } from "@/lib/media-url";
 import type { AboutPagePayload } from "@/types/content";
 
 type AboutHeroProps = {
@@ -12,13 +13,12 @@ type AboutHeroProps = {
 
 export function AboutHero({ hero }: AboutHeroProps) {
   const [videoOpen, setVideoOpen] = useState(false);
+  const watchVideoId = youtubeIdFromMediaUrl(hero.videoId) ?? "";
   // Prefer dedicated video URL, then image (may be a Cloudinary video), then YouTube id.
   const mediaSrc =
     hero.heroVideo.trim() ||
     hero.image.trim() ||
-    (hero.videoId.trim()
-      ? `https://www.youtube.com/watch?v=${hero.videoId.trim()}`
-      : "");
+    (watchVideoId ? `https://www.youtube.com/watch?v=${watchVideoId}` : "");
 
   return (
     <>
@@ -43,40 +43,30 @@ export function AboutHero({ hero }: AboutHeroProps) {
         </div>
 
         <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">
-          <div className="max-w-4xl">
-            <h1
-              id="about-hero-heading"
-              className="text-4xl font-bold leading-[1.1] tracking-tight text-white md:text-5xl lg:text-6xl"
-            >
-              {hero.headline.line1}
-              <br />
-              {hero.headline.line2}
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/85 md:text-lg">
-              {hero.subhead.split("\n").map((line, index) => (
-                <span key={line}>
-                  {index > 0 && <br />}
-                  {line}
-                </span>
-              ))}
-            </p>
-            {hero.videoId.trim() ? (
+          <h1 id="about-hero-heading" className="sr-only">
+            {[hero.headline.line1, hero.headline.line2]
+              .map((line) => line.trim())
+              .filter(Boolean)
+              .join(" ")}
+          </h1>
+          {watchVideoId ? (
+            <div className="max-w-4xl">
               <Button
                 variant="secondary"
                 onClick={() => setVideoOpen(true)}
-                className="mt-8 border-white/40 text-white hover:bg-white/10"
+                className="border-white/40 text-white hover:bg-white/10"
               >
                 {hero.watchVideoLabel}
               </Button>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
         </Container>
       </section>
 
       <YouTubeVideoModal
         open={videoOpen}
         onClose={() => setVideoOpen(false)}
-        videoId={hero.videoId}
+        videoId={watchVideoId}
         videoStart={hero.videoStart}
         title="We Don't Advise From a Distance."
       />

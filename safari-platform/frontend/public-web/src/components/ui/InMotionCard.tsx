@@ -11,11 +11,17 @@ export type InMotionCardData = {
 type InMotionCardProps = {
   card: InMotionCardData;
   className?: string;
+  ariaHidden?: boolean;
 };
 
-export function InMotionCard({ card, className }: InMotionCardProps) {
+export function InMotionCard({
+  card,
+  className,
+  ariaHidden,
+}: InMotionCardProps) {
   return (
     <article
+      aria-hidden={ariaHidden}
       className={cn(
         "relative h-[480px] w-[min(85vw,340px)] shrink-0 snap-start overflow-hidden rounded-2xl md:h-[600px] md:w-[400px] md:snap-none",
         className,

@@ -32,6 +32,17 @@ function readItems<T>(
   return Array.isArray(items) ? items : [];
 }
 
+function mergeSocial(
+  fromCms: Partial<SiteSettings["social"]> | undefined,
+): SiteSettings["social"] {
+  const cms: Partial<SiteSettings["social"]> = fromCms ?? {};
+  return {
+    linkedin: cms.linkedin?.trim() || DEFAULT_SITE.social.linkedin,
+    youtube: cms.youtube?.trim() || DEFAULT_SITE.social.youtube,
+    instagram: cms.instagram?.trim() || DEFAULT_SITE.social.instagram,
+  };
+}
+
 /** Always returns SiteSettings — merges CMS onto defaults. */
 export async function getSiteSettings(): Promise<SiteSettings> {
   const collection =
@@ -48,7 +59,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     donateHref: payload?.donateHref ?? DEFAULT_SITE.donateHref,
     applyUrl: payload?.applyUrl ?? DEFAULT_SITE.applyUrl,
     locations: payload?.locations ?? DEFAULT_SITE.locations,
-    social: payload?.social ?? DEFAULT_SITE.social,
+    social: mergeSocial(payload?.social),
     navLinks:
       Array.isArray(payload?.navLinks) && payload.navLinks.length > 0
         ? payload.navLinks

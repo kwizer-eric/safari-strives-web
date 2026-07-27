@@ -55,15 +55,15 @@ export default function AdminBlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    if (!token) {
+      if (!token) {
       setError("Sign in required.");
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    setError(null);
-    try {
-      const collections = await listAdminCmsCollections(token);
+        setLoading(false);
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      try {
+        const collections = await listAdminCmsCollections(token);
       const col = findCmsCollectionByKey<{ items: Article[] }>(
         collections,
         "articles",
@@ -71,11 +71,11 @@ export default function AdminBlogPage() {
       if (!col) throw new Error("Articles collection missing. Seed CMS content.");
       setCollectionId(col.id);
       setArticles(col.payload?.items ?? []);
-    } catch (err) {
-      setError((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
   }, [token]);
 
   useEffect(() => {
@@ -153,16 +153,16 @@ export default function AdminBlogPage() {
           </div>
 
           <ul className="mb-6 divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
-            {articles.map((article) => (
+          {articles.map((article) => (
               <li
                 key={article.id}
                 className="flex flex-wrap items-center justify-between gap-3 p-4"
               >
                 <div>
                   <p className="font-semibold">{article.title}</p>
-                  <p className="text-xs text-muted">
-                    {article.date} · {article.category}
-                  </p>
+              <p className="text-xs text-muted">
+                {article.date} · {article.category}
+              </p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -186,9 +186,9 @@ export default function AdminBlogPage() {
                     Delete
                   </Button>
                 </div>
-              </li>
-            ))}
-            {articles.length === 0 && (
+            </li>
+          ))}
+          {articles.length === 0 && (
               <li className="p-6 text-sm text-muted">No articles yet.</li>
             )}
           </ul>

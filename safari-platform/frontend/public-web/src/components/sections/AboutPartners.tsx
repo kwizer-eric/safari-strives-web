@@ -11,9 +11,9 @@ type AboutPartnersProps = {
 export function AboutPartners({ copy, partners }: AboutPartnersProps) {
   if (partners.length === 0) return null;
 
-  // Two identical halves so `animate-marquee` (-50%) loops seamlessly; extra copies fill wide viewports.
-  const half = [...partners, ...partners];
-  const duplicated = [...half, ...half];
+  // Each group contains two cycles so it stays wider than ultra-wide viewports.
+  // The two groups must be geometrically identical for translateX(-50%) to loop.
+  const loopPartners = [...partners, ...partners];
 
   return (
     <section
@@ -40,39 +40,61 @@ export function AboutPartners({ copy, partners }: AboutPartnersProps) {
         </div>
       </Container>
 
-      <div className="relative overflow-hidden">
-        <div className="flex w-max gap-4 animate-marquee motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center md:gap-6">
-          {duplicated.map((partner, index) => (
-            <a
-              key={`${partner.id}-${index}`}
-              href={partner.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={
-                partner.name.trim()
-                  ? `Visit ${partner.name} (opens in new tab)`
-                  : "Visit partner website (opens in new tab)"
-              }
+      <div className="marquee-viewport relative overflow-hidden">
+        <div className="grid w-max motion-reduce:w-full">
+          {[0, 1].map((groupIndex) => (
+            <div
+              key={groupIndex}
+              aria-hidden={groupIndex === 1 ? true : undefined}
               className={cn(
-                "flex h-[120px] w-[280px] shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-border bg-card p-6 transition-opacity hover:opacity-90 md:h-[140px] md:w-[320px]",
-                partner.logoOnWhite && "bg-white",
-                partner.logoOnDark && "bg-black",
+                "marquee-lane col-start-1 row-start-1 flex shrink-0 gap-4 pr-4 md:gap-6 md:pr-6",
+                groupIndex === 0 &&
+                  "motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:pr-0",
+                groupIndex === 1 &&
+                  "marquee-lane-offset motion-reduce:hidden",
               )}
             >
-              {partner.logo ? (
-                <CmsImage
-                  src={partner.logo}
-                  alt=""
-                  width={220}
-                  height={80}
-                  className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
-                />
-              ) : (
-                <span className="px-2 text-center text-sm font-semibold leading-snug text-foreground md:text-base">
-                  {partner.name || "Partner"}
-                </span>
-              )}
-            </a>
+              {loopPartners.map((partner, index) => {
+                const isVisualDuplicate =
+                  groupIndex === 1 || index >= partners.length;
+
+                return (
+                  <a
+                    key={`${partner.id}-${index}`}
+                    href={partner.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-hidden={isVisualDuplicate ? true : undefined}
+                    tabIndex={isVisualDuplicate ? -1 : undefined}
+                    aria-label={
+                      partner.name.trim()
+                        ? `Visit ${partner.name} (opens in new tab)`
+                        : "Visit partner website (opens in new tab)"
+                    }
+                    className={cn(
+                      "flex h-[120px] w-[280px] shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-border bg-card p-6 transition-opacity hover:opacity-90 md:h-[140px] md:w-[320px]",
+                      index >= partners.length && "motion-reduce:hidden",
+                      partner.logoOnWhite && "bg-white",
+                      partner.logoOnDark && "bg-black",
+                    )}
+                  >
+                    {partner.logo ? (
+                      <CmsImage
+                        src={partner.logo}
+                        alt=""
+                        width={220}
+                        height={80}
+                        className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
+                      />
+                    ) : (
+                      <span className="px-2 text-center text-sm font-semibold leading-snug text-foreground md:text-base">
+                        {partner.name || "Partner"}
+                      </span>
+                    )}
+                  </a>
+                );
+              })}
+            </div>
           ))}
         </div>
       </div>

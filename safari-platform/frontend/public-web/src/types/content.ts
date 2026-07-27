@@ -91,7 +91,7 @@ export type SiteSettings = {
   locations: string[];
   social: {
     linkedin: string;
-    facebook: string;
+    youtube: string;
     instagram: string;
   };
   navLinks: SiteLink[];

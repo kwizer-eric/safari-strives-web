@@ -13,7 +13,9 @@ type InMotionProps = {
 export function InMotion({ inMotion }: InMotionProps) {
   if (!inMotion.cards.length) return null;
 
-  const duplicated = [...inMotion.cards, ...inMotion.cards];
+  // Two cycles per group keep one group wider than ultra-wide viewports.
+  // Doubling the duration preserves the original card movement speed.
+  const loopCards = [...inMotion.cards, ...inMotion.cards];
 
   return (
     <section
@@ -42,10 +44,33 @@ export function InMotion({ inMotion }: InMotionProps) {
         ))}
       </div>
 
-      <div className="relative hidden overflow-hidden md:block">
-        <div className="flex w-max gap-4 animate-marquee motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center md:gap-6">
-          {duplicated.map((card, index) => (
-            <InMotionCard key={`${card.id}-${index}`} card={card} />
+      <div className="marquee-viewport relative hidden overflow-hidden md:block">
+        <div className="grid w-max motion-reduce:w-full">
+          {[0, 1].map((groupIndex) => (
+            <div
+              key={groupIndex}
+              aria-hidden={groupIndex === 1 ? true : undefined}
+              className={
+                groupIndex === 0
+                  ? "marquee-lane marquee-lane-slow col-start-1 row-start-1 flex shrink-0 gap-4 pr-4 motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:pr-0 md:gap-6 md:pr-6"
+                  : "marquee-lane marquee-lane-slow marquee-lane-offset col-start-1 row-start-1 flex shrink-0 gap-4 pr-4 motion-reduce:hidden md:gap-6 md:pr-6"
+              }
+            >
+              {loopCards.map((card, index) => (
+                <InMotionCard
+                  key={`${card.id}-${index}`}
+                  card={card}
+                  ariaHidden={
+                    groupIndex === 1 || index >= inMotion.cards.length
+                  }
+                  className={
+                    index >= inMotion.cards.length
+                      ? "motion-reduce:hidden"
+                      : undefined
+                  }
+                />
+              ))}
+            </div>
           ))}
         </div>
       </div>

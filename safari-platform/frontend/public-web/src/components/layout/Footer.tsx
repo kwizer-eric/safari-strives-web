@@ -2,6 +2,10 @@ import Link from "next/link";
 import { Container } from "@safari/ui";
 import type { SiteSettings } from "@/types/content";
 
+function isExternalHref(href: string): boolean {
+  return href.startsWith("http://") || href.startsWith("https://");
+}
+
 function FooterColumn({
   title,
   links,
@@ -37,7 +41,7 @@ type FooterProps = {
 export function Footer({ site }: FooterProps) {
   const footerSocial = [
     { label: "LinkedIn", href: site.social.linkedin },
-    { label: "Facebook", href: site.social.facebook },
+    { label: "YouTube", href: site.social.youtube },
     { label: "Instagram", href: site.social.instagram },
   ];
 
@@ -76,6 +80,9 @@ export function Footer({ site }: FooterProps) {
             <Link
               key={link.label}
               href={link.href}
+              {...(isExternalHref(link.href)
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               className="text-sm text-white/90 transition-colors hover:text-white"
             >
               {link.label}
