@@ -74,15 +74,12 @@ export async function getAboutContent(): Promise<{
       ? page.payload
       : DEFAULT_ABOUT;
 
-  // Only show partners with a real logo URL — seed items ship with empty logos
-  // and we must not fall back to the Safari mark (that duplicated six times).
-  const partners = readItems(partnersCol)
-    .map((partner) => ({
-      ...partner,
-      href: partner.href?.trim() || "#",
-      logo: partner.logo?.trim() || "",
-    }))
-    .filter((partner) => Boolean(partner.logo));
+  // Keep partners even without logos — seed often ships names only.
+  const partners = readItems(partnersCol).map((partner) => ({
+    ...partner,
+    href: partner.href?.trim() || "#",
+    logo: partner.logo?.trim() || "",
+  }));
 
   return {
     page: pagePayload,
@@ -101,7 +98,18 @@ export async function getVenturesContent(): Promise<{
   ]);
 
   return {
-    page: page?.payload?.headline ? page.payload : DEFAULT_VENTURES_PAGE,
+    page: page?.payload?.headline
+      ? {
+          ...page.payload,
+          heroImage:
+            page.payload.heroImage?.trim() ||
+            page.payload.heroVideo?.trim() ||
+            DEFAULT_VENTURES_PAGE.heroImage,
+          heroImageAlt:
+            page.payload.heroImageAlt?.trim() ||
+            DEFAULT_VENTURES_PAGE.heroImageAlt,
+        }
+      : DEFAULT_VENTURES_PAGE,
     ventures: readItems(venturesCol),
   };
 }
@@ -224,5 +232,18 @@ export async function getProgramPage(
 ): Promise<ModelPageContent> {
   const page = await getPage(slug);
   if (!page) return defaultModelPage(slug);
-  return toModelPageContent(page);
+  const content = toModelPageContent(page);
+  // Empty CMS media → keep title from API but use slug photo fallback.
+  if (!content.hero.heroVideo && !content.hero.image) {
+    const fallback = defaultModelPage(slug);
+    return {
+      ...content,
+      hero: {
+        ...content.hero,
+        image: fallback.hero.image,
+        imageAlt: content.hero.imageAlt || fallback.hero.imageAlt,
+      },
+    };
+  }
+  return content;
 }

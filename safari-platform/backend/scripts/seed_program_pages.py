@@ -38,7 +38,7 @@ PAGES: list[dict] = [
         "is_published": True,
         "hero_eyebrow": "The Accelerator Program",
         "hero_title": "Interested in joining our community?",
-        "hero_video_url": "",
+        "hero_video_url": "https://images.unsplash.com/photo-1634936016780-65f6a77ebdd4?w=1920&q=80",
         "hero_media_alt": "Founders working with a mentor during an accelerator session",
         "hero_media_caption": "Short clips of founders, products in the making, mentor conversations, and hub tools in use.",
         "hero_cta_label": "Apply Here",
@@ -92,7 +92,7 @@ PAGES: list[dict] = [
         "is_published": True,
         "hero_eyebrow": "Green Enterprise Lab",
         "hero_title": "Commercializing practical solutions for local enterprise, food systems, and waste-to-value growth.",
-        "hero_video_url": "",
+        "hero_video_url": "https://images.unsplash.com/photo-1580918577344-fe0a66733a2a?w=1920&q=80",
         "hero_media_alt": "Poultry operations at the Green Enterprise Lab",
         "hero_media_caption": "Short clips of poultry production, egg collection, packaging, recordkeeping, feed tracking, manure collection, product testing, and local distribution.",
         "intro_eyebrow": "About the lab",
@@ -147,7 +147,7 @@ PAGES: list[dict] = [
         "hero_eyebrow": "The Hub",
         "hero_title": "A hub built for enterprise growth.",
         "hero_body": "The Safari Strives Hub gives entrepreneurs the space, tools, media support, and professional environment they need to build businesses people can trust.",
-        "hero_video_url": "",
+        "hero_video_url": "https://images.unsplash.com/photo-1675434301763-594b4d0c5819?w=1920&q=80",
         "hero_media_alt": "Founders working inside the Safari Strives hub",
         "hero_media_caption": "Short clips of the hub, computers, founders working, media room setup, product filming, packaging, tools, meetings, and mentor sessions.",
         "intro_eyebrow": "Main description",
@@ -204,6 +204,14 @@ def _upsert_page(db: Session, data: dict, *, force: bool) -> Page | None:
         return page
 
     if not force:
+        # Backfill empty hero media only — do not overwrite copy/features.
+        seed_media = (data.get("hero_video_url") or "").strip()
+        if seed_media and not (page.hero_video_url or "").strip():
+            print(f"Backfill page '{data['slug']}' empty hero_video_url from seed")
+            page.hero_video_url = seed_media
+            if data.get("hero_media_alt") and not (page.hero_media_alt or "").strip():
+                page.hero_media_alt = data["hero_media_alt"]
+            return page
         print(f"Skip page '{data['slug']}' (already exists — admin edits kept)")
         return None
 

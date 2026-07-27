@@ -7,6 +7,8 @@ type HeroProps = {
 };
 
 export function Hero({ hero }: HeroProps) {
+  const mediaSrc = hero.heroVideo.trim() || hero.image.trim();
+
   return (
     <section
       aria-labelledby="hero-heading"
@@ -14,8 +16,8 @@ export function Hero({ hero }: HeroProps) {
     >
       <div className="absolute inset-0 overflow-hidden">
         <HeroBackgroundVideo
-          src={hero.heroVideo}
-          label={hero.headline || "Homepage hero video"}
+          src={mediaSrc}
+          label={hero.imageAlt || hero.headline || "Homepage hero"}
         />
         <div className="pointer-events-none absolute inset-0 bg-dark/60" />
       </div>

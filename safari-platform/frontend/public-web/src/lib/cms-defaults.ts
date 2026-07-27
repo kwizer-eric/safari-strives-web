@@ -75,7 +75,8 @@ export const DEFAULT_HOME: HomePayload = {
     body: "",
     image: "",
     imageAlt: "",
-    heroVideo: "",
+    heroVideo:
+      "https://res.cloudinary.com/efzpryhb/video/upload/v1785062087/Opener_bxjmis.mp4",
   },
   explore: {
     title: "",
@@ -128,8 +129,9 @@ export const DEFAULT_VENTURES_PAGE: VenturesPagePayload = {
   eyebrow: "",
   headline: "Ventures",
   heroVideo: "",
-  heroImage: "",
-  heroImageAlt: "",
+  heroImage:
+    "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80",
+  heroImageAlt: "Entrepreneurs collaborating",
   mission: {
     eyebrow: "",
     body: "",
@@ -144,14 +146,24 @@ const PROGRAM_TITLES: Record<string, string> = {
   "the-hub": "The Hub",
 };
 
+const PROGRAM_FALLBACK_IMAGES: Record<string, string> = {
+  "our-model":
+    "https://images.unsplash.com/photo-1634936016780-65f6a77ebdd4?w=1920&q=80",
+  "green-enterprise-lab":
+    "https://images.unsplash.com/photo-1580918577344-fe0a66733a2a?w=1920&q=80",
+  "the-hub":
+    "https://images.unsplash.com/photo-1675434301763-594b4d0c5819?w=1920&q=80",
+};
+
 export function defaultModelPage(slug: string): ModelPageContent {
   const title = PROGRAM_TITLES[slug] ?? slug.replace(/-/g, " ");
+  const image = PROGRAM_FALLBACK_IMAGES[slug] ?? "";
   return {
     hero: {
       headline: { line1: title, line2: "" },
       subhead: { line1: "" },
       heroVideo: "",
-      image: "",
+      image,
       imageAlt: title,
     },
     audience: {

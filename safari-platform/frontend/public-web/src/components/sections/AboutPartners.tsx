@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { cn } from "@safari/shared";
 import { Container } from "@safari/ui";
+import { CmsImage } from "@/components/ui/CmsImage";
 import type { AboutPagePayload, AboutPartner } from "@/types/content";
 
 type AboutPartnersProps = {
@@ -59,14 +59,19 @@ export function AboutPartners({ copy, partners }: AboutPartnersProps) {
                 partner.logoOnDark && "bg-black",
               )}
             >
-              <Image
-                src={partner.logo}
-                alt=""
-                width={220}
-                height={80}
-                className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
-                unoptimized
-              />
+              {partner.logo ? (
+                <CmsImage
+                  src={partner.logo}
+                  alt=""
+                  width={220}
+                  height={80}
+                  className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
+                />
+              ) : (
+                <span className="px-2 text-center text-sm font-semibold leading-snug text-foreground md:text-base">
+                  {partner.name || "Partner"}
+                </span>
+              )}
             </a>
           ))}
         </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { Button, Container } from "@safari/ui";
 import { YouTubeVideoModal } from "@/components/ui/YouTubeVideoModal";
@@ -13,6 +12,13 @@ type AboutHeroProps = {
 
 export function AboutHero({ hero }: AboutHeroProps) {
   const [videoOpen, setVideoOpen] = useState(false);
+  // Prefer dedicated video URL, then image (may be a Cloudinary video), then YouTube id.
+  const mediaSrc =
+    hero.heroVideo.trim() ||
+    hero.image.trim() ||
+    (hero.videoId.trim()
+      ? `https://www.youtube.com/watch?v=${hero.videoId.trim()}`
+      : "");
 
   return (
     <>
@@ -21,20 +27,10 @@ export function AboutHero({ hero }: AboutHeroProps) {
         className="sticky top-0 z-0 min-h-[92vh]"
       >
         <div className="absolute inset-0 overflow-hidden">
-          {hero.heroVideo.trim() ? (
+          {mediaSrc ? (
             <HeroBackgroundVideo
-              src={hero.heroVideo}
-              label={hero.imageAlt || "About hero video"}
-            />
-          ) : hero.image.trim() ? (
-            <Image
-              src={hero.image}
-              alt={hero.imageAlt || "About hero"}
-              fill
-              className="object-cover"
-              priority
-              sizes="100vw"
-              unoptimized
+              src={mediaSrc}
+              label={hero.imageAlt || "About hero"}
             />
           ) : (
             <div

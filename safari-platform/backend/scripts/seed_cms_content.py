@@ -46,7 +46,7 @@ CMS_PAGES: list[dict] = [
                 ),
                 "image": "",
                 "imageAlt": "Group of people in a community",
-                "heroVideo": "",
+                "heroVideo": "https://res.cloudinary.com/efzpryhb/video/upload/v1785062087/Opener_bxjmis.mp4",
             },
             "opening": {
                 "title": "One business at a time.",
@@ -169,7 +169,7 @@ CMS_PAGES: list[dict] = [
                 ),
                 "image": "",
                 "imageAlt": "Safari Strives about hero",
-                "heroVideo": "",
+                "heroVideo": "https://res.cloudinary.com/efzpryhb/video/upload/v1785074288/videoplayback_1_en7ryt.webm",
                 "videoId": "njiqUJcuVc4",
                 "videoStart": 15,
                 "legalNote": (
@@ -277,7 +277,7 @@ CMS_PAGES: list[dict] = [
             "eyebrow": "Meet the ventures",
             "headline": "Entrepreneurs building beyond survival.",
             "heroVideo": "",
-            "heroImage": "",
+            "heroImage": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80",
             "heroImageAlt": "People collaborating at computers in an office",
             "mission": {
                 "eyebrow": "Our mission",
@@ -1252,11 +1252,51 @@ def _upsert_page(db: Session, data: dict, *, force: bool) -> CmsPage | None:
         page = CmsPage(**data)
         db.add(page)
         return page
-    if not force:
+    if force:
+        for field, value in data.items():
+            setattr(page, field, value)
+        return page
+
+    # Keep admin edits, but backfill empty hero media from seed.
+    existing = page.payload if isinstance(page.payload, dict) else {}
+    seed_payload = data.get("payload") if isinstance(data.get("payload"), dict) else {}
+    if not existing or not seed_payload:
         print(f"Skip cms_page '{data['slug']}' (already exists — admin edits kept)")
         return None
-    for field, value in data.items():
-        setattr(page, field, value)
+
+    merged = dict(existing)
+    changed = False
+
+    # Flat media fields (ventures page)
+    for key in ("heroVideo", "heroImage"):
+        seed_val = seed_payload.get(key)
+        if isinstance(seed_val, str) and seed_val.strip():
+            cur = merged.get(key)
+            if not (isinstance(cur, str) and cur.strip()):
+                merged[key] = seed_val
+                changed = True
+
+    # Nested home/about hero media
+    seed_hero = seed_payload.get("hero")
+    existing_hero = merged.get("hero")
+    if isinstance(seed_hero, dict):
+        hero = dict(existing_hero) if isinstance(existing_hero, dict) else {}
+        for key in ("heroVideo", "image"):
+            seed_val = seed_hero.get(key)
+            if isinstance(seed_val, str) and seed_val.strip():
+                cur = hero.get(key)
+                if not (isinstance(cur, str) and cur.strip()):
+                    hero[key] = seed_val
+                    changed = True
+        if hero:
+            merged["hero"] = hero
+
+    if not changed:
+        print(f"Skip cms_page '{data['slug']}' (already exists — admin edits kept)")
+        return None
+
+    print(f"Backfill cms_page '{data['slug']}' empty hero media from seed")
+    page.payload = merged
     return page
 
 
