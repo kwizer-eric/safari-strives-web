@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import { MarketingChrome } from "@/components/layout/MarketingChrome";
 import { ArticleDetail } from "@/components/sections/ArticleDetail";
 import { ArticleRelated } from "@/components/sections/ArticleRelated";
+import { articleYoutubeWatchUrl } from "@/lib/article-link";
 import { getArticleById } from "@/lib/content";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +32,11 @@ export default async function ArticleDetailPage({
 }: ArticleDetailPageProps) {
   const { id } = await params;
   const { article, related } = await getArticleById(id);
+
+  const watchUrl = articleYoutubeWatchUrl(article);
+  if (watchUrl) {
+    redirect(watchUrl);
+  }
 
   return (
     <MarketingChrome solid>

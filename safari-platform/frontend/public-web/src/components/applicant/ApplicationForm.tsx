@@ -47,7 +47,7 @@ const revenueOptions: SelectOption[] = [
 
 const programOptions: SelectOption[] = [
   { value: "Venture Accelerator", label: "Venture Accelerator" },
-  { value: "Green Enterprise Lab", label: "Green Enterprise Lab" },
+  { value: "Generative Enterprise Lab", label: "Generative Enterprise Lab" },
   { value: "The Hub Residency", label: "The Hub Residency" },
 ];
 

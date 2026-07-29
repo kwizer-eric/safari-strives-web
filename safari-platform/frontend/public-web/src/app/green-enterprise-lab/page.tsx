@@ -9,9 +9,9 @@ import { getProgramPage } from "@/lib/content";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Green Enterprise Lab | Safari Strives",
+  title: "Generative Enterprise Lab | Safari Strives",
   description:
-    "Safari Strives' demonstration platform and cash-flow engine: poultry, packaged eggs, organic fertilizer, and market-ready green enterprise.",
+    "Safari Strives' demonstration platform and cash-flow engine: poultry, packaged eggs, organic fertilizer, and market-ready generative enterprise.",
 };
 
 export default async function GreenEnterpriseLabPage() {

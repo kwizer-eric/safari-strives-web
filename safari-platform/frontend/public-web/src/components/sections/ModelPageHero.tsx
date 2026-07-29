@@ -17,7 +17,7 @@ export function ModelPageHero({ hero, headingId }: ModelPageHeroProps) {
   return (
     <section
       aria-labelledby={headingId}
-      className="sticky top-0 z-0 min-h-[92vh]"
+      className="sticky top-0 z-0 h-svh min-h-svh"
     >
       <div className="absolute inset-0 overflow-hidden">
         {hasVideo ? (
@@ -45,7 +45,7 @@ export function ModelPageHero({ hero, headingId }: ModelPageHeroProps) {
         <div className="pointer-events-none absolute inset-0 bg-dark/60" />
       </div>
 
-      <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">
+      <Container className="relative flex h-full min-h-svh flex-col justify-end pb-20 pt-32 md:pb-28">
         <div className="max-w-4xl">
           <h1
             id={headingId}

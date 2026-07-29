@@ -72,7 +72,7 @@ export function AboutPartners({ copy, partners }: AboutPartnersProps) {
                         : "Visit partner website (opens in new tab)"
                     }
                     className={cn(
-                      "flex h-[120px] w-[280px] shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-border bg-card p-6 transition-opacity hover:opacity-90 md:h-[140px] md:w-[320px]",
+                      "flex h-[120px] w-[280px] shrink-0 items-center justify-center rounded-[var(--radius-card)] border border-border bg-card p-3 transition-opacity hover:opacity-90 md:h-[140px] md:w-[320px] md:p-4",
                       index >= partners.length && "motion-reduce:hidden",
                       partner.logoOnWhite && "bg-white",
                       partner.logoOnDark && "bg-black",
@@ -84,7 +84,7 @@ export function AboutPartners({ copy, partners }: AboutPartnersProps) {
                         alt=""
                         width={220}
                         height={80}
-                        className="h-14 w-auto max-w-[200px] object-contain md:h-16 md:max-w-[240px]"
+                        className="h-full w-full object-contain"
                       />
                     ) : (
                       <span className="px-2 text-center text-sm font-semibold leading-snug text-foreground md:text-base">

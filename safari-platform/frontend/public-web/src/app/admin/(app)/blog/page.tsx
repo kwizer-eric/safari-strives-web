@@ -11,6 +11,11 @@ import {
 } from "@/lib/cms";
 import type { Article, ArticleBlock } from "@/types/content";
 import { CmsImage } from "@/components/ui/CmsImage";
+import {
+  articleIsVideo,
+  articlePosterUrl,
+  articleYoutubeWatchUrl,
+} from "@/lib/article-link";
 
 function paragraphsToSections(text: string): ArticleBlock[] {
   return text
@@ -106,7 +111,10 @@ export default function AdminBlogPage() {
   function startEdit(article: Article) {
     setMessage(null);
     setError(null);
-    setEditing(article);
+    setEditing({
+      ...article,
+      videoUrl: article.videoUrl ?? "",
+    });
     setBodyText(sectionsToParagraphs(article.sections));
     setShowPreview(false);
   }
@@ -162,6 +170,7 @@ export default function AdminBlogPage() {
                   <p className="font-semibold">{article.title}</p>
               <p className="text-xs text-muted">
                 {article.date} · {article.category}
+                {articleIsVideo(article) ? " · Video" : ""}
               </p>
                 </div>
                 <div className="flex gap-2">
@@ -227,16 +236,25 @@ export default function AdminBlogPage() {
 
           {showPreview ? (
             <article className="max-w-3xl space-y-6 rounded-[var(--radius-card)] border border-border bg-card p-6 md:p-8">
-              {editing.image.trim() ? (
+              {articlePosterUrl(editing).trim() ? (
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xl bg-muted">
                   <CmsImage
-                    src={editing.image}
+                    src={articlePosterUrl(editing)}
                     alt={editing.imageAlt || editing.title}
                     fill
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 768px"
                   />
                 </div>
+              ) : null}
+              {articleIsVideo(editing) ? (
+                <p className="rounded-md bg-cream px-3 py-2 text-sm text-muted">
+                  Opens on YouTube
+                  {articleYoutubeWatchUrl(editing)
+                    ? `: ${articleYoutubeWatchUrl(editing)}`
+                    : ""}
+                  . Body is optional for video cards.
+                </p>
               ) : null}
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted">
@@ -268,7 +286,11 @@ export default function AdminBlogPage() {
                     ) : null,
                   )
                 ) : (
-                  <p className="text-sm text-muted">No body text yet.</p>
+                  <p className="text-sm text-muted">
+                    {articleIsVideo(editing)
+                      ? "No body text — card will open YouTube."
+                      : "No body text yet."}
+                  </p>
                 )}
               </div>
             </article>
@@ -318,12 +340,21 @@ export default function AdminBlogPage() {
                 }
               />
               <Input
+                label="YouTube URL (optional)"
+                value={editing.videoUrl ?? ""}
+                onChange={(e) =>
+                  setEditing({ ...editing, videoUrl: e.target.value })
+                }
+                hint="When set, the card opens this video on YouTube. Body is optional."
+                placeholder="https://www.youtube.com/watch?v=… or video id"
+              />
+              <Input
                 label="Cover image URL"
                 value={editing.image}
                 onChange={(e) =>
                   setEditing({ ...editing, image: e.target.value })
                 }
-                hint="Cloudinary or other https image URL"
+                hint="Optional if YouTube is set — falls back to the video thumbnail"
               />
               <Input
                 label="Image alt"
@@ -350,11 +381,16 @@ export default function AdminBlogPage() {
                   editing.id ||
                   slugify(editing.title) ||
                   `article-${Date.now()}`;
+                const videoUrl = (editing.videoUrl ?? "").trim();
                 const nextItem: Article = {
                   ...editing,
                   id,
                   sections: paragraphsToSections(bodyText),
+                  ...(videoUrl ? { videoUrl } : { videoUrl: undefined }),
                 };
+                if (!videoUrl) {
+                  delete nextItem.videoUrl;
+                }
                 const exists = articles.some((item) => item.id === id);
                 const next = exists
                   ? articles.map((item) => (item.id === id ? nextItem : item))

@@ -108,7 +108,7 @@ class PageFeature(Base):
 class PageSection(Base):
     """A generic repeatable content block under a Page (eyebrow/title/body).
 
-    Used today only by the Green Enterprise Lab's "Why green enterprise
+    Used today only by the Generative Enterprise Lab's "Why generative enterprise
     matters" block, but modeled as a list from day one so any future page can
     add more of these blocks without another migration.
     """

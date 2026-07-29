@@ -38,8 +38,8 @@ export function ProgramHorizontalCard({
       )}
     >
       <Link href={href} className="group flex h-full flex-col">
-        {/* Square media only — card height comes from image + text below. */}
-        <div className="relative aspect-square w-full shrink-0 overflow-hidden">
+        {/* Media: square on mobile/2xl, shorter 4:3 on laptop. */}
+        <div className="relative aspect-square w-full shrink-0 overflow-hidden md:aspect-[4/3] 2xl:aspect-square">
           <CmsImage
             src={image}
             alt={imageAlt}
@@ -48,14 +48,14 @@ export function ProgramHorizontalCard({
             sizes="(max-width: 768px) 63vw, 40vw"
           />
         </div>
-        <div className="flex flex-1 flex-col gap-3 p-5 sm:p-6 md:gap-4 md:p-6">
+        <div className="flex flex-col gap-2 p-4 sm:p-5 md:gap-2 md:p-4 2xl:flex-1 2xl:gap-4 2xl:p-6">
           <h3 className="text-lg font-bold leading-[1.15] tracking-tight text-foreground md:text-xl">
             {title}
           </h3>
           <p
             className={cn(
               "text-sm leading-relaxed text-muted md:text-[0.9rem] md:leading-6",
-              fillHeight && "flex-1",
+              fillHeight && "2xl:flex-1",
             )}
           >
             {description}

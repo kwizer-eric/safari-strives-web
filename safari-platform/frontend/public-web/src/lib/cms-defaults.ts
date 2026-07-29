@@ -35,7 +35,7 @@ export const DEFAULT_SITE: SiteSettings = {
       href: "/our-model",
     },
     {
-      title: "Green Enterprise Lab",
+      title: "Generative Enterprise Lab",
       description: "Hands-on enterprise building on the ground",
       href: "/green-enterprise-lab",
     },
@@ -50,7 +50,7 @@ export const DEFAULT_SITE: SiteSettings = {
       title: "Programs",
       links: [
         { label: "Venture Accelerator", href: "/our-model" },
-        { label: "Green Enterprise Lab", href: "/green-enterprise-lab" },
+        { label: "Generative Enterprise Lab", href: "/green-enterprise-lab" },
         { label: "The Hub", href: "/the-hub" },
       ],
     },
@@ -142,7 +142,7 @@ export const DEFAULT_VENTURES_PAGE: VenturesPagePayload = {
 
 const PROGRAM_TITLES: Record<string, string> = {
   "our-model": "Venture Accelerator",
-  "green-enterprise-lab": "Green Enterprise Lab",
+  "green-enterprise-lab": "Generative Enterprise Lab",
   "the-hub": "The Hub",
 };
 

@@ -87,7 +87,7 @@ CMS_PAGES: list[dict] = [
                     },
                     {
                         "id": "lab",
-                        "title": "Green Enterprise Lab",
+                        "title": "Generative Enterprise Lab",
                         "description": (
                             "Our own poultry and waste-to-value business. It funds "
                             "the program and serves as a demo enterprise."
@@ -149,7 +149,7 @@ CMS_PAGES: list[dict] = [
                         "id": "gel",
                         "label": "4,000+ birds in current production",
                         "image": "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=800&q=80",
-                        "imageAlt": "Poultry production at the Green Enterprise Lab",
+                        "imageAlt": "Poultry production at the Generative Enterprise Lab",
                     },
                     {
                         "id": "mentors",
@@ -269,7 +269,7 @@ CMS_PAGES: list[dict] = [
                 "body": (
                     "We welcome partners with expertise, networks, market access, "
                     "and growth capital to help us reach more founders and expand "
-                    "the Green Enterprise Lab in Rubavu."
+                    "the Generative Enterprise Lab in Rubavu."
                 ),
                 "primaryCta": {
                     "label": "Partner with Safari Strives",
@@ -348,7 +348,7 @@ CMS_COLLECTIONS: list[dict] = [
                     "href": "/our-model",
                 },
                 {
-                    "title": "Green Enterprise Lab",
+                    "title": "Generative Enterprise Lab",
                     "description": "Hands-on enterprise building on the ground",
                     "href": "/green-enterprise-lab",
                 },
@@ -363,7 +363,7 @@ CMS_COLLECTIONS: list[dict] = [
                     "title": "Programs",
                     "links": [
                         {"label": "Accelerator", "href": "/our-model"},
-                        {"label": "Green Enterprise Lab", "href": "/green-enterprise-lab"},
+                        {"label": "Generative Enterprise Lab", "href": "/green-enterprise-lab"},
                         {"label": "The Hub", "href": "/the-hub"},
                     ],
                 },

@@ -128,7 +128,7 @@ const programs: Program[] = [
   },
   {
     id: id("prg", 2),
-    title: "Green Enterprise Lab",
+    title: "Generative Enterprise Lab",
     summary: "Poultry and waste-to-value residency and demo enterprise.",
     cohort: "2026 Q3",
     seatsTotal: 12,
@@ -188,7 +188,7 @@ const partnerProjects: PartnerProject[] = [
   {
     id: id("prj", 2),
     partnerId,
-    ventureName: "Green Enterprise Lab",
+    ventureName: "Generative Enterprise Lab",
     amountFunded: 45000,
     reportUrl: "https://reports.safari.local/gel-q3.pdf",
     updatedAt: nowIso,

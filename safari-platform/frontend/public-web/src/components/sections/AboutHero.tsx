@@ -24,7 +24,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
     <>
       <section
         aria-labelledby="about-hero-heading"
-        className="sticky top-0 z-0 min-h-[92vh]"
+        className="sticky top-0 z-0 h-svh min-h-svh"
       >
         <div className="absolute inset-0 overflow-hidden">
           {mediaSrc ? (
@@ -42,7 +42,7 @@ export function AboutHero({ hero }: AboutHeroProps) {
           <div className="pointer-events-none absolute inset-0 bg-dark/60" />
         </div>
 
-        <Container className="relative flex min-h-[92vh] flex-col justify-end pb-20 pt-32 md:pb-28">
+        <Container className="relative flex h-full min-h-svh flex-col justify-end pb-20 pt-32 md:pb-28">
           <h1 id="about-hero-heading" className="sr-only">
             {[hero.headline.line1, hero.headline.line2]
               .map((line) => line.trim())

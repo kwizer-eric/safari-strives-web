@@ -25,6 +25,8 @@ export type Article = {
   author: string;
   readTime: string;
   sections: ArticleBlock[];
+  /** YouTube URL or bare id. When set, cards open YouTube instead of the article page. */
+  videoUrl?: string;
 };
 
 export type Testimonial = {

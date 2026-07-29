@@ -22,7 +22,7 @@ const PROGRAM_PAGES = [
   },
   {
     slug: "green-enterprise-lab",
-    label: "Green Enterprise Lab",
+    label: "Generative Enterprise Lab",
     path: "/green-enterprise-lab",
   },
   {

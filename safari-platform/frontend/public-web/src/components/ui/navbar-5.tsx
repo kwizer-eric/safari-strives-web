@@ -42,8 +42,8 @@ export function Navbar5({ isSolid = true, site }: Navbar5Props) {
     "bg-transparent text-sm font-medium transition-colors",
     "hover:bg-transparent focus:bg-transparent data-[active]:bg-transparent",
     isSolid
-      ? "text-foreground/80 hover:text-foreground"
-      : "text-white/90 hover:text-white",
+      ? "text-foreground/80 hover:text-foreground focus:text-foreground"
+      : "text-white/90 hover:text-white focus:text-white",
   );
 
   const triggerClass = cn(
@@ -51,8 +51,8 @@ export function Navbar5({ isSolid = true, site }: Navbar5Props) {
     "bg-transparent px-0 text-sm font-medium shadow-none",
     "hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[active]:bg-transparent",
     isSolid
-      ? "text-foreground/80 hover:text-foreground data-[state=open]:text-foreground"
-      : "text-white/90 hover:text-white data-[state=open]:text-white",
+      ? "text-foreground/80 hover:text-foreground focus:text-foreground data-[state=open]:text-foreground data-[state=open]:focus:text-foreground"
+      : "text-white/90 hover:text-white focus:text-white data-[state=open]:text-white data-[state=open]:focus:text-white",
   );
 
   const simpleLinks = navLinks.filter((link) => link.label !== "Our Model");
