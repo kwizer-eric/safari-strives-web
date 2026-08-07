@@ -64,6 +64,8 @@ export type AboutPerson = {
   location: string;
   image: string;
   imageAlt: string;
+  /** Profile URL shown under bio on hover / mobile expand */
+  linkedin?: string;
   featured?: boolean;
 };
 

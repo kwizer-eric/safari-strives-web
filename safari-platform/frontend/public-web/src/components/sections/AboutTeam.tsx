@@ -76,6 +76,16 @@ function TeamCard({ person }: { person: AboutPerson }) {
         <p className="mt-auto text-sm leading-relaxed text-foreground/90 md:text-[15px] md:leading-relaxed">
           {person.bio}
         </p>
+        {person.linkedin?.trim() ? (
+          <a
+            href={person.linkedin.trim()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 w-fit text-sm font-medium text-foreground underline underline-offset-4 transition-colors hover:text-foreground/70"
+          >
+            LinkedIn
+          </a>
+        ) : null}
       </div>
 
       <button
