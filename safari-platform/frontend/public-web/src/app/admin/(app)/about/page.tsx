@@ -32,6 +32,7 @@ const emptyPerson = (): AboutPerson => ({
   location: "",
   image: "",
   imageAlt: "",
+  linkedin: "",
   featured: false,
 });
 
@@ -92,11 +93,11 @@ export default function AdminAboutPage() {
 
       const boardCol = findCmsCollectionByKey<{ items: AboutPerson[] }>(
         collections,
-        "board-members",
+        "board",
       );
       const teamCol = findCmsCollectionByKey<{ items: AboutPerson[] }>(
         collections,
-        "team-members",
+        "team",
       );
       const partnersCol = findCmsCollectionByKey<{ items: AboutPartner[] }>(
         collections,
@@ -491,6 +492,18 @@ export default function AdminAboutPage() {
               setEditingPerson({ ...editingPerson, bio: e.target.value })
             }
             required
+          />
+          <Input
+            label="LinkedIn URL"
+            type="url"
+            value={editingPerson.linkedin ?? ""}
+            onChange={(e) =>
+              setEditingPerson({
+                ...editingPerson,
+                linkedin: e.target.value,
+              })
+            }
+            placeholder="https://www.linkedin.com/in/…"
           />
           <div className="flex gap-3">
             <Button
