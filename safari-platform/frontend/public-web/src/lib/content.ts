@@ -16,6 +16,7 @@ import {
   getPublishedCmsPage,
   latestArticles,
 } from "@/lib/cms";
+import { listPublishedBoard, listPublishedTeam } from "@/lib/people";
 import {
   DEFAULT_ABOUT,
   DEFAULT_SITE,
@@ -43,6 +44,40 @@ function mergeSocial(
   };
 }
 
+type FooterColumn = SiteSettings["footerColumns"]["programs"];
+
+function readFooterColumn(
+  value: unknown,
+  fallback: FooterColumn,
+): FooterColumn {
+  if (!value || typeof value !== "object") return fallback;
+  const col = value as Partial<FooterColumn>;
+  return {
+    title: typeof col.title === "string" ? col.title : fallback.title,
+    links: Array.isArray(col.links) ? col.links : fallback.links,
+  };
+}
+
+/**
+ * CMS footer shape must match SiteSettings.footerColumns.
+ * Older seeds used `resources` instead of `insights` — accept both.
+ */
+function mergeFooterColumns(
+  fromCms: Partial<SiteSettings["footerColumns"]> & {
+    resources?: FooterColumn;
+  } | undefined,
+): SiteSettings["footerColumns"] {
+  const cms = fromCms ?? {};
+  return {
+    programs: readFooterColumn(cms.programs, DEFAULT_SITE.footerColumns.programs),
+    about: readFooterColumn(cms.about, DEFAULT_SITE.footerColumns.about),
+    insights: readFooterColumn(
+      cms.insights ?? cms.resources,
+      DEFAULT_SITE.footerColumns.insights,
+    ),
+  };
+}
+
 /** Always returns SiteSettings — merges CMS onto defaults. */
 export async function getSiteSettings(): Promise<SiteSettings> {
   const collection =
@@ -65,7 +100,13 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         ? payload.navLinks
         : DEFAULT_SITE.navLinks,
     ourModelLinks: payload?.ourModelLinks ?? DEFAULT_SITE.ourModelLinks,
-    footerColumns: payload?.footerColumns ?? DEFAULT_SITE.footerColumns,
+    footerColumns: mergeFooterColumns(
+      payload?.footerColumns as
+        | (Partial<SiteSettings["footerColumns"]> & {
+            resources?: FooterColumn;
+          })
+        | undefined,
+    ),
   };
 }
 
@@ -75,10 +116,10 @@ export async function getAboutContent(): Promise<{
   team: AboutPerson[];
   partners: AboutPartner[];
 }> {
-  const [page, boardCol, teamCol, partnersCol] = await Promise.all([
+  const [page, board, team, partnersCol] = await Promise.all([
     getPublishedCmsPage<AboutPagePayload>("about"),
-    getPublishedCmsCollection<{ items: AboutPerson[] }>("board-members"),
-    getPublishedCmsCollection<{ items: AboutPerson[] }>("team-members"),
+    listPublishedBoard(),
+    listPublishedTeam(),
     getPublishedCmsCollection<{ items: AboutPartner[] }>("partners"),
   ]);
 
@@ -102,8 +143,8 @@ export async function getAboutContent(): Promise<{
 
   return {
     page: pagePayload,
-    board: readItems(boardCol),
-    team: readItems(teamCol),
+    board,
+    team,
     partners,
   };
 }
