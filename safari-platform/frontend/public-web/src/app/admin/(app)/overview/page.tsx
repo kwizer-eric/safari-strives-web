@@ -25,6 +25,7 @@ type OverviewStats = {
   testimonials: number;
   articles: number;
   team: number;
+  board: number;
   partners: number;
   ventures: number;
 };
@@ -34,6 +35,7 @@ const emptyStats: OverviewStats = {
   testimonials: 0,
   articles: 0,
   team: 0,
+  board: 0,
   partners: 0,
   ventures: 0,
 };
@@ -103,6 +105,7 @@ export default function OverviewPage() {
           testimonials: countItems("testimonials"),
           articles: countItems("articles"),
           team: teamMembers.length,
+          board: boardMembers.length,
           partners: countItems("partners"),
           ventures: countItems("ventures"),
         });
@@ -120,7 +123,7 @@ export default function OverviewPage() {
     <div>
       <PageHeader
         title="Overview"
-        description="Live counts from the CMS."
+        description="Live counts from the CMS and database."
       />
       {error && (
         <Alert tone="danger" className="mb-6">
@@ -132,6 +135,16 @@ export default function OverviewPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          label="Team members"
+          value={stats.team}
+          hint="Staff team"
+        />
+        <StatCard
+          label="Board members"
+          value={stats.board}
+          hint="Board members"
+        />
         <StatCard
           label="Venturists"
           value={stats.ventures}
@@ -151,11 +164,6 @@ export default function OverviewPage() {
           label="Blog posts"
           value={stats.articles}
           hint="Field Notes articles"
-        />
-        <StatCard
-          label="Team members"
-          value={stats.team}
-          hint="About page team"
         />
         <StatCard
           label="Partners"
