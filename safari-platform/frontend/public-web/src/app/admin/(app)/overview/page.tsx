@@ -38,6 +38,30 @@ const emptyStats: OverviewStats = {
   ventures: 0,
 };
 
+async function listAdminTeam(token: string): Promise<Array<{ id: number; name: string }>> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || ""}/admin/people/team`, {
+    cache: "no-store",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+async function listAdminBoard(token: string): Promise<Array<{ id: number; name: string }>> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || ""}/admin/people/board`, {
+    cache: "no-store",
+    headers: {
+      "content-type": "application/json",
+      authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) return [];
+  return res.json();
+}
+
 export default function OverviewPage() {
   const { token } = useAuth();
   const [stats, setStats] = useState<OverviewStats>(emptyStats);
@@ -54,9 +78,11 @@ export default function OverviewPage() {
       setLoading(true);
       setError(null);
       try {
-        const [cmsPages, collections] = await Promise.all([
+        const [cmsPages, collections, teamMembers, boardMembers] = await Promise.all([
           listAdminCmsPages(token),
           listAdminCmsCollections(token),
+          listAdminTeam(token),
+          listAdminBoard(token),
         ]);
 
         const home = cmsPages.find((page) => page.slug === "home");
@@ -76,7 +102,7 @@ export default function OverviewPage() {
           inMotion: homePayload?.inMotion?.cards?.length ?? 0,
           testimonials: countItems("testimonials"),
           articles: countItems("articles"),
-          team: countItems("team-members"),
+          team: teamMembers.length,
           partners: countItems("partners"),
           ventures: countItems("ventures"),
         });
