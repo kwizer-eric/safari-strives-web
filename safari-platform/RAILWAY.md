@@ -112,6 +112,10 @@ railway run --service backend python -m scripts.create_admin \
 # One-time CMS seed (insert-only; do NOT put this in start.sh)
 railway run --service backend python -m scripts.seed_cms_content
 railway run --service backend python -m scripts.seed_program_pages
+
+# One-time: copy CMS board-members/team-members JSON into SQL people tables
+# (fixes admin zeros + dummy Kwizer rows). Do NOT put in start.sh.
+railway run --service backend python -m scripts.migrate_cms_people_to_tables
 ```
 
 ## Troubleshooting

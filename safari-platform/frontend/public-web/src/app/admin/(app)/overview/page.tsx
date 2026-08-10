@@ -9,6 +9,7 @@ import {
   listAdminCmsPages,
   type HomePayload,
 } from "@/lib/cms";
+import { listAdminPeople } from "@/lib/people";
 import type { SiteSettings } from "@/types/content";
 
 const shortcuts = [
@@ -25,7 +26,6 @@ type OverviewStats = {
   testimonials: number;
   articles: number;
   team: number;
-  board: number;
   partners: number;
   ventures: number;
 };
@@ -35,34 +35,9 @@ const emptyStats: OverviewStats = {
   testimonials: 0,
   articles: 0,
   team: 0,
-  board: 0,
   partners: 0,
   ventures: 0,
 };
-
-async function listAdminTeam(token: string): Promise<Array<{ id: number; name: string }>> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || ""}/admin/people/team`, {
-    cache: "no-store",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-  });
-  if (!res.ok) return [];
-  return res.json();
-}
-
-async function listAdminBoard(token: string): Promise<Array<{ id: number; name: string }>> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || ""}/admin/people/board`, {
-    cache: "no-store",
-    headers: {
-      "content-type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-  });
-  if (!res.ok) return [];
-  return res.json();
-}
 
 export default function OverviewPage() {
   const { token } = useAuth();
@@ -80,11 +55,10 @@ export default function OverviewPage() {
       setLoading(true);
       setError(null);
       try {
-        const [cmsPages, collections, teamMembers, boardMembers] = await Promise.all([
+        const [cmsPages, collections, teamPeople] = await Promise.all([
           listAdminCmsPages(token),
           listAdminCmsCollections(token),
-          listAdminTeam(token),
-          listAdminBoard(token),
+          listAdminPeople(token, "team"),
         ]);
 
         const home = cmsPages.find((page) => page.slug === "home");
@@ -104,8 +78,7 @@ export default function OverviewPage() {
           inMotion: homePayload?.inMotion?.cards?.length ?? 0,
           testimonials: countItems("testimonials"),
           articles: countItems("articles"),
-          team: teamMembers.length,
-          board: boardMembers.length,
+          team: teamPeople.length,
           partners: countItems("partners"),
           ventures: countItems("ventures"),
         });
@@ -123,7 +96,7 @@ export default function OverviewPage() {
     <div>
       <PageHeader
         title="Overview"
-        description="Live counts from the CMS and database."
+        description="Live counts from the CMS."
       />
       {error && (
         <Alert tone="danger" className="mb-6">
@@ -135,16 +108,6 @@ export default function OverviewPage() {
       )}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard
-          label="Team members"
-          value={stats.team}
-          hint="Staff team"
-        />
-        <StatCard
-          label="Board members"
-          value={stats.board}
-          hint="Board members"
-        />
         <StatCard
           label="Venturists"
           value={stats.ventures}
@@ -164,6 +127,11 @@ export default function OverviewPage() {
           label="Blog posts"
           value={stats.articles}
           hint="Field Notes articles"
+        />
+        <StatCard
+          label="Team members"
+          value={stats.team}
+          hint="About page team"
         />
         <StatCard
           label="Partners"
