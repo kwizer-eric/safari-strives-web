@@ -673,17 +673,7 @@ def _upsert_collection(
     # Special case: clear legacy Apply URL (single-value migration, safe to always do)
     existing_payload = collection.payload if isinstance(collection.payload, dict) else {}
     seed_payload = data.get("payload") if isinstance(data.get("payload"), dict) else {}
-<<<<<<< HEAD
-    
-    if data["key"] == "site" and existing_payload.get("applyUrl") == LEGACY_APPLY_URL:
-        collection.payload = {**existing_payload, "applyUrl": ""}
-        print(
-            "Backfill cms_collection 'site' "
-            "(legacy applicant login → disabled Apply CTA)"
-=======
 
-    # The old seed sent public Apply CTAs to the applicant login. Clear only
-    # that exact legacy value; preserve every URL configured by an admin.
     if data["key"] == "site":
         updated_payload = dict(existing_payload)
         site_changed = False
@@ -700,8 +690,33 @@ def _upsert_collection(
             seed_payload.get("social")
             if isinstance(seed_payload.get("social"), dict)
             else {}
->>>>>>> 41b9369 (final)
         )
+        existing_social = (
+            existing_payload.get("social")
+            if isinstance(existing_payload.get("social"), dict)
+            else {}
+        )
+        merged_social = dict(existing_social)
+        social_changed = False
+
+        for key, seed_val in seed_social.items():
+            if not isinstance(seed_val, str) or not seed_val.strip():
+                continue
+            cur = merged_social.get(key)
+            if not isinstance(cur, str) or cur.strip() in SOCIAL_PLACEHOLDER_VALUES:
+                merged_social[key] = seed_val
+                social_changed = True
+
+        legacy_facebook = merged_social.get("facebook")
+        if isinstance(legacy_facebook, str) and legacy_facebook.strip() in SOCIAL_PLACEHOLDER_VALUES:
+            merged_social.pop("facebook", None)
+            social_changed = True
+            if (
+                "youtube" not in merged_social
+                and isinstance(seed_social.get("youtube"), str)
+                and seed_social["youtube"].strip()
+            ):
+                merged_social["youtube"] = seed_social["youtube"]
         existing_social = (
             existing_payload.get("social")
             if isinstance(existing_payload.get("social"), dict)
