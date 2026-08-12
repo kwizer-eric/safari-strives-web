@@ -9,7 +9,7 @@ import { getProgramPage } from "@/lib/content";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Generative Enterprise Lab | Safari Strives",
+  title: "Regenerative Enterprise Lab | Safari Strives",
   description:
     "Safari Strives' demonstration platform and cash-flow engine: poultry, packaged eggs, organic fertilizer, and market-ready generative enterprise.",
 };

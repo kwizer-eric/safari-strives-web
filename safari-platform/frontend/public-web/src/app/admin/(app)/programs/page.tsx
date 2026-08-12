@@ -21,7 +21,7 @@ import {
 
 const SLUG_LABELS: Record<string, string> = {
   "our-model": "Venture Accelerator",
-  "green-enterprise-lab": "Generative Enterprise Lab",
+  "green-enterprise-lab": "Regenerative Enterprise Lab",
   "the-hub": "The Hub",
 };
 

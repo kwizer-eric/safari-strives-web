@@ -172,7 +172,7 @@ export default function ApplicationLinkPage() {
           <li>Homepage final CTA “Apply Now”</li>
           <li>Ventures page “Apply Here”</li>
           <li>Venture Accelerator closer “Apply Here”</li>
-          <li>Generative Enterprise Lab closer CTA</li>
+          <li>Regenerative Enterprise Lab closer CTA</li>
           <li>The Hub closer CTA</li>
           <li>About page closer CTA</li>
         </ul>

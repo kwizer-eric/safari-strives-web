@@ -149,10 +149,11 @@ export function youtubeIdFromMediaUrl(raw: string): string | null {
 }
 
 /**
- * Poster for a venturist card. Video is primary — prefer a frame from the
- * video URL (YouTube / Cloudinary), then fall back to a still image.
+ * Poster for a venturist card. Prefer the curated still (`image`); fall back to
+ * a frame derived from the click-to-play video URL.
  */
 export function venturePosterUrl(image: string, videoUrl?: string): string {
+  if (image.trim()) return image.trim();
   const video = videoUrl?.trim() ?? "";
   if (video) {
     const ytId = youtubeIdFromMediaUrl(video);
@@ -160,7 +161,6 @@ export function venturePosterUrl(image: string, videoUrl?: string): string {
     const cloudPoster = cloudinaryVideoPosterUrl(video);
     if (cloudPoster) return cloudPoster;
   }
-  if (image.trim()) return image.trim();
   return "";
 }
 
