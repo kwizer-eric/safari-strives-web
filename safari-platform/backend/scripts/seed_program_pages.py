@@ -90,15 +90,15 @@ PAGES: list[dict] = [
     {
         "slug": "green-enterprise-lab",
         "is_published": True,
-        "hero_eyebrow": "Generative Enterprise Lab",
+        "hero_eyebrow": "Regenerative Enterprise Lab",
         "hero_title": "Commercializing practical solutions for local enterprise, food systems, and waste-to-value growth.",
         "hero_video_url": "https://images.unsplash.com/photo-1580918577344-fe0a66733a2a?w=1920&q=80",
-        "hero_media_alt": "Poultry operations at the Generative Enterprise Lab",
+        "hero_media_alt": "Poultry operations at the Regenerative Enterprise Lab",
         "hero_media_caption": "Short clips of poultry production, egg collection, packaging, recordkeeping, feed tracking, manure collection, product testing, and local distribution.",
         "intro_eyebrow": "About the lab",
         "intro_title": "A demonstration platform and a cash-flow engine",
         "intro_body": _paragraphs(
-            "The Generative Enterprise Lab begins with a practical question: what happens when a community does not only train entrepreneurs, but also builds real enterprises that entrepreneurs can learn from?",
+            "The Regenerative Enterprise Lab begins with a practical question: what happens when a community does not only train entrepreneurs, but also builds real enterprises that entrepreneurs can learn from?",
             "The lab serves two roles. First, it is Safari Strives' demonstration platform, where founders can learn from real operating systems. Second, it is a cash-flow engine designed to help support the hub, the Venture Accelerator, and daily operations.",
         ),
         "features_eyebrow": "In the field",
@@ -135,7 +135,7 @@ PAGES: list[dict] = [
                 "title": "Why generative enterprise matters",
                 "body": _paragraphs(
                     "In many local markets, small producers sell raw outputs with little differentiation. Eggs go out loose, with no packaging or brand behind them. Manure has value and gets used, but rarely as a processed, graded product. Buyers have few reasons to trust one supplier over another.",
-                    "The Generative Enterprise Lab is built to close that gap. We package our eggs. We process manure into organic fertilizer instead of leaving it raw. We built our own feed-processing equipment rather than buying feed at market price.",
+                    "The Regenerative Enterprise Lab is built to close that gap. We package our eggs. We process manure into organic fertilizer instead of leaving it raw. We built our own feed-processing equipment rather than buying feed at market price.",
                 ),
                 "display_order": 0,
             },

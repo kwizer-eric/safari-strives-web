@@ -13,6 +13,7 @@ import {
   slugify,
 } from "@/lib/cms";
 import { mediaUrlValidationMessage } from "@/lib/media-url";
+import { CmsImage } from "@/components/ui/CmsImage";
 import type { Venture, VenturesPagePayload } from "@/types/content";
 
 type Tab = "hero" | "list";
@@ -146,9 +147,17 @@ export default function AdminVenturesPage() {
   function startEdit(venture: Venture) {
     setMessage(null);
     setError(null);
+    const video = (venture.videoUrl ?? "").trim();
+    // Legacy: some rows stored a Cloudinary still in videoUrl — move to image.
+    const imageLooksEmpty = !venture.image.trim();
+    const videoIsImage =
+      !!video &&
+      /\.(jpe?g|png|gif|webp|avif)(\?|$)/i.test(video);
     setEditing({
       ...venture,
-      videoUrl: venture.videoUrl ?? "",
+      image: imageLooksEmpty && videoIsImage ? video : venture.image,
+      videoUrl: imageLooksEmpty && videoIsImage ? "" : video,
+      imageAlt: venture.imageAlt ?? "",
     });
   }
 
@@ -165,7 +174,7 @@ export default function AdminVenturesPage() {
     <div>
       <PageHeader
         title="Ventures"
-        description="Hero media, plus venturist name, business, and click-to-play video."
+        description="Hero media, venturist photo for the card, and optional click-to-play video."
       />
       {message && (
         <Alert tone="success" className="mb-6">
@@ -283,9 +292,22 @@ export default function AdminVenturesPage() {
                 key={venture.id}
                 className="flex flex-wrap items-center justify-between gap-3 p-4"
               >
-                <div>
-                  <p className="font-semibold">{venture.founder}</p>
-                  <p className="text-sm text-muted">{venture.ventureName}</p>
+                <div className="flex items-center gap-3">
+                  {venture.image ? (
+                    <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-muted">
+                      <CmsImage
+                        src={venture.image}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="48px"
+                      />
+                    </div>
+                  ) : null}
+                  <div>
+                    <p className="font-semibold">{venture.founder}</p>
+                    <p className="text-sm text-muted">{venture.ventureName}</p>
+                  </div>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -352,14 +374,32 @@ export default function AdminVenturesPage() {
             required
           />
           <Input
+            label="Photo URL (venture card)"
+            value={editing.image}
+            onChange={(e) =>
+              setEditing({ ...editing, image: e.target.value })
+            }
+            hint="Cloudinary or other https image URL shown on the venturist card"
+            placeholder="https://res.cloudinary.com/..."
+            required
+          />
+          <Input
+            label="Photo alt text"
+            value={editing.imageAlt}
+            onChange={(e) =>
+              setEditing({ ...editing, imageAlt: e.target.value })
+            }
+            hint="Short description for accessibility"
+            placeholder={`${editing.founder.trim() || "Founder"} portrait`}
+          />
+          <Input
             label="Video URL (plays when card is clicked)"
             value={editing.videoUrl ?? ""}
             onChange={(e) =>
               setEditing({ ...editing, videoUrl: e.target.value })
             }
-            hint="YouTube link or direct https video URL"
+            hint="Optional. YouTube link or direct https video URL"
             placeholder="https://www.youtube.com/watch?v=…"
-            required
           />
           <div className="flex gap-3">
             <Button
@@ -368,7 +408,7 @@ export default function AdminVenturesPage() {
                 saving ||
                 !editing.founder.trim() ||
                 !editing.ventureName.trim() ||
-                !(editing.videoUrl ?? "").trim()
+                !editing.image.trim()
               }
               onClick={() => {
                 const id =
@@ -380,6 +420,7 @@ export default function AdminVenturesPage() {
                   id,
                   founder: editing.founder.trim(),
                   ventureName: editing.ventureName.trim(),
+                  image: editing.image.trim(),
                   videoUrl: (editing.videoUrl ?? "").trim(),
                   imageAlt:
                     editing.imageAlt.trim() ||
