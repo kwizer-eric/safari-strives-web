@@ -8,6 +8,7 @@ import {
   Briefcase,
   Home,
   Link2,
+  Mail,
 } from "lucide-react";
 import { RequireRole, useAuth } from "@safari/auth";
 import { Sidebar, Button } from "@safari/ui";
@@ -19,8 +20,9 @@ const items = [
   { label: "Application Link", href: "/admin/application-link", icon: Link2 },
   { label: "Our Model", href: "/admin/our-model", icon: BookOpen },
   { label: "Ventures", href: "/admin/ventures", icon: Briefcase },
-  { label: "Blog", href: "/admin/blog", icon: Newspaper },
+  { label: "Insights", href: "/admin/blog", icon: Newspaper },
   { label: "About", href: "/admin/about", icon: Building2 },
+  { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
 ];
 
 export default function AppLayout({

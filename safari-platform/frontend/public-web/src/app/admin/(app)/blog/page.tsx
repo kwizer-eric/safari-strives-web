@@ -9,13 +9,15 @@ import {
   patchAdminCmsCollection,
   slugify,
 } from "@/lib/cms";
-import type { Article, ArticleBlock } from "@/types/content";
+import type { Article, ArticleBlock, PressItem } from "@/types/content";
 import { CmsImage } from "@/components/ui/CmsImage";
 import {
   articleIsVideo,
   articlePosterUrl,
   articleYoutubeWatchUrl,
 } from "@/lib/article-link";
+
+type Tab = "articles" | "press";
 
 function paragraphsToSections(text: string): ArticleBlock[] {
   return text
@@ -47,11 +49,24 @@ const emptyArticle = (): Article => ({
   sections: [],
 });
 
+const emptyPress = (): PressItem => ({
+  id: "",
+  title: "",
+  date: new Date().toISOString().slice(0, 10),
+  image: "",
+  imageAlt: "",
+  href: "",
+});
+
 export default function AdminBlogPage() {
   const { token } = useAuth();
-  const [collectionId, setCollectionId] = useState<number | null>(null);
+  const [tab, setTab] = useState<Tab>("articles");
+  const [articlesId, setArticlesId] = useState<number | null>(null);
+  const [pressId, setPressId] = useState<number | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
+  const [pressItems, setPressItems] = useState<PressItem[]>([]);
   const [editing, setEditing] = useState<Article | null>(null);
+  const [editingPress, setEditingPress] = useState<PressItem | null>(null);
   const [bodyText, setBodyText] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -60,27 +75,40 @@ export default function AdminBlogPage() {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-      if (!token) {
+    if (!token) {
       setError("Sign in required.");
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
-      setError(null);
-      try {
-        const collections = await listAdminCmsCollections(token);
-      const col = findCmsCollectionByKey<{ items: Article[] }>(
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const collections = await listAdminCmsCollections(token);
+      const articlesCol = findCmsCollectionByKey<{ items: Article[] }>(
         collections,
         "articles",
       );
-      if (!col) throw new Error("Articles collection missing. Seed CMS content.");
-      setCollectionId(col.id);
-      setArticles(col.payload?.items ?? []);
-      } catch (err) {
-        setError((err as Error).message);
-      } finally {
-        setLoading(false);
+      const pressCol = findCmsCollectionByKey<{ items: PressItem[] }>(
+        collections,
+        "press",
+      );
+      if (!articlesCol) {
+        throw new Error("Articles collection missing. Seed CMS content.");
       }
+      if (!pressCol) {
+        throw new Error(
+          "Press collection missing. Run seed or create CMS key 'press'.",
+        );
+      }
+      setArticlesId(articlesCol.id);
+      setPressId(pressCol.id);
+      setArticles(articlesCol.payload?.items ?? []);
+      setPressItems(pressCol.payload?.items ?? []);
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setLoading(false);
+    }
   }, [token]);
 
   useEffect(() => {
@@ -88,12 +116,12 @@ export default function AdminBlogPage() {
   }, [load]);
 
   async function saveArticles(next: Article[]) {
-    if (!token || collectionId == null) return;
+    if (!token || articlesId == null) return;
     setSaving(true);
     setMessage(null);
     setError(null);
     try {
-      await patchAdminCmsCollection(token, collectionId, {
+      await patchAdminCmsCollection(token, articlesId, {
         payload: { items: next },
       });
       setArticles(next);
@@ -108,9 +136,29 @@ export default function AdminBlogPage() {
     }
   }
 
+  async function savePress(next: PressItem[]) {
+    if (!token || pressId == null) return;
+    setSaving(true);
+    setMessage(null);
+    setError(null);
+    try {
+      await patchAdminCmsCollection(token, pressId, {
+        payload: { items: next },
+      });
+      setPressItems(next);
+      setEditingPress(null);
+      setMessage("Press items saved.");
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
   function startEdit(article: Article) {
     setMessage(null);
     setError(null);
+    setEditingPress(null);
     setEditing({
       ...article,
       videoUrl: article.videoUrl ?? "",
@@ -119,12 +167,24 @@ export default function AdminBlogPage() {
     setShowPreview(false);
   }
 
+  function startEditPress(item: PressItem) {
+    setMessage(null);
+    setError(null);
+    setEditing(null);
+    setBodyText("");
+    setShowPreview(false);
+    setEditingPress({ ...item });
+  }
+
   const previewParagraphs = paragraphsToSections(bodyText);
 
   if (loading) {
     return (
       <div>
-        <PageHeader title="Blog" description="Manage Field Notes articles." />
+        <PageHeader
+          title="Insights"
+          description="Manage Insights articles and Press coverage."
+        />
         <p className="text-sm text-muted">Loading…</p>
       </div>
     );
@@ -133,8 +193,8 @@ export default function AdminBlogPage() {
   return (
     <div>
       <PageHeader
-        title="Blog"
-        description="Create, edit, and preview Field Notes articles."
+        title="Insights"
+        description="Manage Insights articles and Press coverage."
       />
       {message && (
         <Alert tone="success" className="mb-6">
@@ -147,7 +207,32 @@ export default function AdminBlogPage() {
         </Alert>
       )}
 
-      {!editing && (
+      {!editing && !editingPress && (
+        <div className="mb-6 flex flex-wrap gap-2">
+          {(
+            [
+              ["articles", "Articles"],
+              ["press", "Press"],
+            ] as const
+          ).map(([id, label]) => (
+            <Button
+              key={id}
+              type="button"
+              size="sm"
+              variant={tab === id ? "primary" : "secondary"}
+              onClick={() => {
+                setTab(id);
+                setMessage(null);
+                setError(null);
+              }}
+            >
+              {label}
+            </Button>
+          ))}
+        </div>
+      )}
+
+      {tab === "articles" && !editing && !editingPress && (
         <>
           <div className="mb-4 flex justify-between gap-3">
             <p className="text-sm text-muted">{articles.length} articles</p>
@@ -161,17 +246,17 @@ export default function AdminBlogPage() {
           </div>
 
           <ul className="mb-6 divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
-          {articles.map((article) => (
+            {articles.map((article) => (
               <li
                 key={article.id}
                 className="flex flex-wrap items-center justify-between gap-3 p-4"
               >
                 <div>
                   <p className="font-semibold">{article.title}</p>
-              <p className="text-xs text-muted">
-                {article.date} · {article.category}
-                {articleIsVideo(article) ? " · Video" : ""}
-              </p>
+                  <p className="text-xs text-muted">
+                    {article.date} · {article.category}
+                    {articleIsVideo(article) ? " · Video" : ""}
+                  </p>
                 </div>
                 <div className="flex gap-2">
                   <Button
@@ -195,10 +280,80 @@ export default function AdminBlogPage() {
                     Delete
                   </Button>
                 </div>
-            </li>
-          ))}
-          {articles.length === 0 && (
+              </li>
+            ))}
+            {articles.length === 0 && (
               <li className="p-6 text-sm text-muted">No articles yet.</li>
+            )}
+          </ul>
+        </>
+      )}
+
+      {tab === "press" && !editing && !editingPress && (
+        <>
+          <div className="mb-4 flex justify-between gap-3">
+            <p className="text-sm text-muted">{pressItems.length} press items</p>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => startEditPress(emptyPress())}
+            >
+              Add press item
+            </Button>
+          </div>
+
+          <ul className="mb-6 divide-y divide-border rounded-[var(--radius-card)] border border-border bg-card">
+            {pressItems.map((item) => (
+              <li
+                key={item.id}
+                className="flex flex-wrap items-center justify-between gap-3 p-4"
+              >
+                <div className="flex items-center gap-3">
+                  {item.image ? (
+                    <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded bg-muted">
+                      <CmsImage
+                        src={item.image}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                      />
+                    </div>
+                  ) : null}
+                  <div>
+                    <p className="font-semibold">{item.title}</p>
+                    <p className="text-xs text-muted">
+                      {item.date}
+                      {item.href ? ` · ${item.href}` : ""}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => startEditPress(item)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="danger"
+                    onClick={() =>
+                      void savePress(
+                        pressItems.filter((row) => row.id !== item.id),
+                      )
+                    }
+                  >
+                    Delete
+                  </Button>
+                </div>
+              </li>
+            ))}
+            {pressItems.length === 0 && (
+              <li className="p-6 text-sm text-muted">No press items yet.</li>
             )}
           </ul>
         </>
@@ -408,6 +563,113 @@ export default function AdminBlogPage() {
                 setBodyText("");
                 setShowPreview(false);
               }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {editingPress && (
+        <div className="max-w-2xl space-y-4 rounded-[var(--radius-card)] border border-border bg-card p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <h2 className="text-lg font-semibold">
+              {editingPress.id ? "Edit press item" : "New press item"}
+            </h2>
+            <Button
+              type="button"
+              size="sm"
+              variant="secondary"
+              onClick={() => setEditingPress(null)}
+            >
+              Back to list
+            </Button>
+          </div>
+          <Input
+            label="Cover image URL"
+            value={editingPress.image}
+            onChange={(e) =>
+              setEditingPress({ ...editingPress, image: e.target.value })
+            }
+            hint="https image URL for the Press card"
+            placeholder="https://res.cloudinary.com/..."
+            required
+          />
+          <Input
+            label="Image alt"
+            value={editingPress.imageAlt}
+            onChange={(e) =>
+              setEditingPress({ ...editingPress, imageAlt: e.target.value })
+            }
+            placeholder={`${editingPress.title.trim() || "Press"} cover`}
+          />
+          <Input
+            label="Date (YYYY-MM-DD)"
+            value={editingPress.date}
+            onChange={(e) =>
+              setEditingPress({ ...editingPress, date: e.target.value })
+            }
+            required
+          />
+          <Input
+            label="Title"
+            value={editingPress.title}
+            onChange={(e) =>
+              setEditingPress({ ...editingPress, title: e.target.value })
+            }
+            required
+          />
+          <Input
+            label="Article link"
+            value={editingPress.href}
+            onChange={(e) =>
+              setEditingPress({ ...editingPress, href: e.target.value })
+            }
+            hint="Opens in a new tab when the card is clicked"
+            placeholder="https://…"
+            required
+          />
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              disabled={
+                saving ||
+                !editingPress.title.trim() ||
+                !editingPress.image.trim() ||
+                !editingPress.href.trim() ||
+                !editingPress.date.trim()
+              }
+              onClick={() => {
+                const id =
+                  editingPress.id ||
+                  slugify(editingPress.title) ||
+                  `press-${Date.now()}`;
+                const nextItem: PressItem = {
+                  ...editingPress,
+                  id,
+                  title: editingPress.title.trim(),
+                  date: editingPress.date.trim(),
+                  image: editingPress.image.trim(),
+                  imageAlt:
+                    editingPress.imageAlt.trim() ||
+                    `${editingPress.title.trim()} cover`,
+                  href: editingPress.href.trim(),
+                };
+                const exists = pressItems.some((item) => item.id === id);
+                const next = exists
+                  ? pressItems.map((item) =>
+                      item.id === id ? nextItem : item,
+                    )
+                  : [...pressItems, nextItem];
+                void savePress(next);
+              }}
+            >
+              {saving ? "Saving…" : "Save press item"}
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setEditingPress(null)}
             >
               Cancel
             </Button>

@@ -6,6 +6,7 @@ from app.models.people import BoardMember, TeamMember
 from app.models.submission import (
     AcceleratorApplication,
     ContactMessage,
+    NewsletterSubscriber,
     PartnerApplication,
 )
 
@@ -21,5 +22,6 @@ __all__ = [
     "TeamMember",
     "AcceleratorApplication",
     "ContactMessage",
+    "NewsletterSubscriber",
     "PartnerApplication",
 ]

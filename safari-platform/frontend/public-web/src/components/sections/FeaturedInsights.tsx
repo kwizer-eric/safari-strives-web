@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { Container } from "@safari/ui";
 import { BlogCard } from "@/components/ui/BlogCard";
-import type { Article } from "@/types/content";
+import { PressCard } from "@/components/ui/PressCard";
+import type { FeaturedInsight } from "@/lib/cms";
 
 type FeaturedInsightsProps = {
   title: string;
-  articles: Article[];
+  items: FeaturedInsight[];
 };
 
-export function FeaturedInsights({ title, articles }: FeaturedInsightsProps) {
-  if (articles.length === 0) return null;
+export function FeaturedInsights({ title, items }: FeaturedInsightsProps) {
+  if (items.length === 0) return null;
 
   return (
     <section
@@ -33,9 +34,13 @@ export function FeaturedInsights({ title, articles }: FeaturedInsightsProps) {
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {articles.map((article) => (
-            <BlogCard key={article.id} article={article} />
-          ))}
+          {items.map((entry) =>
+            entry.kind === "article" ? (
+              <BlogCard key={`article-${entry.article.id}`} article={entry.article} />
+            ) : (
+              <PressCard key={`press-${entry.item.id}`} item={entry.item} />
+            ),
+          )}
         </div>
       </Container>
     </section>

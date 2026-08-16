@@ -26,7 +26,7 @@ export const DEFAULT_SITE: SiteSettings = {
     { label: "About", href: "/about" },
     { label: "Ventures", href: "/ventures" },
     { label: "Our Model", href: "/our-model" },
-    { label: "Field Notes", href: "/field-notes" },
+    { label: "Insights", href: "/field-notes" },
   ],
   ourModelLinks: [
     {
@@ -63,7 +63,7 @@ export const DEFAULT_SITE: SiteSettings = {
     },
     insights: {
       title: "Insights",
-      links: [{ label: "Field Notes", href: "/field-notes" }],
+      links: [{ label: "Insights", href: "/field-notes" }],
     },
   },
 };

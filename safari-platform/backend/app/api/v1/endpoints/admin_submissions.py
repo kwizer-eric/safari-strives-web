@@ -6,12 +6,14 @@ from app.api.v1.deps import get_current_admin, get_db
 from app.models.submission import (
     AcceleratorApplication,
     ContactMessage,
+    NewsletterSubscriber,
     PartnerApplication,
 )
 from app.schemas.submission import (
     AcceleratorApplicationRead,
     AcceleratorApplicationStatusUpdate,
     ContactMessageRead,
+    NewsletterSubscriberRead,
     PartnerApplicationRead,
     PartnerApplicationStatusUpdate,
 )
@@ -82,4 +84,12 @@ def update_partner_status(
 @router.get("/contact", response_model=list[ContactMessageRead])
 def list_contact(db: Session = Depends(get_db)) -> list[ContactMessage]:
     stmt = select(ContactMessage).order_by(ContactMessage.created_at.desc())
+    return list(db.scalars(stmt).all())
+
+
+@router.get("/newsletter", response_model=list[NewsletterSubscriberRead])
+def list_newsletter(db: Session = Depends(get_db)) -> list[NewsletterSubscriber]:
+    stmt = select(NewsletterSubscriber).order_by(
+        NewsletterSubscriber.created_at.desc()
+    )
     return list(db.scalars(stmt).all())

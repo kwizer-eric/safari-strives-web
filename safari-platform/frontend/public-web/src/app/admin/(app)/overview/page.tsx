@@ -17,7 +17,7 @@ const shortcuts = [
   { label: "Application Link", href: "/admin/application-link" },
   { label: "Our Model", href: "/admin/our-model" },
   { label: "Ventures", href: "/admin/ventures" },
-  { label: "Blog", href: "/admin/blog" },
+  { label: "Insights", href: "/admin/blog" },
   { label: "About", href: "/admin/about" },
 ] as const;
 
@@ -25,6 +25,7 @@ type OverviewStats = {
   inMotion: number;
   testimonials: number;
   articles: number;
+  press: number;
   team: number;
   partners: number;
   ventures: number;
@@ -34,6 +35,7 @@ const emptyStats: OverviewStats = {
   inMotion: 0,
   testimonials: 0,
   articles: 0,
+  press: 0,
   team: 0,
   partners: 0,
   ventures: 0,
@@ -78,6 +80,7 @@ export default function OverviewPage() {
           inMotion: homePayload?.inMotion?.cards?.length ?? 0,
           testimonials: countItems("testimonials"),
           articles: countItems("articles"),
+          press: countItems("press"),
           team: teamPeople.length,
           partners: countItems("partners"),
           ventures: countItems("ventures"),
@@ -124,9 +127,14 @@ export default function OverviewPage() {
           hint="Homepage marquee"
         />
         <StatCard
-          label="Blog posts"
+          label="Insights posts"
           value={stats.articles}
-          hint="Field Notes articles"
+          hint="Insights articles"
+        />
+        <StatCard
+          label="Press items"
+          value={stats.press}
+          hint="Insights Press section"
         />
         <StatCard
           label="Team members"
@@ -174,7 +182,7 @@ export default function OverviewPage() {
           <ul className="list-disc space-y-2 pl-5 text-sm text-muted">
             <li>Confirm the Application Link points to the live Google Form.</li>
             <li>Refresh Home → In Motion and Testimonials.</li>
-            <li>Publish new Field Notes from Blog when CMS-wired.</li>
+            <li>Publish new Insights from the Insights admin when CMS-wired.</li>
             <li>Keep About team and partner logos up to date.</li>
           </ul>
         </div>
