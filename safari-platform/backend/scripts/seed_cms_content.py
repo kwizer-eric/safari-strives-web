@@ -338,7 +338,7 @@ CMS_COLLECTIONS: list[dict] = [
             "navLinks": [
                 {"label": "Ventures", "href": "/ventures"},
                 {"label": "Our Model", "href": "/our-model"},
-                {"label": "Blog", "href": "/field-notes"},
+                {"label": "Insights", "href": "/field-notes"},
                 {"label": "About", "href": "/about"},
             ],
             "ourModelLinks": [
@@ -378,7 +378,7 @@ CMS_COLLECTIONS: list[dict] = [
                 "insights": {
                     "title": "Insights",
                     "links": [
-                        {"label": "Field Notes", "href": "/field-notes"},
+                        {"label": "Insights", "href": "/field-notes"},
                         {"label": "Ventures", "href": "/ventures"},
                     ],
                 },
@@ -508,6 +508,12 @@ CMS_COLLECTIONS: list[dict] = [
     {
         "key": "articles",
         "label": "Field Notes Articles",
+        "is_published": True,
+        "payload": {"items": []},
+    },
+    {
+        "key": "press",
+        "label": "Press",
         "is_published": True,
         "payload": {"items": []},
     },

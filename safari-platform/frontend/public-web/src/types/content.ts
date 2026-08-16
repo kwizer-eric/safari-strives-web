@@ -29,6 +29,17 @@ export type Article = {
   videoUrl?: string;
 };
 
+/** External press / media coverage card on the Insights page. */
+export type PressItem = {
+  id: string;
+  title: string;
+  date: string;
+  image: string;
+  imageAlt: string;
+  /** Destination URL — cards open this in a new tab. */
+  href: string;
+};
+
 export type Testimonial = {
   id: string;
   role: string;

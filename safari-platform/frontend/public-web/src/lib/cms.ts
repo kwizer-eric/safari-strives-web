@@ -1,5 +1,10 @@
-import type { Article, Testimonial } from "@/types/content";
+import type { Article, PressItem, Testimonial } from "@/types/content";
 import { getApiBaseUrl } from "@/lib/api-base-url";
+
+/** Homepage Featured Insights slot — article or external press, newest first. */
+export type FeaturedInsight =
+  | { kind: "article"; date: string; article: Article }
+  | { kind: "press"; date: string; item: PressItem };
 
 export type HomeHero = {
   headline: string;
@@ -227,6 +232,33 @@ export function parseArticleDate(date: string): number {
 
 export function latestArticles(items: Article[], limit = 3): Article[] {
   return [...items]
+    .sort((a, b) => parseArticleDate(b.date) - parseArticleDate(a.date))
+    .slice(0, limit);
+}
+
+/** Merge Insights articles + Press by date; take the newest `limit` for the homepage. */
+export function latestFeaturedInsights(
+  articles: Article[],
+  press: PressItem[],
+  limit = 3,
+): FeaturedInsight[] {
+  const pooled: FeaturedInsight[] = [
+    ...articles.map(
+      (article): FeaturedInsight => ({
+        kind: "article",
+        date: article.date,
+        article,
+      }),
+    ),
+    ...press.map(
+      (item): FeaturedInsight => ({
+        kind: "press",
+        date: item.date,
+        item,
+      }),
+    ),
+  ];
+  return pooled
     .sort((a, b) => parseArticleDate(b.date) - parseArticleDate(a.date))
     .slice(0, limit);
 }

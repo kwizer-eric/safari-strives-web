@@ -58,3 +58,18 @@ class ContactMessage(Base):
     message: Mapped[str] = mapped_column(Text)
 
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+
+
+class NewsletterSubscriber(Base):
+    """Homepage newsletter signup — name + email only.
+
+    Email is unique so the same person cannot flood the list; re-submitting
+    updates their name instead of creating a duplicate row.
+    """
+
+    __tablename__ = "newsletter_subscribers"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(200))
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())

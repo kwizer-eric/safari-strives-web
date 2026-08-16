@@ -55,3 +55,15 @@ class ContactMessageRead(ContactMessageCreate):
 
     id: int
     created_at: datetime
+
+
+class NewsletterSubscriberCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=200)
+    email: EmailStr
+
+
+class NewsletterSubscriberRead(NewsletterSubscriberCreate):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: datetime

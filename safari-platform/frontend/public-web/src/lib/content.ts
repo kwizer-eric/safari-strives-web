@@ -5,6 +5,7 @@ import type {
   AboutPerson,
   Article,
   ModelPageContent,
+  PressItem,
   SiteSettings,
   Testimonial,
   Venture,
@@ -193,6 +194,13 @@ export async function getVentureById(id: string): Promise<{
 export async function getArticles(): Promise<Article[]> {
   const collection = await getPublishedCmsCollection<{ items: Article[] }>(
     "articles",
+  );
+  return readItems(collection);
+}
+
+export async function getPressItems(): Promise<PressItem[]> {
+  const collection = await getPublishedCmsCollection<{ items: PressItem[] }>(
+    "press",
   );
   return readItems(collection);
 }

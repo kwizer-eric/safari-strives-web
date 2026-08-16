@@ -1,10 +1,12 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, status
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.v1.deps import get_db
 from app.models.submission import (
     AcceleratorApplication,
     ContactMessage,
+    NewsletterSubscriber,
     PartnerApplication,
 )
 from app.schemas.submission import (
@@ -12,6 +14,8 @@ from app.schemas.submission import (
     AcceleratorApplicationRead,
     ContactMessageCreate,
     ContactMessageRead,
+    NewsletterSubscriberCreate,
+    NewsletterSubscriberRead,
     PartnerApplicationCreate,
     PartnerApplicationRead,
 )
@@ -108,3 +112,44 @@ def submit_contact(
         ),
     )
     return message
+
+
+@router.post(
+    "/newsletter",
+    response_model=NewsletterSubscriberRead,
+    status_code=status.HTTP_201_CREATED,
+)
+def submit_newsletter(
+    payload: NewsletterSubscriberCreate,
+    background_tasks: BackgroundTasks,
+    db: Session = Depends(get_db),
+) -> NewsletterSubscriber:
+    """Persist homepage newsletter signups. Same email updates name (no dupes)."""
+    email = str(payload.email).strip().lower()
+    name = payload.name.strip()
+
+    existing = db.scalars(
+        select(NewsletterSubscriber).where(NewsletterSubscriber.email == email)
+    ).first()
+    if existing is not None:
+        if existing.name != name:
+            existing.name = name
+            db.commit()
+            db.refresh(existing)
+        return existing
+
+    subscriber = NewsletterSubscriber(name=name, email=email)
+    db.add(subscriber)
+    db.commit()
+    db.refresh(subscriber)
+
+    background_tasks.add_task(
+        send_notification_email,
+        subject=f"[Newsletter] {subscriber.name}",
+        body=(
+            f"New newsletter signup #{subscriber.id}\n"
+            f"Name: {subscriber.name}\n"
+            f"Email: {subscriber.email}"
+        ),
+    )
+    return subscriber
